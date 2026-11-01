@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -11,7 +10,7 @@ app.use(express.json());
 // Phục vụ các file HTML giao diện
 app.use(express.static(__dirname, { index: false }));
 
-// Trang mặc định: Dẫn vào đăng nhập (trang đăng nhập sẽ tự chuyển vào trang chủ nếu user đã đăng nhập)
+// Trang mặc định: Dẫn vào đăng nhập
 app.get('/', (req, res) => {
     res.redirect('/dang-nhap.html');
 });
@@ -196,53 +195,50 @@ app.post('/api/send-booking-email', async (req, res) => {
     }
 });
 
-// =========================================================================
-// 6. API LẤY DANH SÁCH CỤM SÂN (Lọc theo Môn, Khu vực, Từ khóa tìm kiếm)
+// // =========================================================================
+// 6. API LẤY DANH SÁCH CỤM SÂN (LẤY TRỰC TIẾP 29 SÂN TỪ TIDB CLOUD)
 // =========================================================================
 app.get('/api/facilities', (req, res) => {
     const { q, district, area, sport } = req.query;
    
-    let sql = `
-        SELECT DISTINCT
-            f.id, f.name, f.address, f.area, f.phone,
-            TIME_FORMAT(f.opening_time, '%H:%i') AS opening_time,
-            TIME_FORMAT(f.closing_time, '%H:%i') AS closing_time,
-            f.base_price, f.peak_surcharge,
-            (f.base_price + f.peak_surcharge) AS peak_price,
-            f.rating, f.google_maps_url, f.amenities, f.image_url,
-            s.id AS sport_id, s.name AS sport_name
-        FROM facilities f
-        LEFT JOIN courts c ON f.id = c.facility_id
-        LEFT JOIN sports s ON c.sport_id = s.id
-        WHERE f.is_active = TRUE
-    `;
+    let sql = `SELECT * FROM facilities WHERE 1=1`;
     const params = [];
 
     if (q) {
-        sql += ` AND (f.name LIKE ? OR f.address LIKE ?)`;
+        sql += ` AND (name LIKE ? OR address LIKE ?)`;
         params.push(`%${q}%`, `%${q}%`);
     }
 
     const targetArea = district || area;
     if (targetArea) {
-        sql += ` AND (f.area LIKE ? OR f.district_name LIKE ?)`;
+        sql += ` AND (district_name LIKE ? OR district LIKE ?)`;
         params.push(`%${targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa')}%`, `%${targetArea}%`);
     }
 
     if (sport && sport !== 'all') {
-        sql += ` AND (s.name LIKE ? OR c.description LIKE ?)`;
-        const sportKeyword = sport === 'soccer' ? '%bóng%' : (sport === 'badminton' ? '%cầu lông%' : '%pickleball%');
-        params.push(sportKeyword, sportKeyword);
+        sql += ` AND (sport = ? OR sport_name LIKE ?)`;
+        const sportKeyword = sport === 'soccer' ? 'soccer' : (sport === 'badminton' ? 'badminton' : 'pickleball');
+        params.push(sportKeyword, `%${sport}%`);
     }
 
-    sql += ` ORDER BY f.id ASC`;
+    sql += ` ORDER BY id ASC`;
 
     db.query(sql, params, (err, results) => {
         if (err) {
             console.error('Lỗi truy vấn facilities:', err);
             return res.status(500).json({ error: err.message });
         }
-        res.json(results);
+        const mapped = (results || []).map(f => ({
+            ...f,
+            area: f.district_name || f.district || 'Hà Nội',
+            district_name: f.district_name || f.district || 'Hà Nội',
+            opening_time: f.open_time || '06:00',
+            closing_time: f.close_time || '23:00',
+            base_price: f.price_min || 100000,
+            price: f.price_min || 100000,
+            google_maps_url: f.map_link || 'https://maps.google.com'
+        }));
+        res.json(mapped);
     });
 });
 
@@ -252,39 +248,30 @@ app.get('/api/facilities', (req, res) => {
 app.get('/api/facilities/:id', (req, res) => {
     const facilityId = req.params.id;
 
-    const sqlFacility = `
-        SELECT DISTINCT
-            f.id, f.name, f.address, f.area, f.phone,
-            TIME_FORMAT(f.opening_time, '%H:%i') AS opening_time,
-            TIME_FORMAT(f.closing_time, '%H:%i') AS closing_time,
-            f.base_price, f.peak_surcharge,
-            (f.base_price + f.peak_surcharge) AS peak_price,
-            f.rating, f.google_maps_url, f.amenities, f.image_url,
-            s.name AS sport_name
-        FROM facilities f
-        LEFT JOIN courts c ON f.id = c.facility_id
-        LEFT JOIN sports s ON c.sport_id = s.id
-        WHERE (f.id = ? OR f.name LIKE ?) AND f.is_active = TRUE
-        LIMIT 1
-    `;
-
+    const sqlFacility = `SELECT * FROM facilities WHERE (id = ? OR name LIKE ?) LIMIT 1`;
     const searchKeyword = `%${facilityId.replace(/-/g, ' ').replace('san bong ', '').replace('clb ', '')}%`;
 
     db.query(sqlFacility, [facilityId, searchKeyword], (err, facilityResults) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (facilityResults.length === 0) {
+        if (!facilityResults || facilityResults.length === 0) {
             return res.status(404).json({ error: 'Không tìm thấy cơ sở!' });
         }
 
-        const facility = facilityResults[0];
-        const sqlCourts = `
-            SELECT id, name, description
-            FROM courts
-            WHERE facility_id = ? AND is_active = TRUE
-            ORDER BY name ASC
-        `;
+        const raw = facilityResults[0];
+        const facility = {
+            ...raw,
+            area: raw.district_name || raw.district || 'Hà Nội',
+            district_name: raw.district_name || raw.district || 'Hà Nội',
+            opening_time: raw.open_time || '06:00',
+            closing_time: raw.close_time || '23:00',
+            base_price: raw.price_min || 100000,
+            price: raw.price_min || 100000,
+            google_maps_url: raw.map_link || 'https://maps.google.com'
+        };
+
+        const sqlCourts = `SELECT id, name, description FROM courts WHERE facility_id = ? ORDER BY name ASC`;
         db.query(sqlCourts, [facility.id], (courtErr, courtsResults) => {
-            facility.sub_courts = courtErr ? [] : courtsResults;
+            facility.sub_courts = courtErr ? [] : (courtsResults || []);
             res.json(facility);
         });
     });
