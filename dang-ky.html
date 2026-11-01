@@ -452,42 +452,8 @@
     <!-- ========================================================================= -->
     <!-- 1. MODAL ĐỌC & XÁC NHẬN ĐIỀU KHOẢN & BẢO MẬT (POPUP HIỆN ĐẠI) -->
     <!-- ========================================================================= -->
-    <div id="termsModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
-            <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-surface-container-low">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary text-2xl">verified_user</span>
-                    <h3 class="text-base font-bold text-on-surface">Điều khoản sử dụng &amp; Bảo mật</h3>
-                </div>
-                <button type="button" onclick="closeTermsModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors cursor-pointer">
-                    <span class="material-symbols-outlined text-lg">close</span>
-                </button>
-            </div>
+    
 
-            <div class="p-5 overflow-y-auto text-xs text-gray-600 leading-relaxed flex flex-col gap-3 max-h-[50vh]">
-                <p class="font-semibold text-gray-800">Chào mừng bạn đến với Nền tảng đặt sân &amp; ghép đối thể thao SportBooking Hà Nội!</p>
-                <div class="p-3 bg-green-50 rounded-xl border border-green-200 text-green-900">
-                    <strong>1. Quy định đặt sân &amp; giữ chỗ:</strong> Người chơi cam kết có mặt đúng giờ thi đấu đã đặt. Hệ thống hỗ trợ hoàn cọc linh hoạt 100% trước 24h và 50% trước 6h.
-                </div>
-                <div class="p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-900">
-                    <strong>2. Quy tắc ghép kèo MatchMaker:</strong> Tôn trọng bạn chơi, tuân thủ đúng trình độ đã khai báo (Beginner, Intermediate, Advanced) để đảm bảo chất lượng trận đấu.
-                </div>
-                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900">
-                    <strong>3. Bảo mật thông tin cá nhân:</strong> Thông tin số điện thoại và email được mã hóa và bảo mật nghiêm ngặt theo Nghị định 13/2023/NĐ-CP.
-                </div>
-            </div>
-
-            <div class="p-4 border-t border-gray-100 bg-surface-container-lowest flex items-center justify-end gap-3">
-                <button type="button" onclick="closeTermsModal()" class="px-4 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
-                    Để sau
-                </button>
-                <button type="button" onclick="confirmTermsAgreement()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
-                    <span class="material-symbols-outlined text-sm">check_circle</span>
-                    <span>Tôi đồng ý &amp; Xác nhận</span>
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- ========================================================================= -->
     <!-- 2. POPUP MODAL ĐĂNG KÝ THÀNH CÔNG (TỰ ĐỘNG CHUYỂN VỀ TRANG ĐĂNG NHẬP) -->
