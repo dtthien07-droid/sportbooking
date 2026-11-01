@@ -87,6 +87,7 @@
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
                     <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
                 </nav>
             </div>
@@ -118,7 +119,7 @@
                     </div>
                 </div>
 
-                <!-- KHU VỰC TÀI KHOẢN: ĐỂ TRỐNG ĐỂ auth.js ĐIỀN ĐÚNG TÀI KHOẢN THẬT, TRÁNH LỖI NHẢY TÊN -->
+                <!-- KHU VỰC TÀI KHOẢN -->
                 <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
             </div>
         </div>
@@ -280,19 +281,19 @@
                                 <span class="material-symbols-outlined text-primary text-base">receipt_long</span>
                                 <span class="text-xs text-on-surface font-bold">Mã đơn đặt sân:</span>
                             </div>
-                            <span class="font-mono text-xs font-bold text-primary tracking-wide" id="displayModalOrderId">#SB-76681</span>
+                            <span class="font-mono text-xs font-bold text-primary tracking-wide" id="displayModalOrderId">#SB-00000</span>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-4 text-xs">
                             <div class="flex flex-col">
                                 <span class="text-gray-500 font-medium">Sân thi đấu</span>
-                                <span class="font-bold text-on-surface truncate" id="displayModalVenueName">Pickleball G.S77</span>
-                                <span class="text-gray-500 text-[11px]" id="displayModalCourtNumber">Sân Acrylic 01</span>
+                                <span class="font-bold text-on-surface truncate" id="displayModalVenueName">-</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalCourtNumber">-</span>
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-gray-500 font-medium">Thời gian thi đấu</span>
-                                <span class="font-bold text-on-surface" id="displayModalMatchTime">19:00 - 20:00</span>
-                                <span class="text-gray-500 text-[11px]" id="displayModalMatchDate">01/11/2026</span>
+                                <span class="font-bold text-on-surface" id="displayModalMatchTime">-</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalMatchDate">-</span>
                             </div>
                             <div class="flex flex-col pt-1">
                                 <span class="text-gray-500 font-medium">Lý do hủy đơn</span>
@@ -322,7 +323,7 @@
                                 <span class="text-[11px] text-gray-500 mt-0.5" id="displayModalRefundPolicyDesc">Áp dụng theo quy chế bảo vệ người chơi</span>
                             </div>
                             <div class="flex flex-col items-end">
-                                <span class="text-xl font-bold text-primary tracking-tight" id="displayModalRefundAmount">104.500₫</span>
+                                <span class="text-xl font-bold text-primary tracking-tight" id="displayModalRefundAmount">0₫</span>
                                 <span class="text-[11px] text-gray-400">Chuyển về tài khoản thanh toán</span>
                             </div>
                         </div>
@@ -333,7 +334,7 @@
                         <div class="flex flex-col gap-0.5 text-xs">
                             <span class="font-bold text-secondary">Quy trình hoàn tất tự động</span>
                             <p class="leading-relaxed text-slate-700">
-                                Số tiền <strong class="font-bold text-on-secondary-fixed" id="bannerRefundText">104.500₫</strong> sẽ được ngân hàng xử lý và hoàn trả trực tiếp về tài khoản nguồn của quý khách trong vòng 1 - 3 ngày làm việc.
+                                Số tiền <strong class="font-bold text-on-secondary-fixed" id="bannerRefundText">0₫</strong> sẽ được ngân hàng xử lý và hoàn trả trực tiếp về tài khoản nguồn của quý khách trong vòng 1 - 3 ngày làm việc.
                             </p>
                         </div>
                     </div>
@@ -543,7 +544,7 @@
                     badgeHtml: `
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-secondary text-xs font-bold animate-pulse">
                             <span class="material-symbols-outlined text-sm">timer</span>
-                            <span>${item.status_label || 'Chờ thanh toán (07:45)'}</span>
+                            <span>${item.status_label || 'Chờ thanh toán'}</span>
                         </span>
                     `,
                     canCancel: true,
@@ -601,7 +602,7 @@
             return getFacilityAccurateImage(venueName, sport);
         }
 
-        // ĐỒNG BỘ DỮ LIỆU USER CHUẨN XÁC, KHÔNG GÁN CỨNG TÊN
+        // TÁCH BIỆT DỮ LIỆU ĐẶT SÂN THEO TỪNG TÀI KHOẢN (KHÔNG GÁN MẪU SÂN 1 HAY G.S77 BỪA BÃI)
         function initUserData() {
             try {
                 if (window.SportAuth && typeof window.SportAuth.getUser === 'function') {
@@ -613,46 +614,32 @@
                 currentUser = null;
             }
 
-            const isNewAccount = currentUser && (currentUser.is_new === true || currentUser.isNew === true);
-            const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'user';
+            // Lấy ID/SĐT duy nhất của tài khoản
+            const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'guest';
             const userStorageKey = `sb_bookings_${userId}`;
 
-            if (isNewAccount) {
-                userBookings = [];
+            let saved = null;
+            try {
+                saved = JSON.parse(localStorage.getItem(userStorageKey));
+            } catch (e) {}
+
+            // Nếu là tài khoản mới tinh (chưa từng đặt sân) -> userBookings = []
+            if (saved && Array.isArray(saved)) {
+                userBookings = saved;
             } else {
-                let saved = null;
-                try {
-                    saved = JSON.parse(localStorage.getItem(userStorageKey) || localStorage.getItem('sb_my_booking_history') || 'null');
-                } catch (e) {}
+                userBookings = [];
+            }
 
-                if (saved && Array.isArray(saved) && saved.length > 0) {
-                    userBookings = saved;
-                } else {
-                    userBookings = [
-                        {
-                            id: "SB-76681",
-                            venue_name: "Pickleball G.S77",
-                            sport: "pickleball",
-                            sport_label: "Pickleball tiêu chuẩn",
-                            court_number: "Sân Acrylic 01",
-                            address: "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội",
-                            time_slot: "19:00 - 20:00",
-                            time_badge: "Sắp tới",
-                            date: "01/11/2026",
-                            price: 104500,
-                            total_price: 104500,
-                            deposit_paid: 104500,
-                            status: "upcoming",
-                            status_label: "Đã xác nhận",
-                            image: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=800&q=80"
-                        }
-                    ];
-                }
+            // Tự động nạp đơn mới nếu tài khoản vừa thao tác đặt sân thành công
+            let recentOrder = null;
+            try { recentOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch (e) {}
 
-                let recentOrder = null;
-                try { recentOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch (e) {}
+            if (recentOrder) {
+                // Kiểm tra xem đơn này có thuộc về tài khoản hiện tại không
+                const orderUser = recentOrder.userId || recentOrder.phone || recentOrder.user_phone;
+                const isMatchUser = !orderUser || (currentUser && (orderUser === currentUser.id || orderUser === currentUser.phone));
 
-                if (recentOrder) {
+                if (isMatchUser) {
                     const orderId = recentOrder.order_id || recentOrder.orderId || recentOrder.id;
                     if (orderId) {
                         const cleanId = String(orderId).replace(/^SB-/i, '');
@@ -661,17 +648,17 @@
                             return bId === cleanId;
                         });
                         const orderPrice = extractCleanPrice(recentOrder) || 104500;
-                        const sportType = recentOrder.sport || "pickleball";
+                        const sportType = recentOrder.sport || "badminton";
                         const newBooking = {
                             id: orderId,
-                            venue_name: recentOrder.venue_name || recentOrder.facility_name || "Pickleball G.S77",
+                            venue_name: recentOrder.venue_name || recentOrder.facility_name || "Sân thể thao",
                             sport: sportType,
                             sport_label: sportType === "soccer" ? "Bóng đá mini" : (sportType === "badminton" ? "Cầu lông" : "Pickleball"),
-                            court_number: recentOrder.court_number || recentOrder.sub_court || "Sân Acrylic 01",
-                            address: recentOrder.address || "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội",
+                            court_number: recentOrder.court_number || recentOrder.sub_court || "Sân thi đấu",
+                            address: recentOrder.address || "Hà Nội",
                             time_slot: recentOrder.time_slot || recentOrder.slot || "19:00 - 20:00",
                             time_badge: "Sắp tới",
-                            date: recentOrder.date || "01/11/2026",
+                            date: recentOrder.date || new Date().toLocaleDateString('vi-VN'),
                             price: orderPrice,
                             total_price: orderPrice,
                             deposit_paid: extractCleanPrice({ deposit: recentOrder.deposit_paid || recentOrder.deposit }) || orderPrice,
@@ -686,7 +673,6 @@
                             userBookings.unshift(newBooking);
                         }
                         localStorage.setItem(userStorageKey, JSON.stringify(userBookings));
-                        localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
                     }
                 }
             }
@@ -1103,9 +1089,8 @@
                     userBookings[idx].refund_amount = rt.refundAmount;
                     userBookings[idx].refund_percent = rt.refundPercent;
 
-                    const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'user';
+                    const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'guest';
                     localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
-                    localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
 
                     try {
                         let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null');
@@ -1117,24 +1102,19 @@
                     } catch(e) {}
                 }
 
+                // Thêm thông báo hủy vào hệ thống thông báo riêng của tài khoản
                 try {
-                    let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
-                    const newCancelNotif = {
-                        id: 'notif-cancel-' + Date.now(),
-                        category: 'booking',
-                        court_name: booking.court_number || "Sân thi đấu",
-                        venue_name: booking.venue_name || "Sân thể thao",
-                        summary_info: `${booking.venue_name} • ${booking.court_number} • ${booking.time_slot} (${booking.date})`,
-                        title: `❌ Đã hủy đặt sân #${orderId} - Hoàn tiền ${rt.refundLabel}`,
-                        desc: `Đã hủy ca ${booking.time_slot} ngày ${booking.date} tại ${booking.venue_name}. Số tiền hoàn: ${rt.refundAmount.toLocaleString('vi-VN')}₫.`,
-                        timestamp: Date.now(),
-                        time: 'Vừa xong',
-                        unread: true,
-                        read: false,
-                        link: `chi-tiet-don-dat-san.html?id=${orderId}`
-                    };
-                    notifs.unshift(newCancelNotif);
-                    localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
+                    if (window.SportNotification && typeof window.SportNotification.add === 'function') {
+                        window.SportNotification.add({
+                            category: 'wallet',
+                            court_name: booking.court_number || "Sân thi đấu",
+                            venue_name: booking.venue_name || "Sân thể thao",
+                            summary_info: `${booking.venue_name} • ${booking.court_number} • ${booking.time_slot} (${booking.date})`,
+                            title: `❌ Đã hủy đặt sân #${orderId} - Hoàn tiền ${rt.refundLabel}`,
+                            desc: `Đã hủy ca ${booking.time_slot} ngày ${booking.date} tại ${booking.venue_name}. Số tiền hoàn: ${rt.refundAmount.toLocaleString('vi-VN')}₫.`,
+                            link: `chi-tiet-don-dat-san.html?id=${orderId}`
+                        });
+                    }
                 } catch(e) {}
 
                 closeCancelModal();
