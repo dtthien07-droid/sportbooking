@@ -1157,3 +1157,116 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+// =========================================================================
+// TỰ ĐỘNG BẮT SỰ KIỆN FORM ĐĂNG NHẬP & ĐĂNG KÝ (DÙNG CHUNG QUA AUTH.JS)
+// =========================================================================
+
+document.addEventListener('DOMContentLoaded', function () {
+    // -------------------------------------------------------------
+    // 1. TỰ ĐỘNG XỬ LÝ ĐĂNG KÝ (KHI ĐANG Ở TRANG DANG-KY.HTML)
+    // -------------------------------------------------------------
+    const registerForm = document.querySelector('form[action*="register"]') || 
+                         document.getElementById('registerForm') || 
+                         (window.location.pathname.includes('dang-ky') ? document.querySelector('form') : null);
+
+    if (registerForm) {
+        registerForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Tự động tìm các input theo name, id hoặc thứ tự
+            const nameInput = registerForm.querySelector('input[name="full_name"], #fullnameInput, input[placeholder*="họ tên" i], input[placeholder*="Họ và tên" i]');
+            const emailInput = registerForm.querySelector('input[name="email"], #emailInput, input[type="email"]');
+            const phoneInput = registerForm.querySelector('input[name="phone"], #phoneInput, input[type="tel"], input[placeholder*="thoại" i]');
+            const passInput = registerForm.querySelector('input[name="password"], #passwordInput, input[type="password"]');
+
+            const full_name = nameInput ? nameInput.value.trim() : '';
+            const email = emailInput ? emailInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const password = passInput ? passInput.value : '';
+
+            if (!full_name || !email || !phone || !password) {
+                alert('Vui lòng điền đầy đủ họ tên, email, số điện thoại và mật khẩu!');
+                return;
+            }
+
+            try {
+                // Gửi dữ liệu lưu thẳng vào Database MySQL thông qua server.js
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ full_name, email, phone, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert('Đăng ký tài khoản thành công! Hệ thống sẽ chuyển bạn sang trang đăng nhập.');
+                    window.location.href = 'dang-nhap.html';
+                } else {
+                    alert(data.error || 'Đăng ký không thành công!');
+                }
+            } catch (err) {
+                console.error('Lỗi kết nối server:', err);
+                alert('Không thể kết nối đến máy chủ Backend!');
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // 2. TỰ ĐỘNG XỬ LÝ ĐĂNG NHẬP (KHI ĐANG Ở TRANG DANG-NHAP.HTML)
+    // -------------------------------------------------------------
+    const loginForm = document.querySelector('form[action*="login"]') || 
+                      document.getElementById('loginForm') || 
+                      (window.location.pathname.includes('dang-nhap') ? document.querySelector('form') : null);
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Tìm input email/sđt và mật khẩu
+            const accInput = loginForm.querySelector('input[name="emailOrPhone"], input[type="text"], input[type="email"], #emailOrPhoneInput');
+            const passInput = loginForm.querySelector('input[name="password"], input[type="password"], #passwordInput');
+
+            const emailOrPhone = accInput ? accInput.value.trim() : '';
+            const password = passInput ? passInput.value : '';
+
+            if (!emailOrPhone || !password) {
+                alert('Vui lòng nhập tài khoản (Email/SĐT) và mật khẩu!');
+                return;
+            }
+
+            try {
+                // Kiểm tra trực tiếp từ Database TiDB Cloud thông qua server.js
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ emailOrPhone, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    // Lưu thông tin phiên đăng nhập cho trình duyệt hiện tại
+                    const sessionUser = {
+                        id: data.user.id,
+                        name: data.user.full_name,
+                        email: data.user.email,
+                        phone: data.user.phone,
+                        role: data.user.role || 'Thành viên'
+                    };
+
+                    localStorage.setItem('currentUser', JSON.stringify(sessionUser));
+                    localStorage.setItem('sb_session', JSON.stringify(sessionUser));
+
+                    // Đăng nhập thành công -> vào trang chủ
+                    window.location.href = 'trangchu-user.html';
+                } else {
+                    alert(data.error || 'Tài khoản hoặc mật khẩu không chính xác!');
+                }
+            } catch (err) {
+                console.error('Lỗi đăng nhập:', err);
+                alert('Không thể kết nối đến máy chủ Backend!');
+            }
+        });
+    }
+});
