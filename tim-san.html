@@ -49,7 +49,7 @@
 
 <body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
 
-    <!-- HEADER ĐỒNG BỘ 100% VỚI TRANG CHỦ (LOGO & NÚT CHUÔNG THANH LỊCH) -->
+    <!-- HEADER ĐỒNG BỘ 100% VỚI TRANG CHỦ -->
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
             <div class="flex items-center gap-space-xl">
@@ -67,19 +67,31 @@
             </div>
 
             <div class="flex items-center gap-space-lg">
-                <!-- NÚT CHUÔNG ĐỒNG BỘ Y HỆT TRANG CHỦ (BỎ VIỀN ĐEN THÔ, CHẤM ĐỎ TINH TẾ) -->
+                <!-- NÚT CHUÔNG ĐỒNG BỘ Y HỆT TRANG CHỦ -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" id="btnToggleNotifDropdown" type="button">
                         <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse" id="badgeQuickCount"></span>
                     </button>
 
-                    <!-- KHUNG XEM NHANH THÔNG BÁO (ĐÃ ĐƯỢC CHỈNH GỌN GÀNG, KHÔNG BỊ TRÙNG LẶP HAY CHE CHỮ) -->
+                    <!-- KHUNG XEM NHANH THÔNG BÁO -->
                     <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
-                        <!-- Header Popover -->
-            
-
-                        <!-- Footer Popover: Duy nhất 1 link chuyển trang -->
+                        <div class="p-3.5 bg-surface-container-low flex items-center justify-between border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="font-bold text-sm text-on-surface">Thông báo mới</span>
+                                <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[11px] font-bold" id="badgePopoverUnread">3 chưa đọc</span>
+                            </div>
+                            <button id="btnQuickMarkAll" type="button" class="text-xs text-primary font-bold hover:underline cursor-pointer">Đã đọc tất cả</button>
+                        </div>
+                        <div class="p-2 flex flex-col gap-1 max-h-[320px] overflow-y-auto" id="quickNotifList">
+                            <div class="quick-item p-3 rounded-xl bg-green-50/50 hover:bg-surface-container transition-all cursor-pointer flex items-start gap-3" data-id="today-1">
+                                <span class="material-symbols-outlined text-primary text-xl mt-0.5">check_circle</span>
+                                <div class="flex-1 flex flex-col gap-0.5">
+                                    <span class="text-xs font-bold text-on-surface">Đặt sân thành công!</span>
+                                    <span class="text-[11px] text-on-surface-variant">Sân bóng Đông Đô - 17:30 hôm nay</span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
                             <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
                                 <span>Xem tất cả thông báo</span>
@@ -96,7 +108,7 @@
     </header>
 
     <main class="w-full pt-20 min-h-screen bg-surface">
-        
+       
         <!-- TIÊU ĐỀ & THANH CÔNG CỤ TÌM KIẾM -->
         <section class="w-full bg-surface-container-low/70 py-6">
             <div class="max-w-[1440px] mx-auto px-margin flex flex-col gap-4">
@@ -183,7 +195,7 @@
         <!-- NỘI DUNG CHÍNH -->
         <section class="max-w-[1440px] mx-auto px-margin py-8 w-full">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
+               
                 <!-- BỘ LỌC CỘT TRÁI -->
                 <aside class="lg:col-span-4 xl:col-span-3 flex flex-col gap-6 sticky top-24">
                     <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col gap-6 border">
@@ -257,7 +269,7 @@
 
                 <!-- CỘT PHẢI: KẾT QUẢ & PHÂN TRANG -->
                 <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
-                    
+                   
                     <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex items-center justify-between border">
                         <p class="font-bold text-sm">
                             Tìm thấy <span id="countResults" class="text-primary font-extrabold text-base">0</span> cụm sân thể thao phù hợp
@@ -271,9 +283,6 @@
                             <span class="font-medium text-base">Đang tải danh sách sân từ cơ sở dữ liệu...</span>
                         </div>
                     </div>
-
-                    <!-- BANNER TÌM ĐỐI CHƠI (MATCHMAKER) -->
-                    
 
                     <!-- KHỐI PHÂN TRANG -->
                     <div id="paginationContainer" class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 border">
@@ -312,8 +321,41 @@
         </div>
     </footer>
 
-    <!-- SCRIPT GỌI API MYSQL & XỬ LÝ SỰ KIỆN -->
+    <!-- SCRIPT GỌI API MYSQL & XỬ LÝ SỰ KIỆN ĐỒNG BỘ 29 SÂN -->
     <script>
+        // BỘ DỮ LIỆU ĐỒNG BỘ 29 CỤM SÂN CHUẨN TOÀN HỆ THỐNG
+        const FALLBACK_29_VENUES = [
+            { "id": "san-bong-dong-do", "name": "Sân bóng Đông Đô", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "Trần Thái Tông, Cầu Giấy, Hà Nội, Việt Nam", "phone": "0899234260", "open_time": "05:00", "close_time": "23:30", "price_min": 100000, "rating": 3.8, "amenities": "Bãi đỗ xe, Căng tin", "map_link": "https://maps.google.com/?q=Sân+bóng+Đông+Đô+Cầu+Giấy", "image_url": "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80" },
+            { "id": "san-bong-thanh-phat", "name": "Sân Bóng Thành Phát", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "2 Đ. Hoàng Minh Giám, Tổ 22, Yên Hòa, Cầu Giấy, Hà Nội", "phone": "0975611652", "open_time": "06:00", "close_time": "23:45", "price_min": 90000, "rating": 3.9, "amenities": "Bãi đỗ xe, Đèn cao áp, Nhà vệ sinh", "map_link": "https://maps.app.goo.gl/H3HCSFLR2q5iHC6T6", "image_url": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80" },
+            { "id": "nha-thi-dau-cau-giay", "name": "Nhà Thi Đấu Cầu Giấy", "sport": "badminton", "sport_name": "Cầu lông", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội", "phone": "0972272112", "open_time": "05:00", "close_time": "23:00", "price_min": 70000, "rating": 4.2, "amenities": "Nhà vệ sinh sạch, Có bãi đỗ xe", "map_link": "https://maps.app.goo.gl/kky7fw3ovX82Fxgq6", "image_url": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80" },
+            { "id": "san-cau-long-swin-thpt-cau-giay", "name": "Sân Cầu Lông Swin THPT Cầu Giấy", "sport": "badminton", "sport_name": "Cầu lông", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "8 Ng. 118 Đ. Nguyễn Khánh Toàn, Nghĩa Đô, Cầu Giấy, Hà Nội", "phone": "0972914307", "open_time": "05:00", "close_time": "23:30", "price_min": 80000, "rating": 4.2, "amenities": "Nhà vệ sinh, Bãi đỗ xe có tính phí", "map_link": "https://maps.app.goo.gl/DQTUF28ghjyJSDfz8", "image_url": "https://images.unsplash.com/photo-1613918108466-292b78a8ef95?w=800&q=80" },
+            { "id": "bmai-sport-cau-giay", "name": "Bmai sport cầu giấy", "sport": "pickleball", "sport_name": "Pickleball", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội", "phone": "0966889778", "open_time": "09:00", "close_time": "21:00", "price_min": 100000, "rating": 5.0, "amenities": "Nhà vệ sinh, Wifi miễn phí, Bãi đỗ xe free", "map_link": "https://maps.app.goo.gl/tc9qggiLLUqak78v6", "image_url": "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80" },
+            { "id": "pickleball-tran-quy-kien", "name": "Pickleball Trần Quý Kiên", "sport": "pickleball", "sport_name": "Pickleball", "district": "cau-giay", "district_name": "Quận Cầu Giấy", "address": "36 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội", "phone": "0365365863", "open_time": "06:00", "close_time": "21:00", "price_min": 120000, "rating": 4.2, "amenities": "Bãi đỗ xe, Quầy nước giải khát", "map_link": "https://maps.app.goo.gl/McXujLSfeKyAYP5F9", "image_url": "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&q=80" },
+            { "id": "nha-thi-dau-tay-ho", "name": "Nhà thi đấu Tây Hồ", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "tay-ho", "district_name": "Quận Tây Hồ", "address": "101 Đ. Xuân La, Xuân Đỉnh, Tây Hồ, Hà Nội", "phone": "0936073333", "open_time": "08:00", "close_time": "22:00", "price_min": 130000, "rating": 4.2, "amenities": "Khán đài, Bãi đỗ xe rộng rãi", "map_link": "https://maps.app.goo.gl/cfvk99biHNP5ZEx59", "image_url": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=800&q=80" },
+            { "id": "san-bong-xuan-la", "name": "Sân Bóng Xuân La", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "tay-ho", "district_name": "Quận Tây Hồ", "address": "101 Đ. Xuân La, Xuân Đỉnh, Tây Hồ, Hà Nội", "phone": "0353402222", "open_time": "07:00", "close_time": "22:00", "price_min": 115000, "rating": 4.2, "amenities": "Bãi đỗ xe, Đèn chiếu sáng cao áp", "map_link": "https://maps.app.goo.gl/Gh9m6rLgiRNn8rW96", "image_url": "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=800&q=80" },
+            { "id": "pickleball-arena-tay-ho", "name": "Pickleball Arena Tây Hồ", "sport": "pickleball", "sport_name": "Pickleball", "district": "tay-ho", "district_name": "Quận Tây Hồ", "address": "TTVHTT, 691 Đ. Lạc Long Quân, Tây Hồ, Hà Nội", "phone": "0973708228", "open_time": "07:00", "close_time": "22:00", "price_min": 150000, "rating": 4.8, "amenities": "Bãi đỗ xe miễn phí, Đèn LED chống lóa", "map_link": "https://maps.app.goo.gl/9Dx8gPGgRV3qEAUa7", "image_url": "https://images.unsplash.com/photo-1617083934555-56360c7e2b17?w=800&q=80" },
+            { "id": "au-lac-pickleball", "name": "Âu Lạc Pickleball", "sport": "pickleball", "sport_name": "Pickleball", "district": "tay-ho", "district_name": "Quận Tây Hồ", "address": "Ngõ 464 Âu Cơ, thôn Bắc, Hồng Hà, Tây Hồ, Hà Nội", "phone": "0964585433", "open_time": "06:00", "close_time": "23:00", "price_min": 100000, "rating": 3.7, "amenities": "Đèn chống chói, khu nghỉ ngơi, bãi giữ xe", "map_link": "https://maps.app.goo.gl/uvfBDxQBUXjFRvC88", "image_url": "https://images.unsplash.com/photo-1587385789097-2b10ec664b23?w=800&q=80" },
+            { "id": "san-cau-long-ban-co-yeu-chinh-phu", "name": "Sân Cầu Lông Ban Cơ Yếu Chính Phủ", "sport": "badminton", "sport_name": "Cầu lông", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "107 Đ. Nguyễn Chí Thanh, Láng Hạ, Đống Đa, Hà Nội", "phone": "0987599746", "open_time": "05:00", "close_time": "22:30", "price_min": 90000, "rating": 4.9, "amenities": "Khu ghế chờ nghỉ ngơi, WC riêng biệt sạch sẽ", "map_link": "https://maps.app.goo.gl/WLA4ackSEFb8yckTA", "image_url": "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&q=80" },
+            { "id": "san-cau-long-hoc-vien-ngan-hang", "name": "Sân Cầu Lông Học viện Ngân Hàng", "sport": "badminton", "sport_name": "Cầu lông", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "Ngõ 12 P. Chùa Bộc, Quang Trung, Đống Đa, Hà Nội", "phone": "0912856343", "open_time": "18:00", "close_time": "21:00", "price_min": 80000, "rating": 5.0, "amenities": "Gửi xe trong học viện, Nhà vệ sinh, Nước uống", "map_link": "https://maps.google.com/?q=Học+viện+Ngân+Hàng", "image_url": "https://images.unsplash.com/photo-1563299796-17596ed6b017?w=800&q=80" },
+            { "id": "san-cau-long-clb-cau-long-nasd-cs1", "name": "Sân Cầu Lông CLB Cầu lông NASD CS1", "sport": "badminton", "sport_name": "Cầu lông", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "Ngõ 12 P. Chùa Bộc, Kim Liên, Đống Đa, Hà Nội", "phone": "0908988866", "open_time": "17:30", "close_time": "21:30", "price_min": 70000, "rating": 4.5, "amenities": "Wifi miễn phí, bãi đỗ xe có camera", "map_link": "https://maps.app.goo.gl/1Kst6Etagu6J5pEU8", "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=800&q=80" },
+            { "id": "san-cau-long-dai-hoc-thuy-loi", "name": "Sân Cầu Lông Đại học Thủy Lợi", "sport": "badminton", "sport_name": "Cầu lông", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "Ng. 95 P. Chùa Bộc, Trung Liệt, Đống Đa, Hà Nội", "phone": "02438522201", "open_time": "05:30", "close_time": "22:00", "price_min": 80000, "rating": 3.9, "amenities": "Bãi gửi xe trường, WC, phòng thay đồ, quầy nước", "map_link": "https://maps.app.goo.gl/o8x2Wc434uNrdVbQ9", "image_url": "https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?w=800&q=80" },
+            { "id": "san-bong-thuy-loi", "name": "Sân bóng Thủy Lợi", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "Ngõ 95 P. Chùa Bộc, Trung Liệt, Đống Đa, Hà Nội", "phone": "0912889900", "open_time": "05:00", "close_time": "21:00", "price_min": 70000, "rating": 4.3, "amenities": "Nhà vệ sinh, Khán đài có mái che", "map_link": "https://maps.app.goo.gl/XC9V7pSGRCxqGz6y7", "image_url": "https://images.unsplash.com/photo-1524015368236-bbf6f72545b6?w=800&q=80" },
+            { "id": "san-bong-hoang-cau", "name": "Sân Bóng Hoàng Cầu", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "dong-da", "district_name": "Quận Đống Đa", "address": "42 P. Hoàng Cầu, Ô Chợ Dừa, Đống Đa, Hà Nội", "phone": "0912503534", "open_time": "06:00", "close_time": "23:00", "price_min": 400000, "rating": 3.9, "amenities": "Bãi đỗ xe, Căng tin, Đèn LED cao áp", "map_link": "https://maps.app.goo.gl/LqMoGLJuvqpD2gtx5", "image_url": "https://images.unsplash.com/photo-1489944445391-11dd35574ca6?w=800&q=80" },
+            { "id": "san-cau-long-thpt-xuan-dinh", "name": "Sân cầu lông THPT Xuân Đỉnh", "sport": "badminton", "sport_name": "Cầu lông", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "176 Đ. Xuân Đỉnh, Xuân Đỉnh, Bắc Từ Liêm, Hà Nội", "phone": "0833394225", "open_time": "05:00", "close_time": "22:00", "price_min": 80000, "rating": 4.6, "amenities": "WC riêng biệt, quầy đồ uống, khán đài", "map_link": "https://maps.app.goo.gl/fs8XCJeW4o7Gt7NZA", "image_url": "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=800&q=80" },
+            { "id": "san-cau-long-my-dinh", "name": "Sân Cầu Lông Mỹ Đình", "sport": "badminton", "sport_name": "Cầu lông", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "Đ. Tân An Bình, Mỹ Đình, Nam Từ Liêm, Hà Nội", "phone": "0969438830", "open_time": "17:00", "close_time": "23:00", "price_min": 90000, "rating": 3.7, "amenities": "WC riêng biệt, quầy nước giải khát, ghế chờ", "map_link": "https://maps.app.goo.gl/bhKE54RSm6xpMmHX8", "image_url": "https://images.unsplash.com/photo-1521537634581-0dced2fed2a8?w=800&q=80" },
+            { "id": "san-cau-long-phuc-dien", "name": "Sân Cầu Lông Phúc Diễn", "sport": "badminton", "sport_name": "Cầu lông", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "402 Phúc Diễn, Xuân Phương, Nam Từ Liêm, Hà Nội", "phone": "0946903036", "open_time": "05:00", "close_time": "23:30", "price_min": 35000, "rating": 4.6, "amenities": "Khán đài rộng, ghế chờ nghỉ ngơi, WC", "map_link": "https://maps.app.goo.gl/6d1kwdC2xTzxfB9N9", "image_url": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80" },
+            { "id": "goat-badminton", "name": "GOAT BADMINTON", "sport": "badminton", "sport_name": "Cầu lông", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội", "phone": "0847776666", "open_time": "05:00", "close_time": "24:00", "price_min": 60000, "rating": 4.2, "amenities": "Nhà vệ sinh sạch, Ghế ngồi chờ", "map_link": "https://maps.app.goo.gl/vV2FN9Ez75US835u6", "image_url": "https://images.unsplash.com/photo-1584813470613-5b1c1cad3d69?w=800&q=80" },
+            { "id": "sportshub-pickleball-pham-hung", "name": "SportsHub Pickleball Phạm Hùng", "sport": "pickleball", "sport_name": "Pickleball", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "40 Đường Phạm Hùng, Đình Thôn, Nam Từ Liêm, Hà Nội", "phone": "0375592222", "open_time": "05:00", "close_time": "24:00", "price_min": 120000, "rating": 4.1, "amenities": "Nhà vệ sinh, bãi đỗ xe miễn phí", "map_link": "https://maps.app.goo.gl/1Kixd89Ld7eRXrn36", "image_url": "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80" },
+            { "id": "star-pickleball-cau-coc", "name": "Star Pickleball Cầu Cốc", "sport": "pickleball", "sport_name": "Pickleball", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "Số 181 P. Cầu Cốc, Tây Mỗ, Nam Từ Liêm, Hà Nội", "phone": "0983219287", "open_time": "06:00", "close_time": "23:00", "price_min": 100000, "rating": 5.0, "amenities": "Nhà vệ sinh sạch, Bãi gửi xe an toàn", "map_link": "https://maps.app.goo.gl/fUABrR4mHjQxUFRo7", "image_url": "https://images.unsplash.com/photo-1511067007775-94998ff59918?w=800&q=80" },
+            { "id": "wessie-haus-pickleball-club", "name": "Wessie Haus Pickleball Club", "sport": "pickleball", "sport_name": "Pickleball", "district": "nam-tu-liem", "district_name": "Quận Nam Từ Liêm", "address": "Sân Vận Động Mỹ Đình, Nam Từ Liêm, Hà Nội", "phone": "0916811951", "open_time": "07:00", "close_time": "23:00", "price_min": 130000, "rating": 4.7, "amenities": "Nhà vệ sinh, bãi đỗ xe miễn phí", "map_link": "https://maps.app.goo.gl/Xbkd7KoR2UNQeqQN9", "image_url": "https://images.unsplash.com/photo-1542144582-1ba00456b5e3?w=800&q=80" },
+            { "id": "san-pickleball-x20", "name": "Sân Pickleball X20", "sport": "pickleball", "sport_name": "Pickleball", "district": "thanh-xuan", "district_name": "Quận Thanh Xuân", "address": "35 P. Phan Đình Giót, Phương Liệt, Thanh Xuân, Hà Nội", "phone": "0976584656", "open_time": "06:00", "close_time": "22:00", "price_min": 100000, "rating": 4.1, "amenities": "Bãi đỗ xe, Quầy giải khát", "map_link": "https://maps.app.goo.gl/72bVoYGZFVcHwjyv5", "image_url": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80" },
+            { "id": "pickleball-g-s77", "name": "Pickleball G.S77", "sport": "pickleball", "sport_name": "Pickleball", "district": "thanh-xuan", "district_name": "Quận Thanh Xuân", "address": "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội", "phone": "0848859999", "open_time": "05:00", "close_time": "24:00", "price_min": 171000, "rating": 4.5, "amenities": "Nhà vệ sinh, chỗ để xe trong khuôn viên", "map_link": "https://maps.app.goo.gl/iYEARkFTYDC1SqbF7", "image_url": "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=800&q=80" },
+            { "id": "san-lucky-pickleball-club", "name": "Sân Lucky Pickleball club", "sport": "pickleball", "sport_name": "Pickleball", "district": "thanh-xuan", "district_name": "Quận Thanh Xuân", "address": "108 P. Bùi Xương Trạch, Khương Đình, Thanh Xuân, Hà Nội", "phone": "0399160832", "open_time": "05:00", "close_time": "22:00", "price_min": 120000, "rating": 4.6, "amenities": "Bãi đỗ xe, Nhà vệ sinh", "map_link": "https://maps.app.goo.gl/Cxxfk1ZGfnMKb3wU9", "image_url": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=800&q=80" },
+            { "id": "the-volley-zone-pickleball", "name": "The Volley Zone Pickleball", "sport": "pickleball", "sport_name": "Pickleball", "district": "thanh-xuan", "district_name": "Quận Thanh Xuân", "address": "63 Nguyễn Huy Tưởng, Thanh Xuân, Hà Nội", "phone": "0366833551", "open_time": "05:00", "close_time": "24:00", "price_min": 150000, "rating": 3.8, "amenities": "Chỗ để xe, Ghế ngồi chờ", "map_link": "https://maps.app.goo.gl/BUWT35shxE1dzgCT6", "image_url": "https://images.unsplash.com/photo-1593766789524-73c3fa697e65?w=800&q=80" },
+            { "id": "san-bong-phuc-xa", "name": "Sân Bóng Phúc Xá", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "ba-dinh", "district_name": "Quận Ba Đình", "address": "2RWV+XP Hồng Hà, Phúc Xá, Ba Đình, Hà Nội", "phone": "02873075788", "open_time": "06:00", "close_time": "22:00", "price_min": 80000, "rating": 4.1, "amenities": "Bãi đỗ xe, Đèn chiếu sáng", "map_link": "https://maps.app.goo.gl/ekwaoy6LYPxiSTYs6", "image_url": "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80" },
+            { "id": "san-bong-viglacera", "name": "Sân bóng Viglacera", "sport": "soccer", "sport_name": "Bóng đá mini", "district": "ba-dinh", "district_name": "Quận Ba Đình", "address": "671 Đ. Hoàng Hoa Thám, Ngọc Hà, Ba Đình, Hà Nội", "phone": "0976883008", "open_time": "07:00", "close_time": "21:00", "price_min": 70000, "rating": 3.8, "amenities": "Bãi đỗ xe, Nhà vệ sinh", "map_link": "https://maps.app.goo.gl/LDhFrdMTM4jSHMrFA", "image_url": "https://images.unsplash.com/photo-1518604666864-74230560a876?w=800&q=80" }
+        ];
+
         let ALL_VENUES = [];
         const ITEMS_PER_PAGE = 4;
         let currentPage = 1;
@@ -334,7 +376,7 @@
             if (user) {
                 const displayName = user.fullName || user.full_name || user.name || user.phone || 'Người dùng';
                 const firstLetter = displayName.trim().charAt(0).toUpperCase();
-                const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'User';
+                const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'Thành viên';
 
                 userContainer.innerHTML = `
                     <div id="userProfileTrigger" class="flex items-center gap-2 cursor-pointer p-1 rounded-xl hover:bg-gray-100 transition-all group" title="Bấm để xem hồ sơ cá nhân" onclick="window.location.href='ho-so-ca-nhan.html'">
@@ -400,8 +442,8 @@
 
         function detectSport(name) {
             const lower = (name || '').toLowerCase();
-            if (lower.includes('bóng') || lower.includes('đá')) return 'soccer';
-            if (lower.includes('pickleball')) return 'pickleball';
+            if (lower.includes('bóng') || lower.includes('đá') || lower.includes('soccer') || lower.includes('football')) return 'soccer';
+            if (lower.includes('pickleball') || lower.includes('pickle')) return 'pickleball';
             return 'badminton';
         }
 
@@ -424,15 +466,18 @@
         }
 
         function buildGoogleMapsUrl(fac) {
+            if (fac.map_link && fac.map_link.trim().startsWith('http')) {
+                return fac.map_link.trim();
+            }
             if (fac.google_maps_url && fac.google_maps_url.trim().startsWith('http')) {
                 return fac.google_maps_url.trim();
             }
-            const searchQuery = encodeURIComponent(`${fac.name}, ${fac.address}, Hà Nội`);
+            const searchQuery = encodeURIComponent(`${fac.name}, ${fac.address || 'Hà Nội'}`);
             return `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
         }
 
         function getSportMatchingImage(fac, sportCounter) {
-            const sportType = detectSport(fac.name);
+            const sportType = fac.sport || detectSport(fac.name);
             const pool = SPORT_IMAGE_POOLS[sportType] || SPORT_IMAGE_POOLS.badminton;
             return pool[sportCounter % pool.length];
         }
@@ -446,8 +491,8 @@
 
             let optionsHtml = `<option value="" ${!currentSelected ? 'selected' : ''}>-- Tất cả quận/khu vực --</option>`;
             uniqueAreas.forEach(area => {
-                const isSelected = (currentSelected.toLowerCase() === area.toLowerCase() || 
-                                    currentSelected.toLowerCase().includes(area.toLowerCase()) || 
+                const isSelected = (currentSelected.toLowerCase() === area.toLowerCase() ||
+                                    currentSelected.toLowerCase().includes(area.toLowerCase()) ||
                                     area.toLowerCase().includes(currentSelected.toLowerCase())) ? 'selected' : '';
                 optionsHtml += `<option value="${area}" ${isSelected}>${area.startsWith('Quận') ? area : 'Quận ' + area}</option>`;
             });
@@ -457,20 +502,29 @@
 
         async function fetchVenuesFromDB() {
             try {
-                const res = await fetch('http://localhost:3000/api/facilities');
-                if (!res.ok) throw new Error('API server không phản hồi');
-                const rawData = await res.json();
-                mapAndSetVenues(rawData);
+                let res = null;
+                // Thử fetch endpoint tương đối /api/facilities trước (hoạt động chuẩn xác cả trên Render lẫn localhost)
+                try {
+                    res = await fetch('/api/facilities');
+                } catch(e) {}
+
+                if (!res || !res.ok) {
+                    try {
+                        res = await fetch('http://localhost:3000/api/facilities');
+                    } catch(e) {}
+                }
+
+                if (res && res.ok) {
+                    const rawData = await res.json();
+                    if (Array.isArray(rawData) && rawData.length > 0) {
+                        mapAndSetVenues(rawData);
+                        return;
+                    }
+                }
+                throw new Error('API server không phản hồi dữ liệu');
             } catch (err) {
-                console.warn('Sử dụng bộ dữ liệu dự phòng chuẩn:', err);
-                const fallbackData = [
-                    { id: 1, name: "Sân bóng Đông Đô", area: "Cầu Giấy", address: "Ngõ 11 Duy Tân, Dịch Vọng Hậu, Cầu Giấy", phone: "0899234260", base_price: 350000, rating: 4.8, opening_time: "05:00", closing_time: "23:30", amenities: "[\"Bãi đỗ xe\", \"Nhà vệ sinh\", \"Căng tin\"]" },
-                    { id: 2, name: "Sân Bóng Thành Phát", area: "Cầu Giấy", address: "2 Đ. Hoàng Minh Giám, Yên Hòa, Cầu Giấy", phone: "0975611652", base_price: 320000, rating: 4.7, opening_time: "06:00", closing_time: "23:45", amenities: "[\"Bãi đỗ xe ô tô\", \"Đèn cao áp\"]" },
-                    { id: 3, name: "Nhà Thi Đấu Cầu Giấy", area: "Cầu Giấy", address: "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy", phone: "0972272112", base_price: 80000, rating: 4.5, opening_time: "05:00", closing_time: "23:00", amenities: "[\"Nhà vệ sinh sạch sẽ\", \"Có bãi đỗ xe\"]" },
-                    { id: 4, name: "Sân Cầu Lông Swin THPT Cầu Giấy", area: "Cầu Giấy", address: "8 Ng. 118 Đ. Nguyễn Khánh Toàn, Nghĩa Đô, Cầu Giấy", phone: "0972914307", base_price: 90000, rating: 4.9, opening_time: "05:00", closing_time: "23:30", amenities: "[\"Thảm BWF\", \"Bãi đỗ xe\"]" },
-                    { id: 8, name: "Pickleball Arena Tây Hồ", area: "Tây Hồ", address: "691 Đ. Lạc Long Quân, Tây Hồ, Hà Nội", phone: "0973708228", base_price: 180000, rating: 4.9, opening_time: "07:00", closing_time: "22:00", amenities: "[\"Mặt sân USAPA\", \"Đèn chống lóa\"]" }
-                ];
-                mapAndSetVenues(fallbackData);
+                console.warn('Sử dụng bộ dữ liệu đồng bộ 29 cụm sân chuẩn:', err);
+                mapAndSetVenues(FALLBACK_29_VENUES);
             }
         }
 
@@ -478,34 +532,55 @@
             const counters = { badminton: 0, soccer: 0, pickleball: 0 };
 
             ALL_VENUES = rawData.map((fac) => {
-                const sportType = detectSport(fac.name);
-                const sportTitle = sportType === 'soccer' ? 'Bóng đá mini' : (sportType === 'pickleball' ? 'Pickleball' : 'Cầu lông');
-                
+                const rawSport = (fac.sport || fac.sport_type || detectSport(fac.name || fac.sport_name || '')).toLowerCase();
+                const sportType = (rawSport.includes('soccer') || rawSport.includes('bong') || rawSport.includes('bóng')) ? 'soccer'
+                                : (rawSport.includes('pickleball') || rawSport.includes('pick')) ? 'pickleball'
+                                : 'badminton';
+
+                const sportTitle = fac.sport_name || (sportType === 'soccer' ? 'Bóng đá mini' : (sportType === 'pickleball' ? 'Pickleball' : 'Cầu lông'));
+               
                 let amenitiesArr = [];
                 try {
-                    amenitiesArr = typeof fac.amenities === 'string' ? JSON.parse(fac.amenities) : (fac.amenities || []);
+                    if (Array.isArray(fac.amenities)) {
+                        amenitiesArr = fac.amenities;
+                    } else if (typeof fac.amenities === 'string') {
+                        if (fac.amenities.startsWith('[') || fac.amenities.startsWith('{')) {
+                            amenitiesArr = JSON.parse(fac.amenities);
+                        } else {
+                            amenitiesArr = fac.amenities.split(',').map(s => s.trim()).filter(Boolean);
+                        }
+                    }
                 } catch(e) {
+                    amenitiesArr = ['Bãi đỗ xe', 'Nhà vệ sinh'];
+                }
+                if (!amenitiesArr || amenitiesArr.length === 0) {
                     amenitiesArr = ['Bãi đỗ xe', 'Nhà vệ sinh'];
                 }
 
                 const amenitiesStr = amenitiesArr.join(' ').toLowerCase();
-                const openStr = (fac.opening_time || '05:00').slice(0, 5);
-                const closeStr = (fac.closing_time || '23:00').slice(0, 5);
+                const openStr = (fac.open_time || fac.opening_time || '05:00').slice(0, 5);
+                const closeStr = (fac.close_time || fac.closing_time || '23:30').slice(0, 5);
 
-                const courtImage = (fac.image_url && fac.image_url.trim() !== '') 
-                                   ? fac.image_url 
-                                   : getSportMatchingImage(fac, counters[sportType]++);
+                const courtImage = (fac.image_url && fac.image_url.trim().startsWith('http'))
+                                    ? fac.image_url.trim()
+                                    : (fac.img && fac.img.trim().startsWith('http'))
+                                    ? fac.img.trim()
+                                    : getSportMatchingImage(fac, counters[sportType]++);
+
+                const rawArea = fac.district_name || fac.area || fac.district || 'Hà Nội';
+                const cleanArea = rawArea.replace(/^Quận\s+/i, '').trim();
 
                 return {
                     id: fac.id,
                     name: fac.name,
                     sport: sportType,
                     sportName: sportTitle,
-                    area: (fac.area || '').trim(),
-                    address: fac.address,
+                    area: cleanArea,
+                    district_name: rawArea,
+                    address: fac.address || 'Hà Nội',
                     phone: fac.phone || '0988 8899',
                     rating: fac.rating || '4.8',
-                    basePrice: Number(fac.base_price || 90000),
+                    basePrice: Number(fac.price_min || fac.price || fac.base_price || 90000),
                     openingTime: openStr,
                     closingTime: closeStr,
                     openMinutes: timeToMinutes(openStr, false),
@@ -513,11 +588,16 @@
                     googleMapsUrl: buildGoogleMapsUrl(fac),
                     amenities: amenitiesArr,
                     hasWc: amenitiesStr.includes('vệ sinh') || amenitiesStr.includes('wc'),
-                    hasParking: amenitiesStr.includes('xe') || amenitiesStr.includes('đỗ'),
-                    hasWifi: amenitiesStr.includes('wifi') || amenitiesStr.includes('nước') || amenitiesStr.includes('căng tin'),
+                    hasParking: amenitiesStr.includes('xe') || amenitiesStr.includes('đỗ') || amenitiesStr.includes('bãi'),
+                    hasWifi: amenitiesStr.includes('wifi') || amenitiesStr.includes('nước') || amenitiesStr.includes('căng tin') || amenitiesStr.includes('giải khát'),
                     img: courtImage
                 };
             });
+
+            // Đồng bộ dữ liệu vào localStorage để các trang khác (chi tiết, khung giờ) dùng chung
+            try {
+                localStorage.setItem('sb_all_facilities', JSON.stringify(ALL_VENUES));
+            } catch (e) {}
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialDistrict = urlParams.get('district') || '';
@@ -626,7 +706,7 @@
                                 </h3>
                                 <span class="px-2.5 py-0.5 bg-surface-container text-xs font-semibold rounded-md text-on-surface-variant shrink-0">${v.area}</span>
                             </div>
-                            
+                           
                             <p class="text-sm text-on-surface-variant flex items-center gap-1 mt-1.5">
                                 <span class="material-symbols-outlined text-primary text-[16px] shrink-0">pin_drop</span>
                                 <span class="truncate" title="${v.address}">${v.address}</span>
@@ -706,20 +786,22 @@
 
         // Click Tên/Ảnh -> Xem chi tiết cơ sở
         function goToDetail(facilityId) {
-            localStorage.setItem('selected_facility_id', facilityId);
+            localStorage.setItem('selected_facility_id', String(facilityId));
             const venue = ALL_VENUES.find(v => String(v.id) === String(facilityId));
             if (venue) {
                 localStorage.setItem('selected_venue', JSON.stringify(venue));
+                localStorage.setItem('sb_current_booking_draft', JSON.stringify(venue));
             }
             window.location.href = `chi-tiet-san.html?id=${encodeURIComponent(facilityId)}`;
         }
 
         // Bấm "Đặt sân ngay" -> Sang trang chọn khung giờ (chon-khung-gio.html)
         function selectAndBook(facilityId) {
-            localStorage.setItem('selected_facility_id', facilityId);
+            localStorage.setItem('selected_facility_id', String(facilityId));
             const venue = ALL_VENUES.find(v => String(v.id) === String(facilityId));
             if (venue) {
                 localStorage.setItem('selected_venue', JSON.stringify(venue));
+                localStorage.setItem('sb_current_booking_draft', JSON.stringify(venue));
             }
 
             const chosenDate = document.getElementById('paramDate')?.value || '';
@@ -871,27 +953,7 @@
 
             syncNotifCount();
         });
-        fetch('/api/facilities')
-    .then(res => res.json())
-    .then(data => {
-        if (data && data.length > 0) {
-            allLoadedFacilities = data;
-            
-            // Vẽ toàn bộ 29 sân (tự động nhận diện hàm vẽ của tim-san.html)
-            if (typeof renderFacilities === 'function') {
-                renderFacilities(allLoadedFacilities);
-            } else if (typeof renderCourts === 'function') {
-                renderCourts(allLoadedFacilities);
-            } else if (typeof applyFilterAndRender === 'function') {
-                applyFilterAndRender();
-            }
-        }
-    })
-    .catch(() => {
-        console.warn('Không kết nối được API, sử dụng danh sách nội bộ');
-    });
     </script>
     <script src="auth.js"></script>
-    
 </body>
 </html>
