@@ -1158,22 +1158,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // =========================================================================
-// TỰ ĐỘNG BẮT SỰ KIỆN FORM ĐĂNG NHẬP & ĐĂNG KÝ (DÙNG CHUNG QUA AUTH.JS)
+// AUTH.JS - HỆ THỐNG XÁC THỰC ĐỒNG BỘ QUA DATABASE MYSQL (TIDB CLOUD)
 // =========================================================================
 
 document.addEventListener('DOMContentLoaded', function () {
-    // -------------------------------------------------------------
-    // 1. TỰ ĐỘNG XỬ LÝ ĐĂNG KÝ (KHI ĐANG Ở TRANG DANG-KY.HTML)
-    // -------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 1. TỰ ĐỘNG BẮT SỰ KIỆN FORM ĐĂNG KÝ (NẾU ĐANG Ở TRANG DANG-KY.HTML)
+    // ---------------------------------------------------------------------
     const registerForm = document.querySelector('form[action*="register"]') || 
                          document.getElementById('registerForm') || 
                          (window.location.pathname.includes('dang-ky') ? document.querySelector('form') : null);
 
     if (registerForm) {
+        // Gỡ bỏ các sự kiện inline cũ (nếu có)
+        registerForm.onsubmit = null;
+
         registerForm.addEventListener('submit', async function (e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
 
-            // Tự động tìm các input theo name, id hoặc thứ tự
             const nameInput = registerForm.querySelector('input[name="full_name"], #fullnameInput, input[placeholder*="họ tên" i], input[placeholder*="Họ và tên" i]');
             const emailInput = registerForm.querySelector('input[name="email"], #emailInput, input[type="email"]');
             const phoneInput = registerForm.querySelector('input[name="phone"], #phoneInput, input[type="tel"], input[placeholder*="thoại" i]');
@@ -1190,7 +1193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             try {
-                // Gửi dữ liệu lưu thẳng vào Database MySQL thông qua server.js
+                // Gửi trực tiếp lên database MySQL
                 const res = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1212,31 +1215,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // -------------------------------------------------------------
-    // 2. TỰ ĐỘNG XỬ LÝ ĐĂNG NHẬP (KHI ĐANG Ở TRANG DANG-NHAP.HTML)
-    // -------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 2. TỰ ĐỘNG BẮT SỰ KIỆN FORM ĐĂNG NHẬP (NẾU ĐANG Ở TRANG DANG-NHAP.HTML)
+    // ---------------------------------------------------------------------
     const loginForm = document.querySelector('form[action*="login"]') || 
                       document.getElementById('loginForm') || 
                       (window.location.pathname.includes('dang-nhap') ? document.querySelector('form') : null);
 
     if (loginForm) {
+        // Gỡ bỏ các sự kiện inline cũ (nếu có)
+        loginForm.onsubmit = null;
+
         loginForm.addEventListener('submit', async function (e) {
             e.preventDefault();
+            e.stopImmediatePropagation();
 
-            // Tìm input email/sđt và mật khẩu
             const accInput = loginForm.querySelector('input[name="emailOrPhone"], input[type="text"], input[type="email"], #emailOrPhoneInput');
-            const passInput = loginForm.querySelector('input[name="password"], input[type="password"], #passwordInput');
+            const passInput = loginForm.querySelector('input[name="password"], #passwordInput, input[type="password"]');
 
             const emailOrPhone = accInput ? accInput.value.trim() : '';
             const password = passInput ? passInput.value : '';
 
             if (!emailOrPhone || !password) {
-                alert('Vui lòng nhập tài khoản (Email/SĐT) và mật khẩu!');
+                alert('Vui lòng nhập tài khoản và mật khẩu!');
                 return;
             }
 
             try {
-                // Kiểm tra trực tiếp từ Database TiDB Cloud thông qua server.js
+                // Gửi request đối soát trực tiếp trong Database MySQL qua API
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1258,9 +1264,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     localStorage.setItem('currentUser', JSON.stringify(sessionUser));
                     localStorage.setItem('sb_session', JSON.stringify(sessionUser));
 
-                    // Đăng nhập thành công -> vào trang chủ
+                    // Đăng nhập thành công -> chuyển sang trang chủ
                     window.location.href = 'trangchu-user.html';
                 } else {
+                    // Báo lỗi từ server
                     alert(data.error || 'Tài khoản hoặc mật khẩu không chính xác!');
                 }
             } catch (err) {
@@ -1270,3 +1277,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+// Hàm hỗ trợ đồng bộ thông tin Header
+(function syncHeaderUser() {
+    try {
+        const user = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || 'null');
+        if (user) {
+            const nameEl = document.getElementById('headerUsername');
+            const roleEl = document.getElementById('headerUserRole');
+            const avatarEl = document.getElementById('headerUserAvatar');
+            if (nameEl) nameEl.textContent = user.name || "Thanh Hiền";
+            if (roleEl) roleEl.textContent = user.role || "Thành viên";
+            if (avatarEl) avatarEl.textContent = (user.name || "T").charAt(0).toUpperCase();
+        }
+    } catch (e) {}
+})();
