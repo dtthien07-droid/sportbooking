@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 // Mở giao diện HTML trực tiếp từ máy chủ Render
 app.use(express.static(__dirname));
-app.get('/', (req, res) => res.redirect('/trangchu-user.html'));
+app.get('/', (req, res) => res.redirect('/dang-nhap.html'));
 // =========================================================================
 // 1. CẤU HÌNH GỬI EMAIL TỰ ĐỘNG QUA GMAIL (NODEMAILER)
 // =========================================================================
