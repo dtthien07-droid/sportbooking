@@ -87,7 +87,6 @@
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
                     <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
-                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
                 </nav>
             </div>
@@ -105,7 +104,7 @@
                                 <h3 class="text-sm font-bold text-on-surface">Thông báo</h3>
                                 <span class="px-2 py-0.5 rounded-full bg-red-100 text-error text-[10px] font-bold" id="badgePopoverUnread">0 chưa đọc</span>
                             </div>
-                            <button type="button" id="btnMarkAllNotifs" class="text-xs text-primary font-bold hover:underline cursor-pointer">
+                            <button type="button" id="btnMarkAllNotifs" onclick="window.markAllNotificationsRead && window.markAllNotificationsRead()" class="text-xs text-primary font-bold hover:underline cursor-pointer">
                                 Đã đọc tất cả
                             </button>
                         </div>
@@ -119,18 +118,8 @@
                     </div>
                 </div>
 
-                <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
-                    <div id="headerUserAvatar" class="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold flex items-center justify-center text-sm">
-                        T
-                    </div>
-                    <div class="flex flex-col text-right">
-                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Trúc Lam</span>
-                        <span id="headerUserRole" class="text-[11px] font-bold text-secondary">Thành viên</span>
-                    </div>
-                    <button onclick="handleLogout()" title="Đăng xuất" class="p-1 text-gray-400 hover:text-gray-700 transition-colors ml-1">
-                        <span class="material-symbols-outlined text-lg">logout</span>
-                    </button>
-                </div>
+                <!-- KHU VỰC TÀI KHOẢN: ĐỂ TRỐNG ĐỂ auth.js ĐIỀN ĐÚNG TÀI KHOẢN THẬT, TRÁNH LỖI NHẢY TÊN -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
             </div>
         </div>
     </header>
@@ -257,24 +246,16 @@
             </div>
         </div>
 
-        <!-- ========================================================================= -->
-        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY VĨNH VIỄN -->
-        <!-- ========================================================================= -->
+        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY -->
         <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" id="cancel-modal">
             <div aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[620px] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all transform scale-100 border border-gray-100" role="dialog">
-               
-                <!-- Dải màu cảnh báo trên cùng -->
                 <div class="w-full h-1.5 bg-gradient-to-r from-error via-secondary-container to-error"></div>
 
-                <!-- Nút đóng góc phải -->
                 <button onclick="closeCancelModal()" aria-label="Đóng cửa sổ" class="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer" id="btn-close-modal">
                     <span class="material-symbols-outlined text-lg">close</span>
                 </button>
 
-                <!-- Nội dung Modal -->
                 <div class="p-5 md:p-6 flex flex-col gap-4">
-                   
-                    <!-- Tiêu đề & Icon Cảnh Báo -->
                     <div class="flex items-start gap-3.5">
                         <div class="relative shrink-0 w-12 h-12 rounded-2xl bg-error-container text-error flex items-center justify-center shadow-xs">
                             <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">event_busy</span>
@@ -293,7 +274,6 @@
                         </div>
                     </div>
 
-                    <!-- Thẻ Tóm tắt thông tin đơn hàng -->
                     <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 border border-gray-100">
                         <div class="flex items-center justify-between pb-2 border-b border-gray-200">
                             <div class="flex items-center gap-1.5">
@@ -333,7 +313,6 @@
                             </div>
                         </div>
 
-                        <!-- Tổng tiền thực nhận hoàn tính theo Điều 5 -->
                         <div class="bg-white rounded-lg p-3 flex items-center justify-between shadow-2xs border border-gray-200 mt-0.5">
                             <div class="flex flex-col">
                                 <div class="flex items-center gap-1.5">
@@ -349,7 +328,6 @@
                         </div>
                     </div>
 
-                    <!-- Banner quy trình hoàn tiền tự động -->
                     <div class="bg-secondary-fixed/50 text-on-secondary-fixed-variant rounded-xl p-3 flex items-start gap-2.5 border border-secondary-fixed">
                         <span class="material-symbols-outlined text-secondary shrink-0 text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
                         <div class="flex flex-col gap-0.5 text-xs">
@@ -360,7 +338,6 @@
                         </div>
                     </div>
 
-                    <!-- Nút thao tác -->
                     <div class="flex flex-col-reverse sm:flex-row items-center gap-2 pt-1" id="modalActionsGroup">
                         <button onclick="closeCancelModal()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer" id="btn-keep-court" type="button">
                             <span class="material-symbols-outlined text-primary text-[18px]">sports_tennis</span>
@@ -373,7 +350,6 @@
                     </div>
                 </div>
 
-                <!-- Chân Modal -->
                 <div class="bg-surface-container px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-1 text-on-surface-variant text-xs border-t border-gray-100">
                     <div class="flex items-center gap-1.5">
                         <span class="material-symbols-outlined text-xs text-primary">verified_user</span>
@@ -412,7 +388,6 @@
         </div>
     </footer>
 
-    <!-- SCRIPT TỰ ĐỘNG CẬP NHẬT & TÍNH TỔNG TIỀN THEO DỮ LIỆU THẬT -->
     <script>
         window.FACILITIES_29_DB = window.FACILITIES_29_DB || {
             "san-bong-dong-do": { id:"san-bong-dong-do", name:"Sân bóng Đông Đô", sport:"soccer", image_url:"https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=1200&q=80" },
@@ -480,9 +455,6 @@
             return 0;
         }
 
-        // =========================================================================
-        // TÍNH TOÁN TRẠNG THÁI & HOÀN TIỀN THEO THỜI GIAN THỰC (ĐIỀU 5)
-        // =========================================================================
         function getRealtimeBookingStatus(item) {
             const rawStatus = String(item.status || '').toLowerCase();
             if (rawStatus === 'cancelled' || rawStatus === 'đã hủy' || rawStatus === 'da huy') {
@@ -503,7 +475,6 @@
             }
 
             const now = new Date();
-
             let dateStr = item.date || item.booking_date || '';
             let formattedDate = '';
             if (dateStr.includes('/')) {
@@ -531,7 +502,6 @@
             let depositPaid = extractCleanPrice({ deposit: item.deposit_paid || item.deposit }) || (totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
             if (depositPaid > totalPrice) depositPaid = totalPrice;
 
-            // 1. Sau giờ kết thúc -> Hoàn thành
             if (now >= endDateTime) {
                 return {
                     effectiveStatus: 'completed',
@@ -549,7 +519,6 @@
                 };
             }
 
-            // 2. Trong khung giờ thi đấu -> Đang trong trận (CẤM HỦY)
             if (now >= startDateTime && now < endDateTime) {
                 return {
                     effectiveStatus: 'in_progress',
@@ -567,7 +536,6 @@
                 };
             }
 
-            // 3. Đơn chờ thanh toán
             if (rawStatus === 'payment-pending') {
                 return {
                     effectiveStatus: 'payment-pending',
@@ -585,7 +553,6 @@
                 };
             }
 
-            // 4. Sắp tới -> Tính tiền hoàn theo Điều 5
             const diffHours = (startDateTime - now) / (1000 * 60 * 60);
             let refundPercent = 0;
             let refundLabel = 'Không hoàn cọc (0%)';
@@ -634,30 +601,20 @@
             return getFacilityAccurateImage(venueName, sport);
         }
 
+        // ĐỒNG BỘ DỮ LIỆU USER CHUẨN XÁC, KHÔNG GÁN CỨNG TÊN
         function initUserData() {
             try {
-                currentUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || 'null');
+                if (window.SportAuth && typeof window.SportAuth.getUser === 'function') {
+                    currentUser = window.SportAuth.getUser();
+                } else {
+                    currentUser = JSON.parse(sessionStorage.getItem('sb_session') || localStorage.getItem('sb_session') || localStorage.getItem('currentUser') || 'null');
+                }
             } catch (e) {
                 currentUser = null;
             }
 
-            const nameEl = document.getElementById('headerUsername');
-            const roleEl = document.getElementById('headerUserRole');
-            const avatarEl = document.getElementById('headerUserAvatar');
-
-            if (currentUser) {
-                const userName = currentUser.name || "Trúc Lam";
-                if (nameEl) nameEl.textContent = userName;
-                if (roleEl) roleEl.textContent = (currentUser && currentUser.role && currentUser.role.toLowerCase() === 'admin') ? 'Admin' : 'Thành viên';
-                if (avatarEl) avatarEl.textContent = userName.charAt(0).toUpperCase();
-            } else {
-                if (nameEl) nameEl.textContent = "Trúc Lam";
-                if (roleEl) roleEl.textContent = "Thành viên";
-                if (avatarEl) avatarEl.textContent = "T";
-            }
-
             const isNewAccount = currentUser && (currentUser.is_new === true || currentUser.isNew === true);
-            const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
+            const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'user';
             const userStorageKey = `sb_bookings_${userId}`;
 
             if (isNewAccount) {
@@ -823,7 +780,7 @@
 
             const filtered = userBookings.filter(item => {
                 const rt = getRealtimeBookingStatus(item);
-                
+               
                 let matchesStatus = false;
                 if (currentFilter === 'all') {
                     matchesStatus = true;
@@ -1048,9 +1005,6 @@
             window.location.href = `chi-tiet-don-dat-san.html?id=${encodeURIComponent(bookingId)}`;
         }
 
-        // =========================================================================
-        // MỞ VÀ XỬ LÝ MODAL HỦY SÂN NGAY TRÊN TRANG LỊCH SỬ
-        // =========================================================================
         function openCancelModalInHistory(bookingId) {
             const cleanId = String(bookingId).replace(/^SB-/i, '');
             const booking = userBookings.find(b => {
@@ -1103,7 +1057,6 @@
             currentCancelTargetOrder = null;
         }
 
-        // HỦY SÂN VÀ CẬP NHẬT TRẠNG THÁI NGAY TRÊN GIAO DIỆN
         async function confirmAndExecuteCancelOrderInHistory() {
             if (!currentCancelTargetOrder) return;
 
@@ -1128,7 +1081,6 @@
                 `;
             }
 
-            // Gửi API backend nếu server đang kết nối
             try {
                 await fetch(`/api/bookings/${orderId}/cancel`, {
                     method: 'POST',
@@ -1138,7 +1090,6 @@
             } catch (err) {}
 
             setTimeout(() => {
-                // Tìm kiếm chuẩn xác đơn và cập nhật trạng thái đã hủy
                 const idx = userBookings.findIndex(b => {
                     const bId = String(b.id || '').replace(/^SB-/i, '');
                     return bId === cleanId;
@@ -1152,7 +1103,7 @@
                     userBookings[idx].refund_amount = rt.refundAmount;
                     userBookings[idx].refund_percent = rt.refundPercent;
 
-                    const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
+                    const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'user') : 'user';
                     localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
                     localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
 
@@ -1166,7 +1117,6 @@
                     } catch(e) {}
                 }
 
-                // Ghi nhận thông báo hủy vào hệ thống
                 try {
                     let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
                     const newCancelNotif = {
@@ -1197,15 +1147,11 @@
                     `;
                 }
 
-                // Vẽ lại toàn bộ giao diện: thẻ sân đổi màu xám và hiện nhãn Đã hủy ngay lập tức
                 renderAll();
-
-                // Hiển thị toast thông báo nổi mượt mà (không dùng alert xám)
                 showToast(`Đã hủy đặt sân #${orderId} thành công! Tiền hoàn: ${rt.refundAmount.toLocaleString('vi-VN')}₫.`);
             }, 400);
         }
 
-        // HÀM HIỂN THỊ TOAST THÔNG BÁO TỰ ĐỘNG
         function showToast(message, isSuccess = true) {
             let toast = document.getElementById('sb-custom-toast');
             if (!toast) {
@@ -1226,10 +1172,13 @@
         }
 
         function handleLogout() {
-            if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
+            if (window.SportAuth && typeof window.SportAuth.logout === 'function') {
+                window.SportAuth.logout();
+            } else {
                 localStorage.removeItem("currentUser");
                 localStorage.removeItem("sb_session");
-                window.location.href = "trangchu-user.html";
+                sessionStorage.removeItem("sb_session");
+                window.location.href = "dang-nhap.html";
             }
         }
 
