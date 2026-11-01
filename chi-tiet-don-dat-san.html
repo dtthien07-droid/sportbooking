@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>SportBooking - Chi tiết đơn đặt sân</title>
+    
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+    
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#341100",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#0051d5",
+                        "tertiary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#00174b",
+                        "on-tertiary-fixed-variant": "#003ea8",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#6e7b6c",
+                        "outline-variant": "#bdcaba",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#293040",
+                        "inverse-on-surface": "#edf0ff"
+                    },
+                    spacing: { "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem" },
+                    fontFamily: {
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- FIREBASE REALTIME DATABASE SDK & REALTIME SYNC ENGINE -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="realtime-sync.js"></script>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-xl text-primary font-bold tracking-tight">SportBooking</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-space-lg">
+                <a href="thong-bao.html" aria-label="Thông báo" class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+                    <span class="material-symbols-outlined align-middle">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+                </a>
+
+                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ QUA AUTH.JS -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
+                    <div id="headerUserAvatar" class="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold flex items-center justify-center text-sm">
+                        T
+                    </div>
+                    <div class="flex flex-col text-right">
+                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Trúc Lam</span>
+                        <span id="headerUserRole" class="text-[11px] font-bold text-secondary">Thành viên</span>
+                    </div>
+                    <button onclick="handleLogout()" title="Đăng xuất" class="p-1 text-gray-400 hover:text-gray-700 transition-colors ml-1">
+                        <span class="material-symbols-outlined text-lg">logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 min-h-screen bg-surface">
+        <div class="flex flex-col w-full">
+            <div class="max-w-[1280px] w-full mx-auto px-margin py-space-lg flex flex-col gap-space-lg">
+                
+                <!-- Tiêu đề & Breadcrumb động -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+                    <div class="flex flex-col gap-space-xs">
+                        <nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-on-surface-variant text-sm font-medium">
+                            <a class="hover:text-primary transition-colors" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                            <span class="text-outline-variant">/</span>
+                            <span class="text-on-surface font-semibold" id="breadcrumbOrderId">Đơn #SB-89201</span>
+                        </nav>
+                        <div class="flex flex-wrap items-center gap-space-md mt-1">
+                            <h1 class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight" id="pageTitleOrderId">Đơn đặt sân #SB-89201</h1>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-bold shadow-sm" id="orderStatusBadge">
+                                <span class="material-symbols-outlined text-[18px]" id="orderStatusIcon">verified</span>
+                                <span id="orderStatusText">Đã xác nhận</span>
+                            </div>
+                            <span class="text-on-surface-variant text-xs flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+                                Đặt lúc <span id="orderTimeDisplay">Đang tải...</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Nút thao tác nhanh -->
+                    <div class="flex items-center gap-space-sm self-start md:self-center">
+                        <button class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-sm font-semibold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer" onclick="window.print()" type="button">
+                            <span class="material-symbols-outlined text-[18px]">print</span>
+                            In đơn
+                        </button>
+                        <button class="px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface text-sm font-semibold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer" onclick="navigator.clipboard?.writeText(window.location.href); alert('Đã sao chép link đơn đặt sân!');" type="button">
+                            <span class="material-symbols-outlined text-[18px]">share</span>
+                            Chia sẻ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Bố cục chính 2 cột -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+                    
+                    <!-- CỘT TRÁI (8/12 cols) -->
+                    <div class="lg:col-span-8 flex flex-col gap-space-lg">
+                        
+                        <!-- 1. Thông tin sân & thời gian thi đấu động theo dữ liệu thật -->
+                        <section class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row border border-gray-100">
+                            <div class="relative md:w-5/12 h-56 md:h-auto min-h-[220px]">
+                                <img id="venueImage" class="w-full h-full object-cover" alt="Sân thể thao" src="https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80">
+                                <div id="sportBadge" class="absolute top-3 left-3 bg-primary text-on-primary text-xs uppercase tracking-wide px-2.5 py-1 rounded-full shadow-sm flex items-center gap-1 font-bold">
+                                    <span id="sportBadgeIcon" class="material-symbols-outlined text-[14px]">sports_soccer</span>
+                                    <span id="sportBadgeText">Bóng đá mini</span>
+                                </div>
+                            </div>
+                            <div class="p-space-lg md:w-7/12 flex flex-col justify-between gap-space-md">
+                                <div class="flex flex-col gap-2">
+                                    <div>
+                                        <span class="text-primary text-xs uppercase font-bold">Cơ sở thi đấu</span>
+                                        <h2 id="venueName" class="text-xl font-bold text-on-surface leading-snug mt-0.5">Sân bóng đá mini Đông Đô</h2>
+                                        <p id="venueSubName" class="text-xs text-on-surface-variant">Khu liên hợp thể thao tiêu chuẩn</p>
+                                    </div>
+                                    
+                                    <div class="flex items-start gap-1.5 text-sm text-on-surface-variant mt-1">
+                                        <span class="material-symbols-outlined text-[20px] text-secondary shrink-0">location_on</span>
+                                        <div class="flex flex-col">
+                                            <span id="venueAddress">Ngõ 39 Triều Khúc, Thanh Xuân, Hà Nội</span>
+                                            <a id="venueMapLink" class="text-primary hover:underline text-xs inline-flex items-center gap-1 mt-0.5 font-bold" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
+                                                <span>Mở bản đồ chỉ đường Google Maps</span>
+                                                <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2 p-3 bg-surface-container-low rounded-xl">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">stadium</span>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-[11px] text-on-surface-variant">Sân thi đấu</span>
+                                            <span id="displayCourtNumber" class="text-xs text-on-surface font-bold truncate">Sân 5A (Cỏ nhân tạo)</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-[11px] text-on-surface-variant">Ngày thi đấu</span>
+                                            <span id="displayMatchDate" class="text-xs text-on-surface font-bold truncate">31/10/2026</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center text-[#15803D] shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">timer</span>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-[11px] text-on-surface-variant">Khung giờ</span>
+                                            <span id="displayMatchTime" class="text-xs text-[#15803D] font-bold truncate">17:00 - 18:00</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-tertiary shrink-0">
+                                            <span class="material-symbols-outlined text-[18px]">call</span>
+                                        </div>
+                                        <div class="flex flex-col min-w-0">
+                                            <span class="text-[11px] text-on-surface-variant">Hotline sân</span>
+                                            <a id="venueHotline" class="text-xs text-tertiary font-bold hover:underline truncate" href="tel:0982668998">0982 668 998</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 2. Vé điện tử QR code quét thực tế -->
+                        <section class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex flex-col gap-space-md border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-[24px]">qr_code_scanner</span>
+                                    <h3 class="text-base font-bold text-on-surface">Vé Check-in Vào Sân Tự Động</h3>
+                                </div>
+                                <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-xs text-on-surface-variant font-bold uppercase" id="ticketStatusLabel">Quầy Lễ Tân</span>
+                            </div>
+
+                            <div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col md:flex-row items-center gap-space-lg relative">
+                                <div class="bg-surface-container-lowest p-3 rounded-2xl shadow-sm flex flex-col items-center shrink-0 border border-gray-100 relative">
+                                    <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SPORTBOOKING-ORDER-DEMO" alt="Mã Check-in QR" class="w-36 h-36 rounded-xl object-contain shadow-2xs">
+                                    <span class="text-[11px] text-on-surface-variant mt-2 font-medium" id="qrSubText">Mã check-in tự động</span>
+                                </div>
+                                <div class="flex flex-col gap-2 w-full text-left">
+                                    <span class="text-xs text-on-surface-variant uppercase font-bold">Mã dự phòng tại quầy</span>
+                                    <div class="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl shadow-sm w-fit border border-gray-200">
+                                        <span class="font-mono font-bold text-lg text-primary tracking-widest" id="displayCheckinCode">SB-89201-CKIN</span>
+                                        <button class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-primary transition-colors cursor-pointer" onclick="navigator.clipboard?.writeText(document.getElementById('displayCheckinCode').innerText); alert('Đã sao chép mã check-in!');" title="Sao chép" type="button">
+                                            <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                                        </button>
+                                    </div>
+                                    <div class="bg-amber-50 p-3 rounded-xl text-amber-900 text-xs flex items-start gap-2 border border-amber-100 mt-1" id="ticketInstructionBox">
+                                        <span class="material-symbols-outlined text-[18px] shrink-0 text-amber-600">info</span>
+                                        <p class="leading-relaxed" id="ticketInstructionText">
+                                            Vui lòng trình mã QR hoặc mã check-in này cho nhân viên lễ tân trước giờ đấu <strong>10 phút</strong> để nhận sân và thiết bị thi đấu.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 3. KHỐI MATCHMAKER (CHỈ HIỂN THỊ KHI ĐƠN CÓ BẬT GHÉP ĐỐI) -->
+                        <section class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex flex-col gap-space-md border border-gray-100 transition-all duration-300" id="matchmakingSection">
+                            
+                            <!-- Header khối MatchMaker -->
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-gray-100" id="matchHeader">
+                                <div class="flex items-center gap-2.5">
+                                    <div id="matchHeaderIconBox" class="w-10 h-10 rounded-xl bg-orange-100 text-secondary flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-[22px]" id="matchHeaderIcon">sensors</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-bold text-on-surface" id="matchmakingTitle">Tìm Đối Chơi Cùng (MatchMaker)</h3>
+                                        <p class="text-xs text-on-surface-variant mt-0.5" id="matchmakingSub">Kèo ghép đối giao lưu kết nối người chơi</p>
+                                    </div>
+                                </div>
+                                <div id="matchmakingBadgeContainer">
+                                    <!-- Badge trạng thái sẽ render bằng JS -->
+                                </div>
+                            </div>
+
+                            <!-- NỘI DUNG 1: TRẠNG THÁI 1 - ĐANG TÌM ĐỐI (CHƯA CÓ AI GHÉP) -->
+                            <div id="matchStateFinding" class="hidden flex-col gap-3">
+                                <div class="flex flex-wrap items-center gap-2 text-xs">
+                                    <span class="text-slate-500 font-semibold">Tiêu chí đã đăng:</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-bold border border-gray-200" id="matchCriteriaGender">♀ Nữ</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-bold border border-gray-200" id="matchCriteriaFormat">Đánh đôi (2vs2)</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-surface-container-low text-on-surface font-bold border border-gray-200" id="matchCriteriaLevel">Trình độ: Trung bình</span>
+                                    <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-primary font-bold border border-emerald-200" id="matchCriteriaSplit">Chia đôi tiền sân</span>
+                                </div>
+
+                                <div class="p-3.5 bg-orange-50/80 rounded-xl border border-orange-200 text-xs text-orange-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                    <div class="flex items-start gap-2.5">
+                                        <div class="w-8 h-8 rounded-full bg-secondary/15 flex items-center justify-center shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-secondary text-[18px] animate-spin" style="animation-duration: 3s;">radar</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-orange-900 block" id="findingStatusHeading">Đang quét tìm kiếm đối thủ quanh bán kính 5km...</span>
+                                            <p class="mt-0.5 leading-relaxed text-orange-800 text-[11px]" id="findingStatusDesc">Kèo của bạn đang hiển thị công khai trên bảng lịch sân để người chơi khác bấm "Xin ghép".</p>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white px-3 py-1.5 rounded-lg border border-orange-200 shadow-2xs flex items-center gap-1.5 self-start sm:self-auto shrink-0">
+                                        <span class="material-symbols-outlined text-secondary text-[16px]">timer</span>
+                                        <span class="text-[11px] text-slate-500 font-medium">Thời gian quét:</span>
+                                        <span id="findingLiveTimer" class="font-mono text-secondary font-bold text-xs">09:50</span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                                    
+                                    <button onclick="handleStopMatchmakingInDetail()" type="button" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-surface-container-lowest hover:bg-red-50 text-error border border-red-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[17px]">pause_circle</span>
+                                        <span>Dừng tìm đối</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- NỘI DUNG 2: TRẠNG THÁI 2 - ĐÃ GHÉP ĐỐI THÀNH CÔNG -->
+                            <div id="matchStateMatched" class="hidden flex-col gap-3">
+                                <div class="p-4 bg-surface-container-low rounded-xl border border-gray-200 flex flex-col gap-3 text-xs">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-slate-500 font-bold uppercase tracking-wider text-[11px]">Thông tin người tham gia (Đối thủ / Bạn chơi cùng)</span>
+                                        <span class="px-2 py-0.5 rounded bg-emerald-100 text-primary font-bold text-[10px]">Đã chốt slot</span>
+                                    </div>
+
+                                    <div class="flex items-center gap-3.5 bg-white p-3 rounded-xl border border-gray-100">
+                                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" alt="Lê Minh Trang" class="w-12 h-12 rounded-full object-cover border-2 border-primary shrink-0 shadow-xs">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center gap-2">
+                                                <h4 class="font-extrabold text-sm text-slate-900 truncate">Lê Minh Trang</h4>
+                                                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-pink-100 text-pink-700">♀ Nữ</span>
+                                            </div>
+                                            <p class="text-slate-600 text-xs mt-0.5">Trình độ: <strong class="text-primary font-bold">Trung bình (TB+)</strong> • 5.0 ★ (24 trận thi đấu)</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-1 border-t border-gray-200">
+                                        <div class="flex items-center gap-1.5 text-slate-700">
+                                            <span class="material-symbols-outlined text-[16px] text-primary">call</span>
+                                            <span>Liên hệ: <strong class="font-mono text-primary text-sm font-bold">0987.654.890</strong></span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <a href="tel:0987654890" class="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-primary font-bold text-xs border border-emerald-200 flex items-center gap-1 transition-colors">
+                                                <span class="material-symbols-outlined text-[15px]">call</span>
+                                                <span>Gọi điện</span>
+                                            </a>
+                                            <a href="https://zalo.me/0987654890" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-tertiary font-bold text-xs border border-blue-200 flex items-center gap-1 transition-colors">
+                                                <span class="material-symbols-outlined text-[15px]">forum</span>
+                                                <span>Nhắn Zalo</span>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-950 font-semibold flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-[18px] shrink-0">payments</span>
+                                        <span>Đối thủ sẽ thanh toán trực tiếp <strong>38.000đ</strong> cho bạn tại sân.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NỘI DUNG 3: TRẠNG THÁI 3 - HẾT HẠN - NỚI LỎNG TIÊU CHÍ -->
+                            <div id="matchStateExpired" class="hidden flex-col gap-3">
+                                <div class="p-4 bg-amber-50/70 rounded-xl border border-amber-200 flex flex-col gap-3 text-xs">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0 mt-0.5">
+                                            <span class="material-symbols-outlined text-2xl">tune</span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-sm text-amber-950">Hết thời gian ghép trực tiếp - Đề xuất nới lỏng tiêu chí</h4>
+                                            <p class="text-amber-900 mt-1 leading-relaxed">
+                                                Đã hết thời gian tìm kiếm theo tiêu chí ban đầu. Bạn có thể <strong>Nới lỏng tiêu chí</strong> để hệ thống mở rộng phạm vi tìm kiếm, hoặc chuyển sang trận đấu riêng.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col sm:flex-row items-center gap-2 pt-1 border-t border-amber-200">
+                                        <button onclick="handleRelaxCriteria()" type="button" class="w-full sm:w-auto flex-1 py-2.5 px-4 rounded-xl bg-secondary hover:bg-orange-600 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[17px]">tune</span>
+                                            <span>Nới lỏng tiêu chí & Quét lại</span>
+                                        </button>
+                                        <button onclick="handleKeepCourtPrivate()" type="button" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-slate-700 border border-gray-300 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[17px]">lock</span>
+                                            <span>Giữ sân chơi riêng</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+
+                    </div>
+
+                    <!-- CỘT PHẢI: Tài chính & Thao tác hành động (4/12 cols) -->
+                    <aside class="lg:col-span-4 flex flex-col gap-space-lg lg:sticky lg:top-24">
+                        
+                        <!-- Khối chi tiết thanh toán động -->
+                        <div class="bg-surface-container-lowest rounded-2xl shadow-md p-space-lg flex flex-col gap-space-md border border-gray-100">
+                            <div class="flex items-center justify-between pb-2 border-b">
+                                <h3 class="text-base font-bold text-on-surface">Chi Tiết Thanh Toán</h3>
+                                <span class="material-symbols-outlined text-primary text-[22px]">receipt_long</span>
+                            </div>
+
+                            <div class="flex flex-col gap-2.5 text-sm">
+                                <div class="flex items-center justify-between text-on-surface-variant">
+                                    <span>Tiền thuê sân</span>
+                                    <span class="font-bold text-on-surface" id="priceCourtTotal">360.000đ</span>
+                                </div>
+                                <div class="flex items-center justify-between text-on-surface-variant">
+                                    <span>Phí dịch vụ SportBooking</span>
+                                    <span class="text-primary font-bold">0đ (Miễn phí)</span>
+                                </div>
+                                <div class="flex items-center justify-between text-on-surface-variant text-xs">
+                                    <span>Đã đặt cọc (Online):</span>
+                                    <span class="font-bold text-emerald-700" id="priceDepositPaid">180.000đ</span>
+                                </div>
+                                <div class="flex items-center justify-between text-on-surface-variant text-xs">
+                                    <span>Còn lại thanh toán tại sân:</span>
+                                    <span class="font-bold text-amber-700" id="priceRemaining">180.000đ</span>
+                                </div>
+                                <div class="pt-2 border-t flex items-center justify-between">
+                                    <div class="flex flex-col">
+                                        <span class="text-sm font-bold text-on-surface">Tổng thanh toán</span>
+                                        <span class="text-xs text-primary font-bold" id="paymentStatusSubtext">Đã cọc thành công</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-xl font-bold text-primary" id="priceFinalTotal">360.000đ</span>
+                                        <span class="block text-xs text-on-surface-variant">Đã gồm thuế VAT</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-surface-container-low rounded-xl p-3 flex flex-col gap-1 text-xs text-on-surface-variant">
+                                <div class="flex items-center justify-between">
+                                    <span>Phương thức:</span>
+                                    <span class="font-bold text-on-surface" id="paymentMethodText">VNPAY / ATM / QR Pay</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span>Mã giao dịch:</span>
+                                    <span class="font-mono text-on-surface font-bold" id="displayTransactionId">VNP148920199</span>
+                                </div>
+                            </div>
+
+                            <!-- Nút thao tác (Bao gồm vùng nút Hủy sân có kiểm tra trạng thái) -->
+                            <div class="flex flex-col gap-2 pt-1" id="orderActionsContainer">
+                                <button class="w-full py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm" onclick="window.print()" type="button">
+                                    <span class="material-symbols-outlined text-[18px]">file_download</span>
+                                    <span>Tải Hóa Đơn / Vé (PDF)</span>
+                                </button>
+                                
+                                <!-- VÙNG NÚT HỦY SÂN HOẶC THÔNG BÁO ĐÃ HỦY -->
+                                <div id="cancelActionWrapper" class="w-full">
+                                    <button id="btnOpenCancelFlow" class="w-full py-3 rounded-xl bg-error-container hover:bg-red-200 text-error text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm" onclick="openCancelModal()" type="button">
+                                        <span class="material-symbols-outlined text-[18px]">cancel</span>
+                                        <span>HỦY ĐẶT SÂN NÀY</span>
+                                    </button>
+                                </div>
+
+                                <a href="lich-su-dat-san.html" class="w-full py-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                                    <span>Quay lại lịch sử đặt sân</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Hỗ trợ khách hàng -->
+                        <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-4 flex items-center gap-3 border border-gray-100">
+                            <div class="w-10 h-10 rounded-xl bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-[22px]">headset_mic</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-bold text-on-surface">Hỗ Trợ Khách Hàng 24/7</span>
+                                <a class="text-xs text-secondary font-bold hover:underline mt-0.5" href="tel:19008899">1900 8899 (Nhánh 1)</a>
+                            </div>
+                        </div>
+
+                    </aside>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY VĨNH VIỄN VỚI ĐẦY ĐỦ THÔNG TIN CHI TIẾT SÂN -->
+        <!-- ========================================================================= -->
+        <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" id="cancel-modal">
+            <div aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[620px] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all transform scale-100 border border-gray-100" role="dialog">
+               
+                <!-- Dải màu cảnh báo trên cùng -->
+                <div class="w-full h-1.5 bg-gradient-to-r from-error via-secondary-container to-error"></div>
+
+                <!-- Nút đóng góc phải -->
+                <button onclick="closeCancelModal()" aria-label="Đóng cửa sổ" class="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer" id="btn-close-modal">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+
+                <!-- Nội dung Modal -->
+                <div class="p-5 md:p-6 flex flex-col gap-4">
+                   
+                    <!-- Tiêu đề & Icon Cảnh Báo -->
+                    <div class="flex items-start gap-3.5">
+                        <div class="relative shrink-0 w-12 h-12 rounded-2xl bg-error-container text-error flex items-center justify-center shadow-xs">
+                            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+                        </div>
+                        <div class="flex flex-col gap-1 pr-6">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] bg-red-100 text-error px-2 py-0.5 rounded font-bold uppercase tracking-wider">Xác nhận lần cuối</span>
+                                <span class="text-xs text-on-surface-variant font-medium">• Không thể đảo ngược</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-on-surface tracking-tight" id="modal-title">
+                                Xác nhận hủy đặt sân vĩnh viễn?
+                            </h2>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                Thao tác này <strong class="text-error font-semibold">không thể hoàn tác</strong>. Khung giờ đặt sân của bạn sẽ được giải phóng ngay lập tức trên hệ thống và nhường cho người chơi khác.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Thẻ Tóm tắt thông tin đơn hàng -->
+                    <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 border border-gray-100">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+                            <div class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-primary text-base">receipt_long</span>
+                                <span class="text-xs text-on-surface font-bold">Mã đơn đặt sân:</span>
+                            </div>
+                            <span class="font-mono text-xs font-bold text-primary tracking-wide" id="displayModalOrderId">#SB-89201</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-4 text-xs">
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Sân thi đấu</span>
+                                <span class="font-bold text-on-surface truncate" id="displayModalVenueName">Sân bóng đá mini Đông Đô</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalCourtNumber">Sân 5A (Cỏ nhân tạo)</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Thời gian thi đấu</span>
+                                <span class="font-bold text-on-surface" id="displayModalMatchTime">17:00 - 18:00</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalMatchDate">31/10/2026</span>
+                            </div>
+                            <div class="flex flex-col pt-1">
+                                <span class="text-gray-500 font-medium">Lý do hủy đơn</span>
+                                <select id="selectCancelReason" class="mt-0.5 p-1.5 bg-white border border-gray-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-primary">
+                                    <option value="Bận việc đột xuất / Lịch công tác">Bận việc đột xuất / Lịch công tác</option>
+                                    <option value="Thay đổi địa điểm hoặc thời gian chơi">Thay đổi địa điểm hoặc thời gian chơi</option>
+                                    <option value="Thời tiết không thuận lợi">Thời tiết không thuận lợi</option>
+                                    <option value="Không đủ thành viên thi đấu">Không đủ thành viên thi đấu</option>
+                                    <option value="Lý do cá nhân khác">Lý do cá nhân khác</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col pt-1">
+                                <span class="text-gray-500 font-medium">Kênh hoàn tiền</span>
+                                <div class="flex items-center gap-1 text-on-surface font-bold mt-1">
+                                    <span class="material-symbols-outlined text-primary text-sm">account_balance</span>
+                                    <span>Tài khoản gốc (1 - 3 ngày)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tổng tiền thực nhận hoàn -->
+                        <div class="bg-white rounded-lg p-3 flex items-center justify-between shadow-2xs border border-gray-200 mt-0.5">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs font-bold text-on-surface">Tổng tiền hoàn lại:</span>
+                                    <span class="text-[10px] bg-green-100 text-primary px-1.5 py-0.5 rounded-full font-bold">100% Hoàn tiền</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 mt-0.5">Áp dụng theo quy chế bảo vệ người chơi</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="text-xl font-bold text-primary tracking-tight" id="displayModalRefundAmount">180.000₫</span>
+                                <span class="text-[11px] text-gray-400">Chuyển về tài khoản thanh toán</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banner quy trình hoàn tiền tự động -->
+                    <div class="bg-secondary-fixed/50 text-on-secondary-fixed-variant rounded-xl p-3 flex items-start gap-2.5 border border-secondary-fixed">
+                        <span class="material-symbols-outlined text-secondary shrink-0 text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+                        <div class="flex flex-col gap-0.5 text-xs">
+                            <span class="font-bold text-secondary">Quy trình hoàn tất tự động</span>
+                            <p class="leading-relaxed text-slate-700">
+                                Số tiền <strong class="font-bold text-on-secondary-fixed" id="bannerRefundText">180.000₫</strong> sẽ được ngân hàng xử lý và hoàn trả trực tiếp về tài khoản nguồn của quý khách trong vòng 1 - 3 ngày làm việc.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Nút thao tác -->
+                    <div class="flex flex-col-reverse sm:flex-row items-center gap-2 pt-1" id="modalActionsGroup">
+                        <button onclick="closeCancelModal()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer" id="btn-keep-court" type="button">
+                            <span class="material-symbols-outlined text-primary text-[18px]">sports_tennis</span>
+                            <span>Không, giữ lại sân</span>
+                        </button>
+                        <button onclick="confirmAndExecuteCancelOrder()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-error hover:bg-red-700 text-white text-sm font-bold shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95" id="btn-confirm-cancel" type="button">
+                            <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                            <span>Hủy sân &amp; Nhận tiền</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chân Modal -->
+                <div class="bg-surface-container px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-1 text-on-surface-variant text-xs border-t border-gray-100">
+                    <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-xs text-primary">verified_user</span>
+                        <span>Bảo mật giao dịch mã hóa SSL 256-bit</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span>Hỗ trợ 24/7:</span>
+                        <a class="font-bold text-secondary hover:underline" href="tel:19008899">1900 8899</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER ĐỒNG BỘ -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT TỰ ĐỘNG NẠP VÀ ĐỒNG BỘ ĐÚNG DỮ LIỆU ĐƠN HÀNG THỰC TẾ -->
+    <script>
+        // BẢN ĐỒ DỮ LIỆU 29 CỤM SÂN HÀ NỘI
+        window.FACILITIES_29_DB = {
+  "san-bong-dong-do": {
+    "id": "san-bong-dong-do",
+    "name": "Sân bóng Đông Đô",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "Trần Thái Tông, Cầu Giấy, Hà Nội, Việt Nam",
+    "phone": "0899234260",
+    "open_time": "05:00",
+    "close_time": "23:30",
+    "price_min": 100000,
+    "price_max": 150000,
+    "price_display": "100.000đ - 150.000đ/giờ",
+    "rating": 3.8,
+    "amenities": "Bãi đỗ xe, Căng tin",
+    "map_link": "https://maps.google.com/?q=Sân+bóng+Đông+Đô+Cầu+Giấy",
+    "image_url": "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT CỎ NHÂN TẠO FIFA PRO",
+    "sub_title": "Cụm sân 7 người tiêu chuẩn thi đấu ban đêm, cỏ sợi kim cương",
+    "review_count": 110
+  },
+  "san-bong-thanh-phat": {
+    "id": "san-bong-thanh-phat",
+    "name": "Sân Bóng Thành Phát",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "2 Đ. Hoàng Minh Giám, Tổ 22, Yên Hòa, Cầu Giấy, Hà Nội",
+    "phone": "0975611652",
+    "open_time": "06:00",
+    "close_time": "23:45",
+    "price_min": 90000,
+    "price_max": 160000,
+    "price_display": "90.000 VNĐ/giờ",
+    "rating": 3.9,
+    "amenities": "Bãi đỗ xe, Đèn cao áp, Nhà vệ sinh",
+    "map_link": "https://maps.app.goo.gl/H3HCSFLR2q5iHC6T6",
+    "image_url": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "CỎ NHÂN TẠO CHỐNG TRƠN TRƯỢT",
+    "sub_title": "Hệ thống 4 sân 7 người liên hoàn, dàn đèn LED 400W chống chói",
+    "review_count": 112
+  },
+  "nha-thi-dau-cau-giay": {
+    "id": "nha-thi-dau-cau-giay",
+    "name": "Nhà Thi Đấu Cầu Giấy",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội",
+    "phone": "0972272112",
+    "open_time": "05:00",
+    "close_time": "23:00",
+    "price_min": 70000,
+    "price_max": 80000,
+    "price_display": "70.000 – 80.000 VNĐ/giờ",
+    "rating": 4.2,
+    "amenities": "Nhà vệ sinh sạch, Có bãi đỗ xe",
+    "map_link": "https://maps.app.goo.gl/kky7fw3ovX82Fxgq6",
+    "image_url": "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT THẢM TIÊU CHUẨN BWF",
+    "sub_title": "Sân thảm PVC vân cát 5 lớp chống trượt chuẩn BWF, đèn LED gián tiếp",
+    "review_count": 120
+  },
+  "san-cau-long-swin-thpt-cau-giay": {
+    "id": "san-cau-long-swin-thpt-cau-giay",
+    "name": "Sân Cầu Lông Swin THPT Cầu Giấy",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "8 Ng. 118 Đ. Nguyễn Khánh Toàn, Nghĩa Đô, Cầu Giấy, Hà Nội",
+    "phone": "0972914307",
+    "open_time": "05:00",
+    "close_time": "23:30",
+    "price_min": 80000,
+    "price_max": 120000,
+    "price_display": "80.000 – 120.000 VNĐ/giờ",
+    "rating": 4.2,
+    "amenities": "Nhà vệ sinh, Bãi đỗ xe có tính phí",
+    "map_link": "https://maps.app.goo.gl/DQTUF28ghjyJSDfz8",
+    "image_url": "https://images.unsplash.com/photo-1613918108466-292b78a8ef95?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT THẢM CHUYÊN DỤNG YONEX",
+    "sub_title": "Cụm 6 sân thảm Yonex cao cấp, trần cao 9m thoáng đãng, ghế chờ tiện nghi",
+    "review_count": 120
+  },
+  "bmai-sport-cau-giay": {
+    "id": "bmai-sport-cau-giay",
+    "name": "Bmai sport cầu giấy",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội",
+    "phone": "0966889778",
+    "open_time": "09:00",
+    "close_time": "21:00",
+    "price_min": 100000,
+    "price_max": 150000,
+    "price_display": "100.000đ - 150.000đ/giờ",
+    "rating": 5.0,
+    "amenities": "Nhà vệ sinh, Wifi miễn phí, Bãi đỗ xe free",
+    "map_link": "https://maps.app.goo.gl/tc9qggiLLUqak78v6",
+    "image_url": "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT SÂN ACRYLIC TIÊU CHUẨN USA PICKLEBALL",
+    "sub_title": "Sân sơn Acrylic 7 lớp chuẩn USA Pickleball, đệm đàn hồi giảm chấn khớp",
+    "review_count": 140
+  },
+  "pickleball-tran-quy-kien": {
+    "id": "pickleball-tran-quy-kien",
+    "name": "Pickleball Trần Quý Kiên",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "cau-giay",
+    "district_name": "Quận Cầu Giấy",
+    "address": "36 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy, Hà Nội",
+    "phone": "0365365863",
+    "open_time": "06:00",
+    "close_time": "21:00",
+    "price_min": 120000,
+    "price_max": 190000,
+    "price_display": "120.000đ - 190.000đ/giờ",
+    "rating": 4.2,
+    "amenities": "Bãi đỗ xe, Quầy nước giải khát",
+    "map_link": "https://maps.app.goo.gl/McXujLSfeKyAYP5F9",
+    "image_url": "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "SÂN ACRYLIC CHỐNG LÓA NGOÀI TRỜI",
+    "sub_title": "Cụm 4 sân ngoài trời thoáng mát Trần Quý Kiên, lưới thi đấu chuyên nghiệp",
+    "review_count": 120
+  },
+  "nha-thi-dau-tay-ho": {
+    "id": "nha-thi-dau-tay-ho",
+    "name": "Nhà thi đấu Tây Hồ",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "tay-ho",
+    "district_name": "Quận Tây Hồ",
+    "address": "101 Đ. Xuân La, Khu đô thị Tây Hồ Tây, Xuân Đỉnh, Tây Hồ, Hà Nội",
+    "phone": "0936073333",
+    "open_time": "08:00",
+    "close_time": "22:00",
+    "price_min": 130000,
+    "price_max": 130000,
+    "price_display": "130.000đ/giờ",
+    "rating": 4.2,
+    "amenities": "Khán đài, Bãi đỗ xe rộng rãi",
+    "map_link": "https://maps.app.goo.gl/cfvk99biHNP5ZEx59",
+    "image_url": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT SÂN TIÊU CHUẨN THI ĐẤU",
+    "sub_title": "Mặt sân cỏ tự nhiên kết hợp nhân tạo đạt chuẩn thi đấu bán chuyên",
+    "review_count": 120
+  },
+  "san-bong-xuan-la": {
+    "id": "san-bong-xuan-la",
+    "name": "Sân Bóng Xuân La",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "tay-ho",
+    "district_name": "Quận Tây Hồ",
+    "address": "101 Đ. Xuân La, Xuân Đỉnh, Tây Hồ, Hà Nội",
+    "phone": "0353402222",
+    "open_time": "07:00",
+    "close_time": "22:00",
+    "price_min": 115000,
+    "price_max": 115000,
+    "price_display": "115.000đ/giờ",
+    "rating": 4.2,
+    "amenities": "Bãi đỗ xe, Đèn chiếu sáng cao áp",
+    "map_link": "https://maps.app.goo.gl/Gh9m6rLgiRNn8rW96",
+    "image_url": "https://images.unsplash.com/photo-1551958219-acbc608c6377?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT CỎ Ý TIÊU CHUẨN FIFA",
+    "sub_title": "Khu tổ hợp 3 sân bóng đá mini 7 người, lưới chắn bóng cao 12m",
+    "review_count": 120
+  },
+  "pickleball-arena-tay-ho": {
+    "id": "pickleball-arena-tay-ho",
+    "name": "Pickleball Arena Tây Hồ",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "tay-ho",
+    "district_name": "Quận Tây Hồ",
+    "address": "TTVHTT, 691 Đ. Lạc Long Quân, Tây Hồ, Hà Nội",
+    "phone": "0973708228",
+    "open_time": "07:00",
+    "close_time": "22:00",
+    "price_min": 150000,
+    "price_max": 200000,
+    "price_display": "150.000đ – 200.000đ/giờ",
+    "rating": 4.8,
+    "amenities": "Bãi đỗ xe miễn phí, Đèn LED chống lóa",
+    "map_link": "https://maps.app.goo.gl/9Dx8gPGgRV3qEAUa7",
+    "image_url": "https://images.unsplash.com/photo-1617083934555-56360c7e2b17?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT SÂN ĐỆM SILICON CAO CẤP",
+    "sub_title": "Arena Pickleball Tây Hồ ven hồ lộng gió, trang bị bóng và vợt đạt chuẩn",
+    "review_count": 135
+  },
+  "au-lac-pickleball": {
+    "id": "au-lac-pickleball",
+    "name": "Âu Lạc Pickleball",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "tay-ho",
+    "district_name": "Quận Tây Hồ",
+    "address": "Ngõ 464 Âu Cơ, thôn Bắc, Hồng Hà, Tây Hồ, Hà Nội",
+    "phone": "0964585433",
+    "open_time": "06:00",
+    "close_time": "23:00",
+    "price_min": 100000,
+    "price_max": 200000,
+    "price_display": "100.000đ – 200.000đ/giờ",
+    "rating": 3.7,
+    "amenities": "Đèn chống chói, khu nghỉ ngơi, bãi giữ xe",
+    "map_link": "https://maps.app.goo.gl/uvfBDxQBUXjFRvC88",
+    "image_url": "https://images.unsplash.com/photo-1587385789097-2b10ec664b23?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT SÂN ACRYLIC CHUẨN THI ĐẤU",
+    "sub_title": "Âu Lạc Pickleball cụm 6 sân tiêu chuẩn, đèn chống chói, khu nghỉ ngơi cà phê",
+    "review_count": 107
+  },
+  "san-cau-long-ban-co-yeu-chinh-phu": {
+    "id": "san-cau-long-ban-co-yeu-chinh-phu",
+    "name": "Sân Cầu Lông Ban Cơ Yếu Chính Phủ",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "107 Đ. Nguyễn Chí Thanh, Láng Hạ, Đống Đa, Hà Nội",
+    "phone": "0987599746",
+    "open_time": "05:00",
+    "close_time": "22:30",
+    "price_min": 90000,
+    "price_max": 90000,
+    "price_display": "90.000 VNĐ/giờ",
+    "rating": 4.9,
+    "amenities": "Khu ghế chờ nghỉ ngơi, WC riêng biệt sạch sẽ",
+    "map_link": "https://maps.app.goo.gl/WLA4ackSEFb8yckTA",
+    "image_url": "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "SÀN GỖ THẢM BẢO VỆ KHỚP",
+    "sub_title": "Mặt sân thảm PVC lót gỗ giảm chấn bảo vệ khớp gối, khán đài 150 chỗ",
+    "review_count": 137
+  },
+  "san-cau-long-hoc-vien-ngan-hang": {
+    "id": "san-cau-long-hoc-vien-ngan-hang",
+    "name": "Sân Cầu Lông Học viện Ngân Hàng",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "Ngõ 12 P. Chùa Bộc, Quang Trung, Đống Đa, Hà Nội",
+    "phone": "0912856343",
+    "open_time": "18:00",
+    "close_time": "21:00",
+    "price_min": 80000,
+    "price_max": 100000,
+    "price_display": "80.000 – 100.000đ/giờ",
+    "rating": 5.0,
+    "amenities": "Gửi xe trong học viện, Nhà vệ sinh, Nước uống",
+    "map_link": "https://maps.google.com/?q=Học+viện+Ngân+Hàng",
+    "image_url": "https://images.unsplash.com/photo-1563299796-17596ed6b017?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "THẢM XANH CHUẨN THI ĐẤU",
+    "sub_title": "Nhà thi đấu trường học tiêu chuẩn, dàn đèn LED chống chói mắt tuyệt đối",
+    "review_count": 140
+  },
+  "san-cau-long-clb-cau-long-nasd-cs1": {
+    "id": "san-cau-long-clb-cau-long-nasd-cs1",
+    "name": "Sân Cầu Lông CLB Cầu lông NASD CS1",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "Ngõ 12 P. Chùa Bộc, Kim Liên, Đống Đa, Hà Nội",
+    "phone": "0908988866",
+    "open_time": "17:30",
+    "close_time": "21:30",
+    "price_min": 70000,
+    "price_max": 80000,
+    "price_display": "70.000 – 80.000 VNĐ/giờ",
+    "rating": 4.5,
+    "amenities": "Wifi miễn phí, bãi đỗ xe có camera",
+    "map_link": "https://maps.app.goo.gl/1Kst6Etagu6J5pEU8",
+    "image_url": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT THẢM PVC ĐỘ BÁM CAO",
+    "sub_title": "CLB cầu lông hiện đại, 8 sân thảm xanh kẻ vạch thi đấu chuẩn quốc gia",
+    "review_count": 127
+  },
+  "san-cau-long-dai-hoc-thuy-loi": {
+    "id": "san-cau-long-dai-hoc-thuy-loi",
+    "name": "Sân Cầu Lông Đại học Thủy Lợi",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "Ng. 95 P. Chùa Bộc, Trung Liệt, Đống Đa, Hà Nội",
+    "phone": "02438522201",
+    "open_time": "05:30",
+    "close_time": "22:00",
+    "price_min": 80000,
+    "price_max": 120000,
+    "price_display": "80.000 – 120.000 VNĐ/giờ",
+    "rating": 3.9,
+    "amenities": "Bãi gửi xe trường, WC, phòng thay đồ, quầy nước",
+    "map_link": "https://maps.app.goo.gl/o8x2Wc434uNrdVbQ9",
+    "image_url": "https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT SÂN NHÀ THI ĐẤU ĐH THỦY LỢI",
+    "sub_title": "Tổ hợp sân cầu lông trong nhà rộng rãi, hệ thống quạt thông gió mát mẻ",
+    "review_count": 112
+  },
+  "san-bong-thuy-loi": {
+    "id": "san-bong-thuy-loi",
+    "name": "Sân bóng Thủy Lợi",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "Ngõ 95 P. Chùa Bộc, Trung Liệt, Đống Đa, Hà Nội",
+    "phone": "0912889900",
+    "open_time": "05:00",
+    "close_time": "21:00",
+    "price_min": 70000,
+    "price_max": 140000,
+    "price_display": "70.000đ – 140.000đ/giờ",
+    "rating": 4.3,
+    "amenities": "Nhà vệ sinh, Khán đài có mái che",
+    "map_link": "https://maps.app.goo.gl/XC9V7pSGRCxqGz6y7",
+    "image_url": "https://images.unsplash.com/photo-1524015368236-bbf6f72545b6?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT CỎ NHÂN TẠO 5CM CAO CẤP",
+    "sub_title": "Cụm 3 sân 7 người tiêu chuẩn thi đấu ban đêm, thoát nước tự động",
+    "review_count": 122
+  },
+  "san-bong-hoang-cau": {
+    "id": "san-bong-hoang-cau",
+    "name": "Sân Bóng Hoàng Cầu",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "dong-da",
+    "district_name": "Quận Đống Đa",
+    "address": "42 P. Hoàng Cầu, Ô Chợ Dừa, Đống Đa, Hà Nội",
+    "phone": "0912503534",
+    "open_time": "06:00",
+    "close_time": "23:00",
+    "price_min": 400000,
+    "price_max": 700000,
+    "price_display": "400.000đ – 700.000đ/giờ",
+    "rating": 3.9,
+    "amenities": "Bãi đỗ xe, Căng tin, Đèn LED cao áp",
+    "map_link": "https://maps.app.goo.gl/LqMoGLJuvqpD2gtx5",
+    "image_url": "https://images.unsplash.com/photo-1489944445391-11dd35574ca6?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "CỎ NHÂN TẠO CHUẨN QUỐC TẾ",
+    "sub_title": "Tổ hợp sân bóng trung tâm thành phố, khán đài có mái che kiên cố",
+    "review_count": 112
+  },
+  "san-cau-long-thpt-xuan-dinh": {
+    "id": "san-cau-long-thpt-xuan-dinh",
+    "name": "Sân cầu lông THPT Xuân Đỉnh",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "176 Đ. Xuân Đỉnh, Xuân Đỉnh, Bắc Từ Liêm, Hà Nội",
+    "phone": "0833394225",
+    "open_time": "05:00",
+    "close_time": "22:00",
+    "price_min": 80000,
+    "price_max": 100000,
+    "price_display": "80.000 - 100.000đ/giờ",
+    "rating": 4.6,
+    "amenities": "WC nam/nữ riêng biệt, quầy đồ uống, khán đài",
+    "map_link": "https://maps.app.goo.gl/fs8XCJeW4o7Gt7NZA",
+    "image_url": "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT THẢM TIÊU CHUẨN THI ĐẤU",
+    "sub_title": "Sân cầu lông chất lượng cao khu vực Xuân Đỉnh, khán đài ngồi nghỉ rộng rãi",
+    "review_count": 130
+  },
+  "san-cau-long-my-dinh": {
+    "id": "san-cau-long-my-dinh",
+    "name": "Sân Cầu Lông Mỹ Đình",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "Đ. Tân An Bình, Mỹ Đình, Nam Từ Liêm, Hà Nội",
+    "phone": "0969438830",
+    "open_time": "17:00",
+    "close_time": "23:00",
+    "price_min": 90000,
+    "price_max": 90000,
+    "price_display": "90.000đ/giờ",
+    "rating": 3.7,
+    "amenities": "WC riêng biệt, quầy nước giải khát, ghế chờ",
+    "map_link": "https://maps.app.goo.gl/bhKE54RSm6xpMmHX8",
+    "image_url": "https://images.unsplash.com/photo-1521537634581-0dced2fed2a8?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT THẢM PVC CHỐNG CHẤN THƯƠNG",
+    "sub_title": "Cụm sân cầu lông Mỹ Đình hoạt động đến 23h, tiện ích phòng tắm nóng lạnh",
+    "review_count": 107
+  },
+  "san-cau-long-phuc-dien": {
+    "id": "san-cau-long-phuc-dien",
+    "name": "Sân Cầu Lông Phúc Diễn",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "402 Phúc Diễn, Xuân Phương, Nam Từ Liêm, Hà Nội",
+    "phone": "0946903036",
+    "open_time": "05:00",
+    "close_time": "23:30",
+    "price_min": 35000,
+    "price_max": 125000,
+    "price_display": "35.000 – 125.000 VNĐ/giờ",
+    "rating": 4.6,
+    "amenities": "Khán đài rộng, ghế chờ nghỉ ngơi, WC nam nữ",
+    "map_link": "https://maps.app.goo.gl/6d1kwdC2xTzxfB9N9",
+    "image_url": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT THẢM CAO SU ĐA NĂNG",
+    "sub_title": "Sân Phúc Diễn thiết kế chuẩn BWF, chỗ để xe máy ô tô rộng rãi an toàn",
+    "review_count": 130
+  },
+  "goat-badminton": {
+    "id": "goat-badminton",
+    "name": "GOAT BADMINTON",
+    "sport": "badminton",
+    "sport_name": "Cầu lông",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "Trịnh Văn Bô, Xuân Phương, Nam Từ Liêm, Hà Nội",
+    "phone": "0847776666",
+    "open_time": "05:00",
+    "close_time": "24:00",
+    "price_min": 60000,
+    "price_max": 110000,
+    "price_display": "60.000 - 110.000đ/giờ",
+    "rating": 4.2,
+    "amenities": "Nhà vệ sinh sạch, Ghế ngồi chờ",
+    "map_link": "https://maps.app.goo.gl/vV2FN9Ez75US835u6",
+    "image_url": "https://images.unsplash.com/photo-1584813470613-5b1c1cad3d69?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT THẢM THI ĐẤU ĐỈNH CAO GOAT",
+    "sub_title": "CLB GOAT Badminton mở cửa 24/7, sân thảm xịn sò bậc nhất Nam Từ Liêm",
+    "review_count": 120
+  },
+  "sportshub-pickleball-pham-hung": {
+    "id": "sportshub-pickleball-pham-hung",
+    "name": "SportsHub Pickleball Phạm Hùng",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "40 Đường Phạm Hùng, Đình Thôn, Nam Từ Liêm, Hà Nội",
+    "phone": "0375592222",
+    "open_time": "05:00",
+    "close_time": "24:00",
+    "price_min": 120000,
+    "price_max": 250000,
+    "price_display": "120.000đ – 250.000đ/giờ",
+    "rating": 4.1,
+    "amenities": "Nhà vệ sinh, bãi đỗ xe miễn phí",
+    "map_link": "https://maps.app.goo.gl/1Kixd89Ld7eRXrn36",
+    "image_url": "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT SÂN ACRYLIC CUSHION PRO",
+    "sub_title": "Tổ hợp SportsHub Phạm Hùng hiện đại, mở cửa 24/7, bãi gửi xe ô tô rộng rãi",
+    "review_count": 117
+  },
+  "star-pickleball-cau-coc": {
+    "id": "star-pickleball-cau-coc",
+    "name": "Star Pickleball Cầu Cốc",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "Số 181 P. Cầu Cốc, Tây Mỗ, Nam Từ Liêm, Hà Nội",
+    "phone": "0983219287",
+    "open_time": "06:00",
+    "close_time": "23:00",
+    "price_min": 100000,
+    "price_max": 180000,
+    "price_display": "100.000đ – 180.000đ/giờ",
+    "rating": 5.0,
+    "amenities": "Nhà vệ sinh sạch, Bãi gửi xe an toàn",
+    "map_link": "https://maps.app.goo.gl/fUABrR4mHjQxUFRo7",
+    "image_url": "https://images.unsplash.com/photo-1511067007775-94998ff59918?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT SÂN CHỐNG TRƠN TRƯỢT USA",
+    "sub_title": "Star Pickleball Cầu Cốc cụm 4 sân khép kín, mặt sân phủ cát thạch anh mịn",
+    "review_count": 140
+  },
+  "wessie-haus-pickleball-club": {
+    "id": "wessie-haus-pickleball-club",
+    "name": "Wessie Haus Pickleball Club",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "nam-tu-liem",
+    "district_name": "Quận Nam Từ Liêm",
+    "address": "Sân Vận Động Mỹ Đình, Nam Từ Liêm, Hà Nội",
+    "phone": "0916811951",
+    "open_time": "07:00",
+    "close_time": "23:00",
+    "price_min": 130000,
+    "price_max": 230000,
+    "price_display": "130.000đ – 230.000đ/giờ",
+    "rating": 4.7,
+    "amenities": "Nhà vệ sinh, bãi đỗ xe miễn phí",
+    "map_link": "https://maps.app.goo.gl/Xbkd7KoR2UNQeqQN9",
+    "image_url": "https://images.unsplash.com/photo-1542144582-1ba00456b5e3?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "SÂN PICKLEBALL TRONG NHÀ CAO CẤP",
+    "sub_title": "Wessie Haus trong khuôn viên SVĐ Mỹ Đình, hệ thống điều hòa và quạt làm mát",
+    "review_count": 132
+  },
+  "san-pickleball-x20": {
+    "id": "san-pickleball-x20",
+    "name": "Sân Pickleball X20",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "thanh-xuan",
+    "district_name": "Quận Thanh Xuân",
+    "address": "35 P. Phan Đình Giót, Phương Liệt, Thanh Xuân, Hà Nội",
+    "phone": "0976584656",
+    "open_time": "06:00",
+    "close_time": "22:00",
+    "price_min": 100000,
+    "price_max": 150000,
+    "price_display": "100.000 - 150.000đ/giờ",
+    "rating": 4.1,
+    "amenities": "Bãi đỗ xe, Quầy giải khát",
+    "map_link": "https://maps.app.goo.gl/72bVoYGZFVcHwjyv5",
+    "image_url": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT SÂN TIÊU CHUẨN QUỐC TẾ",
+    "sub_title": "Sân Pickleball X20 Phan Đình Giót, cụm sân phong trào sôi động bậc nhất",
+    "review_count": 117
+  },
+  "pickleball-g-s77": {
+    "id": "pickleball-g-s77",
+    "name": "Pickleball G.S77",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "thanh-xuan",
+    "district_name": "Quận Thanh Xuân",
+    "address": "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội",
+    "phone": "0848859999",
+    "open_time": "05:00",
+    "close_time": "24:00",
+    "price_min": 171000,
+    "price_max": 230000,
+    "price_display": "171.000 - 230.000đ/giờ",
+    "rating": 4.5,
+    "amenities": "Nhà vệ sinh, chỗ để xe trong khuôn viên",
+    "map_link": "https://maps.app.goo.gl/iYEARkFTYDC1SqbF7",
+    "image_url": "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1590487988256-9ed24133863e?w=600&q=80",
+    "surface_badge": "MẶT SÂN ACRYLIC THỜI TRANG G.S77",
+    "sub_title": "Pickleball G.S77 Khuất Duy Tiến, mặt sân màu sắc trẻ trung, mở 24/24",
+    "review_count": 127
+  },
+  "san-lucky-pickleball-club": {
+    "id": "san-lucky-pickleball-club",
+    "name": "Sân Lucky Pickleball club",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "thanh-xuan",
+    "district_name": "Quận Thanh Xuân",
+    "address": "108 P. Bùi Xương Trạch, Khương Đình, Thanh Xuân, Hà Nội",
+    "phone": "0399160832",
+    "open_time": "05:00",
+    "close_time": "22:00",
+    "price_min": 120000,
+    "price_max": 200000,
+    "price_display": "120.000 - 200.000đ/giờ",
+    "rating": 4.6,
+    "amenities": "Bãi đỗ xe, Nhà vệ sinh",
+    "map_link": "https://maps.app.goo.gl/Cxxfk1ZGfnMKb3wU9",
+    "image_url": "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1577223625816-7546f13df25d?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT SÂN CÓ MÁI CHE LUCKY CLUB",
+    "sub_title": "Lucky Pickleball Bùi Xương Trạch, thi đấu bất chấp thời tiết nắng mưa",
+    "review_count": 130
+  },
+  "the-volley-zone-pickleball": {
+    "id": "the-volley-zone-pickleball",
+    "name": "The Volley Zone Pickleball",
+    "sport": "pickleball",
+    "sport_name": "Pickleball",
+    "sport_icon": "sports_tennis",
+    "district": "thanh-xuan",
+    "district_name": "Quận Thanh Xuân",
+    "address": "63 Nguyễn Huy Tưởng, Thanh Xuân, Hà Nội",
+    "phone": "0366833551",
+    "open_time": "05:00",
+    "close_time": "24:00",
+    "price_min": 150000,
+    "price_max": 250000,
+    "price_display": "150.000 - 250.000đ/giờ",
+    "rating": 3.8,
+    "amenities": "Chỗ để xe, Ghế ngồi chờ",
+    "map_link": "https://maps.app.goo.gl/BUWT35shxE1dzgCT6",
+    "image_url": "https://images.unsplash.com/photo-1593766789524-73c3fa697e65?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT SÂN CHUẨN THI ĐẤU QUỐC GIA",
+    "sub_title": "The Volley Zone Nguyễn Huy Tưởng, phòng thay đồ chuẩn VIP, phục vụ đồ uống",
+    "review_count": 110
+  },
+  "san-bong-phuc-xa": {
+    "id": "san-bong-phuc-xa",
+    "name": "Sân Bóng Phúc Xá",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "ba-dinh",
+    "district_name": "Quận Ba Đình",
+    "address": "2RWV+XP Hồng Hà, Phúc Xá, Ba Đình, Hà Nội",
+    "phone": "02873075788",
+    "open_time": "06:00",
+    "close_time": "22:00",
+    "price_min": 80000,
+    "price_max": 150000,
+    "price_display": "80.000đ – 150.000đ/giờ",
+    "rating": 4.1,
+    "amenities": "Bãi đỗ xe, Đèn chiếu sáng",
+    "map_link": "https://maps.app.goo.gl/ekwaoy6LYPxiSTYs6",
+    "image_url": "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=600&q=80",
+    "surface_badge": "MẶT CỎ ĐỆM CAO SU ĐÀN HỒI",
+    "sub_title": "Sân cỏ nhân tạo ven sông thoáng mát, hệ thống chiếu sáng ban đêm",
+    "review_count": 117
+  },
+  "san-bong-viglacera": {
+    "id": "san-bong-viglacera",
+    "name": "Sân bóng Viglacera",
+    "sport": "soccer",
+    "sport_name": "Bóng đá mini",
+    "sport_icon": "sports_soccer",
+    "district": "ba-dinh",
+    "district_name": "Quận Ba Đình",
+    "address": "671 Đ. Hoàng Hoa Thám, Ngọc Hà, Ba Đình, Hà Nội",
+    "phone": "0976883008",
+    "open_time": "07:00",
+    "close_time": "21:00",
+    "price_min": 70000,
+    "price_max": 140000,
+    "price_display": "70.000đ – 140.000đ/giờ",
+    "rating": 3.8,
+    "amenities": "Bãi đỗ xe, Nhà vệ sinh",
+    "map_link": "https://maps.app.goo.gl/LDhFrdMTM4jSHMrFA",
+    "image_url": "https://images.unsplash.com/photo-1518604666864-74230560a876?w=1200&q=80",
+    "gallery_stand": "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80",
+    "gallery_locker": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=600&q=80",
+    "surface_badge": "MẶT CỎ NHÂN TẠO FIFA QUALITY",
+    "sub_title": "Cụm sân bóng đá mini trung tâm Ba Đình, khán đài cổ vũ sức chứa 200 chỗ",
+    "review_count": 110
+  }
+};
+
+        let currentActiveOrder = null;
+
+        function getFacilityAccurateImage(facIdOrName, sportType) {
+            const key = String(facIdOrName || '').toLowerCase().trim();
+            if (window.FACILITIES_29_DB && window.FACILITIES_29_DB[key]) {
+                return window.FACILITIES_29_DB[key].image_url;
+            }
+            if (window.FACILITIES_29_DB) {
+                for (let k in window.FACILITIES_29_DB) {
+                    const f = window.FACILITIES_29_DB[k];
+                    if (key && (f.name.toLowerCase().includes(key) || key.includes(f.name.toLowerCase()) || key.includes(k))) {
+                        return f.image_url;
+                    }
+                }
+            }
+            const s = String(sportType || '').toLowerCase();
+            if (s.includes('badminton') || s.includes('cầu lông')) return 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80';
+            if (s.includes('pickleball') || s.includes('pick')) return 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80';
+            return 'https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80';
+        }
+
+        // Hàm trích xuất giá tiền sạch
+        function parsePrice(val, defaultVal = 0) {
+            if (val === undefined || val === null || val === '') return defaultVal;
+            const str = String(val).replace(/[^\d]/g, '');
+            const num = Number(str);
+            return (!isNaN(num) && num > 0) ? num : defaultVal;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 1. Đồng bộ thông tin User
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || 'null');
+                if (user) {
+                    const name = user.name || "Trúc Lam";
+                    document.getElementById('headerUsername').textContent = name;
+                    document.getElementById('headerUserRole').textContent = user.role || "Thành viên";
+                    document.getElementById('headerUserAvatar').textContent = name.charAt(0).toUpperCase();
+                }
+            } catch(e) {}
+
+            // 2. Tìm kiếm thông tin đơn hàng từ các nguồn thực tế
+            const params = new URLSearchParams(window.location.search);
+            const queryOrderId = params.get('id');
+
+            let savedList = [];
+            try { savedList = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]'); } catch(e) {}
+            let finalOrder = null;
+            try { finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch(e) {}
+            let selectedDetail = null;
+            try { selectedDetail = JSON.parse(localStorage.getItem('sb_selected_booking_detail') || 'null'); } catch(e) {}
+
+            if (queryOrderId) {
+                currentActiveOrder = savedList.find(b => b.id === queryOrderId || b.id === `SB-${queryOrderId}` || String(b.id).replace('SB-', '') === String(queryOrderId).replace('SB-', ''));
+                if (!currentActiveOrder && selectedDetail && (selectedDetail.id === queryOrderId || selectedDetail.order_id === queryOrderId || String(selectedDetail.id).replace('SB-', '') === String(queryOrderId).replace('SB-', ''))) {
+                    currentActiveOrder = selectedDetail;
+                }
+                if (!currentActiveOrder && finalOrder && (finalOrder.order_id === queryOrderId || finalOrder.id === queryOrderId)) {
+                    currentActiveOrder = finalOrder;
+                }
+            }
+
+            if (currentActiveOrder && finalOrder && (finalOrder.order_id === currentActiveOrder.id || finalOrder.id === currentActiveOrder.id)) {
+                currentActiveOrder = { ...currentActiveOrder, ...finalOrder };
+            }
+
+            if (!currentActiveOrder && finalOrder && finalOrder.order_id) {
+                currentActiveOrder = finalOrder;
+            }
+
+            if (!currentActiveOrder && savedList.length > 0) {
+                currentActiveOrder = savedList[0];
+            }
+
+            if (!currentActiveOrder) {
+                currentActiveOrder = {
+                    id: queryOrderId || "SB-89201",
+                    order_id: queryOrderId || "SB-89201",
+                    venue_name: "Sân bóng Thủy Lợi",
+                    sport: "soccer",
+                    sport_label: "Bóng đá mini",
+                    court_number: "Sân cỏ 7 - Số 1",
+                    address: "Ngõ 95 P. Chùa Bộc, Trung Liệt, Đống Đa, Hà Nội",
+                    time_slot: "17:00 - 18:00",
+                    date: "31/10/2026",
+                    total_price: 360000,
+                    deposit_paid: 180000,
+                    status: "upcoming",
+                    status_label: "Đã xác nhận",
+                    image: "https://images.unsplash.com/photo-1524015368236-bbf6f72545b6?w=800&q=80",
+                    created_at: Date.now() - 600000
+                };
+            }
+
+            // ĐỔ DỮ LIỆU ĐỘNG CHUẨN XÁC VÀO TỪNG THÀNH PHẦN GIAO DIỆN
+            renderOrderDetails(currentActiveOrder);
+
+            // Kiểm tra nếu vừa chuyển hướng từ hủy sân
+            if (params.get('cancelled') === 'true') {
+                showToast("Đơn đặt sân này đã được hủy thành công! Tiền hoàn đang được xử lý.");
+            }
+        });
+
+        function renderOrderDetails(order) {
+            const orderId = order.id || order.order_id || order.orderId || "SB-89201";
+            
+            // Mã đơn & Tiêu đề
+            document.getElementById('breadcrumbOrderId').innerText = `Đơn #${orderId}`;
+            document.getElementById('pageTitleOrderId').innerText = `Đơn đặt sân #${orderId}`;
+            document.getElementById('displayCheckinCode').innerText = `${orderId}-CKIN`;
+            
+            // Mã giao dịch
+            const numPart = orderId.replace(/[^0-9]/g, '') || '89201';
+            document.getElementById('displayTransactionId').innerText = `VNP${numPart}88`;
+
+            // Mã QR quét tự động
+            document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SPORTBOOKING-ORDER-${orderId}`;
+
+            // Thời gian đặt
+            let orderTime = order.created_at || order.createdAt || Date.now();
+            const dateObj = new Date(orderTime);
+            const hours = String(dateObj.getHours()).padStart(2, '0');
+            const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+            const day = String(dateObj.getDate()).padStart(2, '0');
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const year = dateObj.getFullYear();
+            document.getElementById('orderTimeDisplay').innerText = `${hours}:${minutes}, ${day}/${month}/${year}`;
+
+            // Thông tin cơ sở & Sân thi đấu
+            const venueNameText = order.venue_name || order.facility_name || "Sân thể thao SportBooking";
+            document.getElementById('venueName').innerText = venueNameText;
+            document.getElementById('venueAddress').innerText = order.address || "Hà Nội";
+            document.getElementById('displayCourtNumber').innerText = order.court_number || order.sub_court || "Sân thi đấu tiêu chuẩn";
+            document.getElementById('displayMatchDate').innerText = order.date || `${day}/${month}/${year}`;
+            document.getElementById('displayMatchTime').innerText = order.time_slot || order.slot || "17:00 - 18:00";
+            
+            // Hotline & Bản đồ
+            if (order.hotline) {
+                document.getElementById('venueHotline').innerText = order.hotline;
+                document.getElementById('venueHotline').href = `tel:${order.hotline}`;
+            }
+            document.getElementById('venueMapLink').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueNameText + ' ' + (order.address || 'Hà Nội'))}`;
+
+            // Môn thể thao & Ảnh sân
+            const sportType = (order.sport || "soccer").toLowerCase();
+            let sportBadgeName = "Bóng đá mini";
+            let sportIcon = "sports_soccer";
+
+            if (sportType.includes("badminton") || sportType.includes("cầu lông")) {
+                sportBadgeName = "Cầu lông tiêu chuẩn";
+                sportIcon = "sports_tennis";
+            } else if (sportType.includes("pickleball")) {
+                sportBadgeName = "Pickleball tiêu chuẩn";
+                sportIcon = "sports_cricket";
+            }
+
+            document.getElementById('sportBadgeText').innerText = sportBadgeName;
+            document.getElementById('sportBadgeIcon').innerText = sportIcon;
+            document.getElementById('venueImage').src = getFacilityAccurateImage(order.facility_id || venueNameText, sportType);
+
+            // =========================================================================
+            // TRẠNG THÁI ĐƠN HÀNG VÀ KIỂM SOÁT HÀNH ĐỘNG HỦY SÂN
+            // =========================================================================
+            const statusBadge = document.getElementById('orderStatusBadge');
+            const statusIcon = document.getElementById('orderStatusIcon');
+            const statusText = document.getElementById('orderStatusText');
+            const cancelWrapper = document.getElementById('cancelActionWrapper');
+
+            const st = (order.status || 'upcoming').toLowerCase();
+
+            if (st === 'cancelled') {
+                // ĐƠN ĐÃ HỦY: KHÔNG CHO PHÉP HỦY LẠI
+                statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-error text-sm font-bold shadow-sm";
+                statusIcon.innerText = "cancel";
+                statusText.innerText = "Đã hủy đơn";
+
+                // Vô hiệu hóa nút hủy trên giao diện và hiển thị thông báo
+                if (cancelWrapper) {
+                    cancelWrapper.innerHTML = `
+                        <div class="p-3 bg-red-50 rounded-xl border border-red-200 text-xs text-red-800 flex items-start gap-2 font-medium mb-1.5">
+                            <span class="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5">info</span>
+                            <div class="flex flex-col gap-0.5">
+                                <span class="font-bold text-error">Đơn đặt sân này đã được hủy</span>
+                                <span class="text-[11px] text-red-700">Tiền cọc đang được hoàn trả về tài khoản gốc. Bạn không thể thực hiện hủy lại đơn này.</span>
+                            </div>
+                        </div>
+                        <button disabled class="w-full py-3 rounded-xl bg-gray-100 text-gray-400 text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200 shadow-none select-none" type="button">
+                            <span class="material-symbols-outlined text-[18px]">block</span>
+                            <span>ĐÃ HỦY ĐẶT SÂN (KHÔNG THỂ HỦY LẠI)</span>
+                        </button>
+                    `;
+                }
+
+                // Làm mờ vé QR để báo hiệu vé không còn giá trị
+                const qrImg = document.getElementById('qrCodeImage');
+                if (qrImg) qrImg.style.filter = "grayscale(100%) opacity(35%)";
+                const ticketLabel = document.getElementById('ticketStatusLabel');
+                if (ticketLabel) {
+                    ticketLabel.innerText = "VÉ ĐÃ HỦY HIỆU LỰC";
+                    ticketLabel.className = "px-2.5 py-0.5 rounded-full bg-red-100 text-error text-xs font-bold uppercase";
+                }
+                const instBox = document.getElementById('ticketInstructionBox');
+                if (instBox) {
+                    instBox.className = "bg-red-50 p-3 rounded-xl text-red-900 text-xs flex items-start gap-2 border border-red-200 mt-1";
+                    document.getElementById('ticketInstructionText').innerHTML = "Đơn đặt sân này đã bị hủy. Mã vé điện tử không còn hiệu lực để vào sân thi đấu.";
+                }
+
+            } else {
+                // ĐƠN CÒN HIỆU LỰC: CHO PHÉP BẤM HỦY ĐỂ MỞ MODAL XÁC NHẬN CHI TIẾT
+                if (st === 'payment-pending') {
+                    statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-secondary text-sm font-bold shadow-sm animate-pulse";
+                    statusIcon.innerText = "timer";
+                    statusText.innerText = "Chờ thanh toán";
+                } else if (st === 'completed') {
+                    statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-tertiary text-sm font-bold shadow-sm";
+                    statusIcon.innerText = "check_circle";
+                    statusText.innerText = "Đã hoàn thành";
+                } else {
+                    statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DCFCE7] text-[#15803D] text-sm font-bold shadow-sm";
+                    statusIcon.innerText = "verified";
+                    statusText.innerText = "Đã xác nhận";
+                }
+
+                if (cancelWrapper) {
+                    cancelWrapper.innerHTML = `
+                        <button id="btnOpenCancelFlow" class="w-full py-3 rounded-xl bg-error-container hover:bg-red-200 text-error text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm" onclick="openCancelModal()" type="button">
+                            <span class="material-symbols-outlined text-[18px]">cancel</span>
+                            <span>HỦY ĐẶT SÂN NÀY</span>
+                        </button>
+                    `;
+                }
+            }
+
+            // Chi tiết tài chính
+            const totalPrice = parsePrice(order.total_price || order.price || order.totalAmount, 360000);
+            let depositPaid = parsePrice(order.deposit_paid || order.deposit, totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
+            if (depositPaid > totalPrice) depositPaid = totalPrice;
+            const remainingPrice = Math.max(0, totalPrice - depositPaid);
+
+            document.getElementById('priceCourtTotal').innerText = `${totalPrice.toLocaleString('vi-VN')}đ`;
+            document.getElementById('priceFinalTotal').innerText = `${totalPrice.toLocaleString('vi-VN')}đ`;
+            document.getElementById('priceDepositPaid').innerText = `${depositPaid.toLocaleString('vi-VN')}đ`;
+            document.getElementById('priceRemaining').innerText = `${remainingPrice.toLocaleString('vi-VN')}đ`;
+
+            if (remainingPrice === 0) {
+                document.getElementById('paymentStatusSubtext').innerText = "Đã thanh toán đủ 100%";
+            } else {
+                document.getElementById('paymentStatusSubtext').innerText = "Đã cọc trực tuyến";
+            }
+
+            // ĐỒNG BỘ KHỐI MATCHMAKER
+            const params = new URLSearchParams(window.location.search);
+            const matchParam = params.get('match') || params.get('isMatch') || params.get('state');
+
+            const isMatchMaker = order.is_matching_enabled === true || order.isMatchMaker === true || 
+                                order.type === 'matchmaking' || order.has_matchmaking === true || 
+                                matchParam === '1' || matchParam === 'matched' || matchParam === 'finding' || matchParam === 'expired';
+
+            let initialMode = 'regular';
+            if (isMatchMaker && st !== 'cancelled') {
+                if (matchParam === 'regular') {
+                    initialMode = 'regular';
+                } else if (order.matched_opponent || order.match_status === 'matched' || matchParam === 'matched') {
+                    initialMode = 'matched';
+                } else if (order.match_status === 'expired' || matchParam === 'expired') {
+                    initialMode = 'expired';
+                } else {
+                    initialMode = 'finding';
+                }
+            } else {
+                initialMode = 'regular';
+            }
+
+            setDetailViewMode(initialMode);
+
+            if (initialMode !== 'regular') {
+                listenForMatchSignal(order.id || order.order_id || 'SB-32753', (matchData) => {
+                    setDetailViewMode('matched');
+                    showToast(`🎉 ${matchData.opponentName || 'Lê Minh Trang'} vừa bấm xin ghép trận cùng bạn!`);
+                });
+            }
+        }
+
+        // =========================================================================
+        // CÁC HÀM XỬ LÝ MODAL HỦY SÂN VỚI THÔNG TIN ĐẦY ĐỦ
+        // =========================================================================
+        function openCancelModal() {
+            if (!currentActiveOrder) return;
+
+            // KIỂM TRA CHẶN: NẾU ĐƠN ĐÃ HỦY THÌ BÁO VÀ KHÔNG MỞ MODAL
+            if (String(currentActiveOrder.status || '').toLowerCase() === 'cancelled') {
+                alert('Đơn đặt sân này đã được hủy trước đó, bạn không thể thực hiện hủy lại!');
+                return;
+            }
+
+            const orderId = currentActiveOrder.id || currentActiveOrder.order_id || "SB-89201";
+            const venueName = currentActiveOrder.venue_name || currentActiveOrder.facility_name || "Sân bóng Thủy Lợi";
+            const courtName = currentActiveOrder.court_number || currentActiveOrder.sub_court || "Sân 5A (Cỏ nhân tạo)";
+            const matchTime = currentActiveOrder.time_slot || currentActiveOrder.slot || "17:00 - 18:00";
+            const matchDate = currentActiveOrder.date || "31/10/2026";
+
+            const totalPrice = parsePrice(currentActiveOrder.total_price || currentActiveOrder.price, 360000);
+            let depositPaid = parsePrice(currentActiveOrder.deposit_paid || currentActiveOrder.deposit, totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
+            if (depositPaid > totalPrice) depositPaid = totalPrice;
+            const refundFormatted = `${depositPaid.toLocaleString('vi-VN')}₫`;
+
+            // Gán dữ liệu vào modal xác nhận
+            document.getElementById('displayModalOrderId').innerText = `#${orderId}`;
+            document.getElementById('displayModalVenueName').innerText = venueName;
+            document.getElementById('displayModalCourtNumber').innerText = courtName;
+            document.getElementById('displayModalMatchTime').innerText = matchTime;
+            document.getElementById('displayModalMatchDate').innerText = matchDate;
+            document.getElementById('displayModalRefundAmount').innerText = refundFormatted;
+            document.getElementById('bannerRefundText').innerText = refundFormatted;
+
+            // Mở modal
+            const modal = document.getElementById('cancel-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeCancelModal() {
+            const modal = document.getElementById('cancel-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // THỰC HIỆN HỦY SÂN CHÍNH THỨC
+        function confirmAndExecuteCancelOrder() {
+            if (!currentActiveOrder) return;
+
+            if (String(currentActiveOrder.status || '').toLowerCase() === 'cancelled') {
+                alert('Đơn đặt sân này đã được hủy trước đó!');
+                closeCancelModal();
+                return;
+            }
+
+            const orderId = currentActiveOrder.id || currentActiveOrder.order_id || "SB-89201";
+            const venueName = currentActiveOrder.venue_name || currentActiveOrder.facility_name || "Sân thể thao";
+            const courtName = currentActiveOrder.court_number || currentActiveOrder.sub_court || "Sân thi đấu";
+            const matchTime = currentActiveOrder.time_slot || currentActiveOrder.slot || "17:00 - 18:00";
+            const matchDate = currentActiveOrder.date || "31/10/2026";
+
+            const totalPrice = parsePrice(currentActiveOrder.total_price || currentActiveOrder.price, 360000);
+            let depositPaid = parsePrice(currentActiveOrder.deposit_paid || currentActiveOrder.deposit, totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
+            if (depositPaid > totalPrice) depositPaid = totalPrice;
+            const refundFormatted = `${depositPaid.toLocaleString('vi-VN')}₫`;
+
+            const selectedReason = document.getElementById('selectCancelReason').value || 'Bận việc đột xuất';
+            const btnConfirm = document.getElementById('btn-confirm-cancel');
+
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = `
+                    <span class="material-symbols-outlined animate-spin text-base">progress_activity</span>
+                    <span>Đang xử lý hủy sân...</span>
+                `;
+            }
+
+            setTimeout(() => {
+                // 1. Cập nhật trạng thái đơn
+                currentActiveOrder.status = 'cancelled';
+                currentActiveOrder.status_label = 'Đã hủy theo yêu cầu';
+                currentActiveOrder.cancelled_at = Date.now();
+                currentActiveOrder.cancel_reason = selectedReason;
+
+                // Đồng bộ vào sb_my_booking_history
+                try {
+                    let savedList = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
+                    const idx = savedList.findIndex(b => b.id === orderId || b.id === `SB-${orderId}` || String(b.id).replace('SB-', '') === String(orderId).replace('SB-', ''));
+                    if (idx !== -1) {
+                        savedList[idx].status = 'cancelled';
+                        savedList[idx].status_label = 'Đã hủy theo yêu cầu';
+                        savedList[idx].cancelled_at = Date.now();
+                        savedList[idx].cancel_reason = selectedReason;
+                        localStorage.setItem('sb_my_booking_history', JSON.stringify(savedList));
+                    }
+                } catch(e) {}
+
+                // Đồng bộ vào sb_final_order
+                try {
+                    let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null');
+                    if (finalOrder && (finalOrder.id === orderId || finalOrder.order_id === orderId)) {
+                        finalOrder.status = 'cancelled';
+                        finalOrder.status_label = 'Đã hủy theo yêu cầu';
+                        localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
+                    }
+                } catch(e) {}
+
+                // Đồng bộ vào sb_selected_booking_detail
+                try {
+                    let sel = JSON.parse(localStorage.getItem('sb_selected_booking_detail') || 'null');
+                    if (sel && (sel.id === orderId || sel.order_id === orderId)) {
+                        sel.status = 'cancelled';
+                        sel.status_label = 'Đã hủy theo yêu cầu';
+                        localStorage.setItem('sb_selected_booking_detail', JSON.stringify(sel));
+                    }
+                } catch(e) {}
+
+                // 2. GHI THÔNG BÁO CHI TIẾT VÀO HỆ THỐNG (sb_notifications_list)
+                try {
+                    let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
+                    const newCancelNotif = {
+                        id: 'notif-cancel-' + Date.now(),
+                        category: 'booking',
+                        court_name: courtName,
+                        venue_name: venueName,
+                        summary_info: `${venueName} • ${courtName} • ${matchTime} (${matchDate})`,
+                        title: `❌ Đã hủy đặt sân #${orderId} - Hoàn tiền cọc 100%`,
+                        desc: `Đã hủy ca ${matchTime} ngày ${matchDate} tại ${venueName}. Tiền hoàn ${refundFormatted} đang được hoàn lại 100%.`,
+                        content: `Lượt đặt #${orderId} tại ${venueName} (${courtName}, khung giờ ${matchTime} ngày ${matchDate}) đã được hủy thành công theo yêu cầu của bạn. Lý do: "${selectedReason}". Số tiền ${refundFormatted} đang được ngân hàng xử lý hoàn trả về tài khoản nguồn của bạn trong 1 - 3 ngày làm việc.`,
+                        timestamp: Date.now(),
+                        time: 'Vừa xong',
+                        unread: true,
+                        read: false,
+                        link: `chi-tiet-don-dat-san.html?id=${orderId}`,
+                        actionText: 'Xem chi tiết đơn hủy',
+                        actionIcon: 'receipt_long',
+                        icon: 'event_busy',
+                        color: 'text-red-600',
+                        bgIcon: 'bg-red-50 border border-red-200',
+                        badgeCategoryText: 'Hủy đặt sân',
+                        badgeClass: 'bg-red-100 text-red-800 border border-red-200'
+                    };
+                    notifs.unshift(newCancelNotif);
+                    localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
+                } catch(e) {}
+
+                // 3. Đóng modal và cập nhật ngay giao diện trang chi tiết
+                closeCancelModal();
+
+                if (btnConfirm) {
+                    btnConfirm.disabled = false;
+                    btnConfirm.innerHTML = `
+                        <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                        <span>Hủy sân &amp; Nhận tiền</span>
+                    `;
+                }
+
+                renderOrderDetails(currentActiveOrder);
+                showToast(`Đã hủy đơn đặt sân #${orderId} thành công! Tiền hoàn ${refundFormatted} đang được xử lý.`);
+
+                // Thông báo chuông đỏ
+                const notifDots = document.querySelectorAll('header .bg-error');
+                notifDots.forEach(d => d.classList.remove('hidden'));
+
+            }, 700);
+        }
+
+        // Các hàm phụ trợ
+        let currentDetailMode = 'regular';
+        let countdownTimerInterval = null;
+        let remainingFindingSeconds = 590;
+
+        function startFindingCountdown() {
+            if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+            const timerEl = document.getElementById('findingLiveTimer');
+            
+            function updateTimer() {
+                if (remainingFindingSeconds <= 0) {
+                    clearInterval(countdownTimerInterval);
+                    if (timerEl) timerEl.innerText = "00:00";
+                    if (currentDetailMode === 'finding') {
+                        showToast("⏳ Đã hết 10 phút quét nhanh. Đề xuất nới lỏng tiêu chí ghép!", false);
+                        setDetailViewMode('expired');
+                    }
+                    return;
+                }
+                const m = Math.floor(remainingFindingSeconds / 60);
+                const s = remainingFindingSeconds % 60;
+                if (timerEl) timerEl.innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2, '0')}`;
+                remainingFindingSeconds--;
+            }
+            updateTimer();
+            countdownTimerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function setDetailViewMode(mode, isRelaxed = false) {
+            currentDetailMode = mode;
+            const matchSection = document.getElementById('matchmakingSection');
+            const stateFinding = document.getElementById('matchStateFinding');
+            const stateMatched = document.getElementById('matchStateMatched');
+            const stateExpired = document.getElementById('matchStateExpired');
+            const badgeContainer = document.getElementById('matchmakingBadgeContainer');
+            const headerIconBox = document.getElementById('matchHeaderIconBox');
+            const headerIcon = document.getElementById('matchHeaderIcon');
+            const titleEl = document.getElementById('matchmakingTitle');
+            const subEl = document.getElementById('matchmakingSub');
+
+            if (mode === 'regular') {
+                if (matchSection) matchSection.classList.add('hidden');
+                if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+            } else {
+                if (matchSection) matchSection.classList.remove('hidden');
+
+                if (mode === 'finding') {
+                    if (headerIconBox) headerIconBox.className = "w-10 h-10 rounded-xl bg-orange-100 text-secondary flex items-center justify-center shrink-0";
+                    if (headerIcon) headerIcon.innerText = "sensors";
+                    if (titleEl) titleEl.innerText = isRelaxed ? "Tìm Đối Chơi Cùng (Đã nới lỏng)" : "Tìm Đối Chơi Cùng (MatchMaker)";
+                    if (subEl) subEl.innerText = isRelaxed ? "Đang quét tìm kiếm với tiêu chí mở rộng trong bán kính 10km" : "Kèo của bạn đang hiển thị công khai trên bảng lịch để người chơi khác xin ghép";
+
+                    if (badgeContainer) {
+                        badgeContainer.innerHTML = `
+                            <span class="px-3 py-1 rounded-full bg-orange-100 text-secondary border border-orange-300 text-xs font-extrabold flex items-center gap-1.5 shadow-2xs">
+                                <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+                                <span>${isRelaxed ? 'ĐANG TÌM ĐỐI (ĐÃ NỚI LỎNG)' : 'ĐANG TÌM ĐỐI THỦ'}</span>
+                            </span>
+                        `;
+                    }
+
+                    if (stateFinding) { stateFinding.classList.remove('hidden'); stateFinding.classList.add('flex'); }
+                    if (stateMatched) stateMatched.classList.add('hidden');
+                    if (stateExpired) stateExpired.classList.add('hidden');
+
+                    startFindingCountdown();
+                }
+                else if (mode === 'matched') {
+                    if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+                    if (headerIconBox) headerIconBox.className = "w-10 h-10 rounded-xl bg-emerald-100 text-primary flex items-center justify-center shrink-0";
+                    if (headerIcon) headerIcon.innerText = "handshake";
+                    if (titleEl) titleEl.innerText = "Kết Quả Ghép Đối (MatchMaker)";
+                    if (subEl) subEl.innerText = "Đã có người chơi tham gia cùng ca thi đấu của bạn";
+
+                    if (badgeContainer) {
+                        badgeContainer.innerHTML = `
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 text-primary border border-emerald-300 text-xs font-extrabold flex items-center gap-1.5 shadow-2xs">
+                                <span class="material-symbols-outlined text-[15px] text-primary">check_circle</span>
+                                <span>GHÉP THÀNH CÔNG</span>
+                            </span>
+                        `;
+                    }
+
+                    if (stateFinding) stateFinding.classList.add('hidden');
+                    if (stateMatched) { stateMatched.classList.remove('hidden'); stateMatched.classList.add('flex'); }
+                    if (stateExpired) stateExpired.classList.add('hidden');
+                }
+                else if (mode === 'expired') {
+                    if (countdownTimerInterval) clearInterval(countdownTimerInterval);
+                    if (headerIconBox) headerIconBox.className = "w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0";
+                    if (headerIcon) headerIcon.innerText = "tune";
+                    if (titleEl) titleEl.innerText = "Hết Hạn Tìm Đối - Nới Lỏng Tiêu Chí";
+                    if (subEl) subEl.innerText = "Đã qua thời gian quét nhanh, đề xuất mở rộng phạm vi tìm kiếm";
+
+                    if (badgeContainer) {
+                        badgeContainer.innerHTML = `
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold flex items-center gap-1.5 shadow-2xs">
+                                <span class="material-symbols-outlined text-[15px] text-amber-700">hourglass_top</span>
+                                <span>HẾT HẠN - NỚI LỎNG TIÊU CHÍ</span>
+                            </span>
+                        `;
+                    }
+
+                    if (stateFinding) stateFinding.classList.add('hidden');
+                    if (stateMatched) stateMatched.classList.add('hidden');
+                    if (stateExpired) { stateExpired.classList.remove('hidden'); stateExpired.classList.add('flex'); }
+                }
+            }
+        }
+
+        function handleRelaxCriteria() {
+            showToast("✅ Đã nới lỏng tiêu chí! Đang quét mở rộng: Mọi trình độ & Giới tính trong bán kính 10km.");
+            const gEl = document.getElementById('matchCriteriaGender');
+            const lEl = document.getElementById('matchCriteriaLevel');
+            const sHeading = document.getElementById('findingStatusHeading');
+            const sDesc = document.getElementById('findingStatusDesc');
+
+            if (gEl) gEl.innerText = "⚥ Mọi giới tính (Nam & Nữ)";
+            if (lEl) lEl.innerText = "Trình độ: Mọi trình độ";
+            if (sHeading) sHeading.innerText = "Đang quét tìm kiếm đối thủ trong bán kính mở rộng 10km...";
+            if (sDesc) sDesc.innerText = "Hệ thống đã nới lỏng tiêu chí (chấp nhận mọi trình độ và giới tính) để tăng cơ hội ghép cặp nhanh nhất.";
+
+            remainingFindingSeconds = 600;
+            setDetailViewMode('finding', true);
+        }
+
+        function handleKeepCourtPrivate() {
+            if (confirm("Xác nhận chuyển khung giờ này thành trận đấu riêng của bạn? Sân và tiền cọc được giữ nguyên 100%.")) {
+                if (currentActiveOrder) {
+                    currentActiveOrder.is_matching_enabled = false;
+                    currentActiveOrder.isMatchMaker = false;
+                    currentActiveOrder.match_status = 'private';
+                }
+                showToast("Đã chuyển thành trận đấu riêng của bạn. Chúc bạn chơi vui vẻ!");
+                setDetailViewMode('regular');
+            }
+        }
+
+        function handleStopMatchmakingInDetail() {
+            if (confirm("Bạn có chắc chắn muốn dừng tìm kiếm đối thủ? Sân và tiền cọc được giữ nguyên 100%.")) {
+                if (currentActiveOrder) {
+                    currentActiveOrder.is_matching_enabled = false;
+                    currentActiveOrder.isMatchMaker = false;
+                    currentActiveOrder.match_status = 'stopped';
+                }
+                showToast("Đã dừng tìm đối thủ. Đơn chuyển thành đơn Đặt thường.");
+                setDetailViewMode('regular');
+            }
+        }
+
+        // TOAST NỔI ĐẸP MẮT
+        function showToast(message, isSuccess = true) {
+            let t = document.getElementById('sb-detail-toast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'sb-detail-toast';
+                t.style.cssText = 'position:fixed;top:84px;left:50%;transform:translateX(-50%);z-index:99999;padding:12px 24px;border-radius:12px;color:#fff;font:600 13px "Be Vietnam Pro",sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.18);max-width:90vw;text-align:center;transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);display:flex;align-items:center;gap:8px;pointer-events:none;';
+                document.body.appendChild(t);
+            }
+            t.style.background = isSuccess ? '#006b2c' : '#b3261e';
+            t.innerHTML = `<span class="material-symbols-outlined text-lg">${isSuccess ? 'check_circle' : 'info'}</span><span>${message}</span>`;
+            t.style.opacity = '1';
+            t.style.transform = 'translateX(-50%) translateY(0)';
+            clearTimeout(t._h);
+            t._h = setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transform = 'translateX(-50%) translateY(-10px)';
+            }, 4000);
+        }
+
+        // ĐĂNG XUẤT AN TOÀN
+        function handleLogout() {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
+                localStorage.removeItem("currentUser");
+                localStorage.removeItem("sb_session");
+                window.location.href = "trangchu-user.html";
+            }
+        }
+
+        // Phím Escape để đóng modal
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCancelModal();
+        });
+    </script>
+
+    <!-- NHÚNG FILE AUTH ĐỂ ĐỒNG BỘ THÔNG TIN USER -->
+    <script src="auth.js"></script>
+</body>
+</html>

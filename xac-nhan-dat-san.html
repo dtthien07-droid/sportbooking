@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SportBooking - Quy trình Đặt sân & Thanh toán</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+        .step-panel {
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+        }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#341100",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#0051d5",
+                        "tertiary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#003ea8",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-highest": "#dce2f7",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#6e7b6c",
+                        "outline-variant": "#bdcaba",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    spacing: { 
+                        "space-xs": "0.25rem", 
+                        "space-sm": "0.5rem", 
+                        "space-md": "1rem", 
+                        "space-lg": "1.5rem", 
+                        "space-xl": "2rem", 
+                        "margin": "1.25rem" 
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased selection:bg-primary/20">
+
+    <!-- HEADER HỆ THỐNG ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <!-- LOGO CHỮ SPORTBOOKING THUẦN XANH LÁ -->
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-2xl font-bold text-primary tracking-tight">SportBooking</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- KHỐI CHUÔNG THÔNG BÁO XEM NHANH -->
+                <div class="relative" id="notifDropdownContainer">
+                    <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button">
+                        <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse hidden" id="badgeQuickCount"></span>
+                    </button>
+
+                    <!-- KHUNG POPOVER XEM NHANH THÔNG BÁO -->
+                    <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
+                        <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-on-surface">Thông báo</h3>
+                                <span class="px-2 py-0.5 rounded-full bg-red-100 text-error text-[10px] font-bold" id="badgePopoverUnread">0 chưa đọc</span>
+                            </div>
+                            <button type="button" id="btnMarkAllNotifs" class="text-xs text-primary font-bold hover:underline cursor-pointer">
+                                Đã đọc tất cả
+                            </button>
+                        </div>
+                        <div class="max-h-[340px] overflow-y-auto divide-y divide-gray-100" id="quickNotifList"></div>
+                        <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
+                            <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
+                                <span>Xem tất cả thông báo</span>
+                                <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC USER HEADER CHUẨN ĐÚNG ẢNH MẪU -->
+                <div id="userHeaderArea" class="flex items-center pl-2"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 min-h-screen bg-surface">
+        <div class="flex flex-col w-full">
+            <div class="w-full max-w-[1280px] mx-auto px-margin py-space-xl">
+                
+                <!-- NÚT QUAY LẠI CHỌN KHUNG GIỜ -->
+                <div class="flex items-center justify-between mb-space-md" id="topNavArea">
+                    <button type="button" onclick="goBackToPreviousStep()" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-surface-container-lowest hover:bg-surface-container text-on-surface text-sm font-bold border border-gray-200 shadow-xs transition-all cursor-pointer group hover:border-primary/50">
+                        <span class="material-symbols-outlined text-[19px] text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        <span id="btnBackText">Quay lại chọn khung giờ</span>
+                    </button>
+
+                    <!-- Tên sân phụ hiển thị phía đối diện -->
+                    <span class="text-xs text-on-surface-variant hidden sm:inline" id="breadcrumbVenueName">Sân bóng mini Đông Đô</span>
+                </div>
+
+                <!-- THANH TIẾN TRÌNH STEPPER (BỐ CỤC CHUẨN CỦA BƯỚC 1) -->
+                <div class="mb-space-lg bg-surface-container-lowest p-space-md rounded-2xl shadow-sm border border-gray-100">
+                    <div class="grid grid-cols-3 items-center relative">
+                        <!-- Đường kẻ tiến trình kết nối 3 bước -->
+                        <div class="absolute left-[16.6%] right-[16.6%] top-1/2 -translate-y-1/2 h-1 bg-surface-container-high rounded-full -z-0">
+                            <div id="stepperProgressBar" class="h-full w-0 bg-primary rounded-full transition-all duration-300"></div>
+                        </div>
+                        
+                        <!-- Bước 1 -->
+                        <div class="flex items-center gap-space-sm z-10 pl-space-xs cursor-pointer" onclick="goToStep(1)">
+                            <div id="step-icon-1" class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm transition-all">1</div>
+                            <div class="flex flex-col min-w-0">
+                                <span id="step-tag-1" class="text-[11px] text-primary uppercase font-bold tracking-wider">Bước 1</span>
+                                <span id="step-title-1" class="text-sm font-bold text-on-surface truncate">Xác nhận thông tin</span>
+                            </div>
+                        </div>
+
+                        <!-- Bước 2 -->
+                        <div class="flex items-center justify-center gap-space-sm z-10 cursor-pointer" onclick="goToStep(2)">
+                            <div id="step-icon-2" class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base transition-all">2</div>
+                            <div class="flex flex-col min-w-0">
+                                <span id="step-tag-2" class="text-[11px] text-on-surface-variant uppercase font-bold tracking-wider">Bước 2</span>
+                                <span id="step-title-2" class="text-sm font-medium text-on-surface-variant truncate">Thanh toán &amp; Giữ chỗ</span>
+                            </div>
+                        </div>
+
+                        <!-- Bước 3 -->
+                        <div class="flex items-center justify-end gap-space-sm z-10 pr-space-xs">
+                            <div id="step-icon-3" class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base transition-all">3</div>
+                            <div class="flex flex-col min-w-0 text-right">
+                                <span id="step-tag-3" class="text-[11px] text-on-surface-variant uppercase font-bold tracking-wider">Bước 3</span>
+                                <span id="step-title-3" class="text-sm font-medium text-on-surface-variant truncate">Hoàn tất đặt lịch</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BANNER ĐẾM NGƯỢC GIỮ CHỖ 10 PHÚT (HIỂN THỊ TRONG BƯỚC 1 & 2 - TỰ ĐỘNG QUAY VỀ KHI HẾT GIỜ) -->
+                <div id="countdownBanner" class="mb-space-lg p-space-md rounded-2xl bg-secondary-fixed/40 text-on-secondary-fixed flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md shadow-sm border border-secondary-fixed">
+                    <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-xl bg-secondary-container text-white flex items-center justify-center shrink-0 shadow-sm animate-pulse">
+                            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">hourglass_top</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="text-sm font-bold text-on-secondary-fixed">Lưu ý giữ chỗ:</span>
+                                <span class="text-sm text-on-secondary-fixed">Khung giờ đã chọn đang được tạm giữ trong</span>
+                                <span class="px-2 py-0.5 rounded-lg bg-secondary-container text-white text-sm font-mono font-bold" id="countdown-badge">09:59</span>
+                            </div>
+                            <p class="text-xs text-on-secondary-fixed-variant mt-0.5">Vui lòng hoàn tất xác nhận &amp; thanh toán để đảm bảo slot không bị hủy nhường cho người chơi khác.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-secondary text-xs font-bold shrink-0 self-end sm:self-center shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+                        <span>Hệ thống đang giữ slot</span>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- BƯỚC 1: XÁC NHẬN THÔNG TIN ĐẶT SÂN        -->
+                <!-- ========================================== -->
+                <div id="step-panel-1" class="step-panel">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                        
+                        <!-- CỘT TRÁI BƯỚC 1 (7 cols) -->
+                        <div class="lg:col-span-7 flex flex-col gap-space-lg">
+                            
+                            <!-- Thẻ Tóm tắt Sân & Khung giờ -->
+                            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
+                                <div class="flex items-start justify-between gap-space-md mb-space-md">
+                                    <div>
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-2">
+                                            <span class="material-symbols-outlined text-[14px]" id="step1SportIcon">sports_soccer</span>
+                                            <span id="displaySportBadge">Bóng đá mini</span>
+                                        </span>
+                                        <h2 class="text-xl font-bold text-on-surface" id="displayVenueName">Sân bóng mini Đông Đô</h2>
+                                        <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-1">
+                                            <span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+                                            <span id="displayVenueAddress">Ngõ 39 Triều Khúc, Thanh Xuân, Hà Nội</span>
+                                        </p>
+                                    </div>
+                                    <a id="btnMapDirections" class="px-3 py-1.5 rounded-xl bg-surface-container text-primary text-xs font-bold hover:bg-surface-container-high transition-colors flex items-center gap-1 shrink-0" href="https://maps.google.com" target="_blank" rel="noopener noreferrer">
+                                        <span class="material-symbols-outlined text-[16px]">map</span>
+                                        <span>Chỉ đường</span>
+                                    </a>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md p-space-md rounded-xl bg-surface-container-low border border-gray-200">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">grid_view</span> Sân thi đấu
+                                        </span>
+                                        <span class="text-sm font-bold text-on-surface mt-1" id="displayCourtSubName">Sân 5A (Cỏ nhân tạo)</span>
+                                        <span class="text-[11px] text-gray-500">Mặt cỏ nhân tạo tiêu chuẩn</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">calendar_today</span> Ngày chơi
+                                        </span>
+                                        <span class="text-sm font-bold text-on-surface mt-1" id="displaySelectedDate">Hôm nay (31/10/2026)</span>
+                                        <span class="text-[11px] text-primary font-bold">Ngày đã chọn</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">schedule</span> Khung giờ
+                                        </span>
+                                        <span class="text-sm font-bold text-on-surface mt-1" id="displaySelectedSlot">17:00 - 18:00</span>
+                                        <span class="text-[11px] text-secondary font-bold" id="displayDurationText">1 giờ thi đấu</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Thông Tin Người Đặt Sân -->
+                            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
+                                <div class="flex items-center justify-between mb-space-md">
+                                    <h3 class="text-base font-bold text-on-surface flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-primary text-[22px]">badge</span>
+                                        <span>Thông tin người đặt sân</span>
+                                    </h3>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold" id="displayUserBadge">
+                                        Đồng bộ tài khoản
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                                    <div>
+                                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5" for="bookerName">Họ và tên *</label>
+                                        <div class="relative">
+                                            <input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all border border-gray-200" id="bookerName" type="text" placeholder="Nhập họ và tên...">
+                                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-primary text-[18px]">verified</span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5" for="bookerPhone">Số điện thoại liên hệ *</label>
+                                        <div class="relative">
+                                            <input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all border border-gray-200" id="bookerPhone" type="text" placeholder="Nhập số điện thoại...">
+                                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-gray-400 text-[18px]">call</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5" for="bookerEmail">Email nhận hóa đơn &amp; mã QR Check-in</label>
+                                        <div class="relative">
+                                            <input class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all border border-gray-200" id="bookerEmail" type="email" placeholder="Nhập địa chỉ email...">
+                                            <span class="material-symbols-outlined absolute right-3 top-2.5 text-gray-400 text-[18px]">mail</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:col-span-2">
+                                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5" for="bookerNotes">Ghi chú cho quản lý sân (Tùy chọn)</label>
+                                        <textarea class="w-full px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-sm focus:ring-2 focus:ring-primary/20 outline-none resize-none transition-all border border-gray-200" id="bookerNotes" placeholder="Ví dụ: Cần mượn thêm bóng thi đấu, áo bib..." rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TÍNH NĂNG TÌM ĐỐI CHƠI CÙNG (MẶC ĐỊNH TẮT) -->
+                            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
+                                <div class="flex items-start justify-between gap-space-md">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-secondary text-[22px]">groups</span>
+                                            <h3 class="text-base font-bold text-on-surface">Tìm đối chơi cùng</h3>
+                                            <span class="px-2 py-0.5 rounded-md bg-orange-100 text-secondary text-[11px] font-bold">MatchMaker</span>
+                                        </div>
+                                        <p class="text-xs text-on-surface-variant mt-1">Đăng tin ghép cặp tự động lên bảng tin cộng đồng SportBooking khu vực sân.</p>
+                                    </div>
+
+                                    <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                        <input class="sr-only peer" id="matching-toggle" type="checkbox">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+
+                                <div id="matching-options-wrapper" class="hidden mt-4 pt-4 border-t border-gray-100">
+                                    <div class="grid grid-cols-2 gap-2 p-1 bg-surface-container rounded-xl mb-4">
+                                        <button class="py-2 rounded-lg text-xs font-semibold text-gray-500 hover:text-on-surface transition-all flex items-center justify-center gap-1.5 cursor-pointer" id="tab-random" type="button">
+                                            <span class="material-symbols-outlined text-[16px]">shuffle</span>
+                                            <span>Ghép ngẫu nhiên</span>
+                                        </button>
+                                        <button class="py-2 rounded-lg text-xs font-bold bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer" id="tab-criteria" type="button">
+                                            <span class="material-symbols-outlined text-[16px]">tune</span>
+                                            <span>Theo tiêu chí</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- VIEW A: GHÉP NGẪU NHIÊN -->
+                                    <div class="hidden flex-col gap-2" id="view-random">
+                                        <div class="flex items-center gap-3 p-3.5 rounded-xl bg-surface-container-low border border-gray-200">
+                                            <div class="w-9 h-9 rounded-full bg-green-100 text-primary flex items-center justify-center shrink-0">
+                                                <span class="material-symbols-outlined text-[20px]">radar</span>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-xs font-bold text-on-surface">Quét tìm người chơi quanh bán kính 5km</p>
+                                                <p class="text-[11px] text-on-surface-variant mt-0.5">Hệ thống sẽ gửi thông báo đến các thành viên rảnh trong khung giờ thi đấu này.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- VIEW B: TIÊU CHÍ GHÉP ĐỐI CHI TIẾT -->
+                                    <div class="flex flex-col gap-4" id="view-criteria">
+                                        <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                                            <div class="flex items-center gap-2">
+                                                <span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+                                                <span class="text-sm font-bold text-on-surface">Tiêu chí ghép đối chi tiết</span>
+                                            </div>
+                                            <button type="button" onclick="resetMatchingCriteria()" class="text-xs font-bold text-primary hover:underline cursor-pointer">
+                                                Đặt lại mặc định
+                                            </button>
+                                        </div>
+
+                                        <!-- 1. Giới tính mong muốn -->
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs font-bold text-on-surface">1. Giới tính mong muốn</span>
+                                                <span class="text-[11px] text-gray-400">Ưu tiên người nhận lời mời</span>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-2 text-xs" id="genderSelectionGroup">
+                                                <button type="button" onclick="selectGender('male', this)" class="gender-btn py-2.5 px-3 rounded-xl bg-surface-container-low text-on-surface font-semibold border border-gray-200 hover:border-primary/50 transition-all text-center">
+                                                    Nam
+                                                </button>
+                                                <button type="button" onclick="selectGender('female', this)" class="gender-btn active py-2.5 px-3 rounded-xl bg-primary text-white font-bold shadow-sm transition-all text-center">
+                                                    ♀ Nữ (Đang chọn)
+                                                </button>
+                                                <button type="button" onclick="selectGender('any', this)" class="gender-btn py-2.5 px-3 rounded-xl bg-surface-container-low text-on-surface font-semibold border border-gray-200 hover:border-primary/50 transition-all text-center">
+                                                    Bất kỳ (Nam/Nữ)
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- 2. Trình độ kỹ năng thi đấu -->
+                                        <div>
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="text-xs font-bold text-on-surface">2. Trình độ kỹ năng thi đấu</span>
+                                                <span class="text-[11px] text-primary font-semibold">Khớp kỹ năng để trận đấu hấp dẫn</span>
+                                            </div>
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                                <div onclick="selectSkillLevel('beginner', this)" class="skill-card p-3.5 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex flex-col justify-between">
+                                                    <div>
+                                                        <div class="flex items-center justify-between mb-1">
+                                                            <span class="text-xs font-bold text-on-surface">Mới chơi</span>
+                                                            <span class="skill-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]"></span>
+                                                        </div>
+                                                        <div class="text-amber-500 text-xs mb-1.5">★ ☆ ☆</div>
+                                                        <p class="text-[11px] text-gray-500 leading-relaxed">Dưới 6 tháng kinh nghiệm, rèn luyện sức bền.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div onclick="selectSkillLevel('intermediate', this)" class="skill-card active p-3.5 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex flex-col justify-between">
+                                                    <div>
+                                                        <div class="flex items-center justify-between mb-1">
+                                                            <span class="text-xs font-bold text-primary">Trung bình</span>
+                                                            <span class="skill-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">✓</span>
+                                                        </div>
+                                                        <div class="text-amber-500 text-xs mb-1.5">★ ★ ☆</div>
+                                                        <p class="text-[11px] text-on-surface-variant leading-relaxed">1 - 3 năm, nắm chắc kỹ thuật, phối hợp nhịp nhàng.</p>
+                                                    </div>
+                                                </div>
+
+                                                <div onclick="selectSkillLevel('advanced', this)" class="skill-card p-3.5 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex flex-col justify-between">
+                                                    <div>
+                                                        <div class="flex items-center justify-between mb-1">
+                                                            <span class="text-xs font-bold text-on-surface">Khá / Chuyên</span>
+                                                            <span class="skill-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]"></span>
+                                                        </div>
+                                                        <div class="text-amber-500 text-xs mb-1.5">★ ★ ★</div>
+                                                        <p class="text-[11px] text-gray-500 leading-relaxed">Trên 3 năm, chiến thuật linh hoạt, phong trào tốt.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 3. Thể thức thi đấu -->
+                                        <div>
+                                            <span class="block text-xs font-bold text-on-surface mb-2">3. Thể thức thi đấu</span>
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                <div onclick="selectMatchFormat('single', this)" class="format-card p-3 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex items-center gap-3">
+                                                    <span class="format-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]"></span>
+                                                    <div>
+                                                        <span class="text-xs font-bold text-on-surface block">Đánh đơn (1 vs 1)</span>
+                                                        <span class="text-[11px] text-gray-500">Tìm 01 người so tài đối kháng</span>
+                                                    </div>
+                                                </div>
+
+                                                <div onclick="selectMatchFormat('double', this)" class="format-card active p-3 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex items-center gap-3">
+                                                    <span class="format-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">●</span>
+                                                    <div>
+                                                        <span class="text-xs font-bold text-primary block">Đánh đôi / Ghép đội</span>
+                                                        <span class="text-[11px] text-on-surface-variant">Tìm thêm đồng đội ghép trận giao hữu</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 4. Lời nhắn / Ghi chú thêm -->
+                                        <div>
+                                            <div class="flex items-center justify-between mb-1.5">
+                                                <span class="text-xs font-bold text-on-surface">4. Lời nhắn / Ghi chú thêm</span>
+                                                <span class="text-[11px] text-gray-400" id="charCountLabel">Tối đa 150 ký tự</span>
+                                            </div>
+                                            <div class="relative">
+                                                <textarea id="matchingNoteText" maxlength="150" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-xs focus:ring-2 focus:ring-primary/20 outline-none resize-none transition-all border border-gray-200">Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!</textarea>
+                                                <span class="material-symbols-outlined absolute right-2.5 bottom-2 text-gray-400 text-[16px] pointer-events-none">edit_note</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- CỘT PHẢI BƯỚC 1: TÓM TẮT CHI PHÍ & NÚT TIẾP TỤC (5 cols) -->
+                        <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
+                            
+                            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
+                                <div class="flex items-center justify-between pb-3 border-b">
+                                    <h3 class="text-base font-bold text-on-surface">Tóm tắt chi phí</h3>
+                                    <span class="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full font-bold" id="displayDraftCode">Mã: SB-89201</span>
+                                </div>
+
+                                <div class="flex flex-col gap-2.5 pt-3 text-sm">
+                                    <div class="flex items-center justify-between text-on-surface">
+                                        <span class="flex items-center gap-1.5 text-on-surface-variant">
+                                            <span class="material-symbols-outlined text-[16px]">sports</span>
+                                            <span>Tiền thuê sân</span>
+                                        </span>
+                                        <span class="font-bold" id="displayBasePriceText">360.000đ</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-on-surface">
+                                        <span class="flex items-center gap-1.5 text-on-surface-variant">
+                                            <span class="material-symbols-outlined text-[16px]">lightbulb</span>
+                                            <span>Chiếu sáng &amp; vệ sinh</span>
+                                        </span>
+                                        <span class="text-primary font-bold">0đ (Đã bao gồm)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-on-surface">
+                                        <span class="flex items-center gap-1.5 text-secondary">
+                                            <span class="material-symbols-outlined text-[16px]">star</span>
+                                            <span>Ưu đãi thành viên (-5%)</span>
+                                        </span>
+                                        <span class="text-secondary font-bold" id="displayDiscountText">-18.000đ</span>
+                                    </div>
+
+                                    <div class="h-px bg-gray-100 my-1"></div>
+
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-bold text-on-surface">Tổng tiền dịch vụ:</span>
+                                        <span class="text-lg font-bold text-on-surface" id="displayFinalTotal">342.000đ</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tùy chọn cọc hay thanh toán hết -->
+                                <div class="mt-4 p-3 rounded-xl bg-surface-container-low border border-gray-200">
+                                    <span class="block text-xs font-bold text-on-surface mb-2">Tùy chọn thanh toán giữ sân:</span>
+                                    <div class="flex flex-col gap-2">
+                                        <label class="flex items-center justify-between p-2.5 rounded-lg bg-white cursor-pointer shadow-sm border border-gray-200">
+                                            <div class="flex items-center gap-2">
+                                                <input checked class="text-secondary focus:ring-secondary w-4 h-4 accent-secondary-container" name="payment_choice" type="radio" value="deposit">
+                                                <div>
+                                                    <span class="text-xs font-bold text-on-surface">Đặt cọc giữ sân (50%)</span>
+                                                    <p class="text-[11px] text-gray-500" id="depositRemainingText">Thanh toán nốt 171.000đ tại quầy</p>
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-bold text-secondary" id="depositPriceOptionBadge">171.000đ</span>
+                                        </label>
+                                        <label class="flex items-center justify-between p-2.5 rounded-lg bg-white cursor-pointer shadow-sm border border-gray-200">
+                                            <div class="flex items-center gap-2">
+                                                <input class="text-secondary focus:ring-secondary w-4 h-4 accent-secondary-container" name="payment_choice" type="radio" value="full">
+                                                <div>
+                                                    <span class="text-xs font-bold text-on-surface">Thanh toán toàn bộ (100%)</span>
+                                                    <p class="text-[11px] text-gray-500">Không cần thanh toán thêm tại sân</p>
+                                                </div>
+                                            </div>
+                                            <span class="text-xs font-bold text-on-surface" id="fullPriceBadge">342.000đ</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="mt-3 pt-2 border-t border-gray-200 flex items-center justify-between text-on-surface">
+                                        <span class="text-xs text-on-surface-variant font-medium">Số tiền cần thanh toán ngay:</span>
+                                        <span class="text-lg text-secondary font-bold" id="amount-payable">171.000đ</span>
+                                    </div>
+                                </div>
+
+                                <!-- CHECKBOX ĐIỀU KHOẢN -->
+                                <div class="mt-4">
+                                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                                        <input checked class="w-5 h-5 rounded accent-primary text-primary cursor-pointer shrink-0" id="terms-checkbox" type="checkbox">
+                                        <span class="text-xs text-on-surface leading-normal flex flex-wrap items-center gap-1">
+                                            <span>Tôi đã đọc và đồng ý với</span>
+                                            <a href="dieu-khoan-su-dung.html" class="border border-black px-1.5 py-0.5 rounded font-bold text-on-surface hover:bg-gray-100 transition-colors">Chính sách hủy sân</a>
+                                            <span>&amp;</span>
+                                            <a href="chinh-sach-bao-mat.html" class="text-primary font-bold hover:underline">Nội quy SportBooking</a>.
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <!-- NÚT TIẾP TỤC ĐẾN BƯỚC 2 -->
+                                <div class="mt-4 flex flex-col gap-2">
+                                    <button onclick="handleProceedToPayment()" class="w-full h-12 rounded-xl bg-secondary-container hover:bg-secondary text-white text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95" id="cta-checkout" type="button">
+                                        <span id="cta-text">TIẾP TỤC ĐẾN THANH TOÁN (171.000đ)</span>
+                                        <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                                    </button>
+                                    
+                                    <button type="button" onclick="goBackToPreviousStep()" class="w-full h-11 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer">
+                                        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                                        <span>Quay lại chọn khung giờ khác</span>
+                                    </button>
+                                </div>
+
+                                <div class="mt-4 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2 text-center">
+                                    <div class="flex items-center justify-center gap-1 text-gray-500 text-[11px]">
+                                        <span class="material-symbols-outlined text-sm text-primary">lock</span>
+                                        <span>Bảo mật SSL 256-bit</span>
+                                    </div>
+                                    <div class="flex items-center justify-center gap-1 text-gray-500 text-[11px]">
+                                        <span class="material-symbols-outlined text-sm text-primary">replay</span>
+                                        <span>Hoàn tiền minh bạch</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin chính sách hủy -->
+                            <div class="p-4 rounded-2xl bg-surface-container-lowest shadow-sm flex items-start gap-3 border border-gray-100">
+                                <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
+                                <p class="text-xs text-on-surface-variant leading-relaxed">
+                                    Hủy sân miễn phí trước giờ chơi ≥ 12 tiếng. Sau thời gian này, tiền cọc sẽ được xử lý theo quy định bảo vệ chủ sân.
+                                </p>
+                            </div>
+
+                        </aside>
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- BƯỚC 2: THANH TOÁN & GIỮ CHỖ              -->
+                <!-- ========================================== -->
+                <div id="step-panel-2" class="step-panel hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                        
+                        <!-- CỘT TRÁI: PHƯƠNG THỨC THANH TOÁN (7 cols) -->
+                        <div class="lg:col-span-7 flex flex-col gap-space-lg">
+                            <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
+                                <div class="flex flex-wrap items-center justify-between gap-space-sm">
+                                    <div class="flex items-center gap-2">
+                                        <h2 class="text-lg font-bold text-on-surface">Phương thức thanh toán</h2>
+                                        <span class="px-2.5 py-0.5 rounded-full bg-orange-100 text-secondary text-xs font-bold">Mô phỏng Sandbox</span>
+                                    </div>
+                                    <span class="text-xs text-on-surface-variant flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+                                        <span>Bảo mật SSL 256-bit</span>
+                                    </span>
+                                </div>
+
+                                <div class="bg-surface-container-low p-3.5 rounded-xl flex items-start gap-2.5 border border-gray-200">
+                                    <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
+                                    <p class="text-xs text-on-surface-variant leading-relaxed">
+                                        <strong class="text-on-surface">Môi trường thử nghiệm an toàn:</strong> Bạn không cần chuyển khoản tiền thật, chỉ cần nhấn nút xác nhận bên phải để nhận thông báo thành công và mã QR check-in ngay lập tức.
+                                    </p>
+                                </div>
+
+                                <!-- Danh sách phương thức -->
+                                <div class="flex flex-col gap-space-sm mt-1" id="payment-options-container">
+                                    
+                                    <!-- VietQR (Mặc định) -->
+                                    <label class="relative flex flex-col p-4 rounded-xl bg-white cursor-pointer transition-all shadow-sm ring-2 ring-primary border border-primary/20">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <input checked class="w-4 h-4 text-primary accent-primary cursor-pointer" name="payment_method" type="radio" value="vietqr">
+                                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                                    <span class="material-symbols-outlined text-[22px]">qr_code_scanner</span>
+                                                </div>
+                                                <div>
+                                                    <div class="flex items-center gap-1.5 flex-wrap">
+                                                        <span class="text-sm font-bold text-on-surface">Quét mã VietQR / Chuyển khoản nhanh</span>
+                                                        <span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[11px] font-bold">Khuyên dùng</span>
+                                                    </div>
+                                                    <p class="text-xs text-on-surface-variant">Hỗ trợ tất cả ngân hàng tại Việt Nam (MB, Vietcombank, Techcombank,...)</p>
+                                                </div>
+                                            </div>
+                                            <span class="material-symbols-outlined text-primary text-[22px]">expand_less</span>
+                                        </div>
+
+                                        <!-- Khung thông tin QR demo -->
+                                        <div class="mt-4 pt-4 border-t border-gray-100 bg-surface-container-low rounded-xl p-4 flex flex-col md:flex-row items-center gap-5">
+                                            <div class="bg-white p-3 rounded-xl shadow-sm flex flex-col items-center shrink-0 border border-gray-200">
+                                                <div class="w-36 h-36 bg-surface-container-high rounded-lg p-2 flex items-center justify-center relative">
+                                                    <img id="vietqr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=SPORTBOOKING-VIETQR-DEMO" alt="Mã VietQR" class="w-full h-full object-contain">
+                                                </div>
+                                                <span class="text-[11px] text-secondary mt-2 flex items-center gap-1 font-bold">
+                                                    <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+                                                    <span>Mã VietQR Tự Động</span>
+                                                </span>
+                                            </div>
+
+                                            <div class="flex-1 w-full flex flex-col gap-1 text-xs">
+                                                <div class="flex justify-between items-center py-1 border-b border-gray-200">
+                                                    <span class="text-gray-500">Ngân hàng:</span>
+                                                    <span class="font-bold text-on-surface">MB Bank (Quân Đội)</span>
+                                                </div>
+                                                <div class="flex justify-between items-center py-1 border-b border-gray-200">
+                                                    <span class="text-gray-500">Số tài khoản:</span>
+                                                    <span class="font-mono font-bold text-primary">0988 8888 6886</span>
+                                                </div>
+                                                <div class="flex justify-between items-center py-1 border-b border-gray-200">
+                                                    <span class="text-gray-500">Chủ tài khoản:</span>
+                                                    <span class="font-bold text-on-surface uppercase">SPORTBOOKING SYSTEM</span>
+                                                </div>
+                                                <div class="flex justify-between items-center py-1 border-b border-gray-200">
+                                                    <span class="text-gray-500">Số tiền cọc:</span>
+                                                    <span class="font-bold text-secondary text-sm" id="qrDepositAmount">171.000 đ</span>
+                                                </div>
+                                                <div class="flex justify-between items-center py-1.5 bg-white px-2 rounded-lg border border-gray-200 mt-1">
+                                                    <span class="text-gray-500">Nội dung CK:</span>
+                                                    <span class="font-mono font-bold text-primary" id="displayTransferMemo">SB 89201 0988123456</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- MoMo -->
+                                    <label class="flex items-center justify-between p-4 rounded-xl bg-white hover:bg-surface-container-low cursor-pointer transition-all shadow-sm border border-gray-100">
+                                        <div class="flex items-center gap-3">
+                                            <input class="w-4 h-4 text-primary accent-primary cursor-pointer" name="payment_method" type="radio" value="momo">
+                                            <div class="w-10 h-10 rounded-xl bg-pink-50 flex items-center justify-center text-pink-600 shrink-0">
+                                                <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-bold text-on-surface">Ví điện tử MoMo</span>
+                                                <p class="text-xs text-on-surface-variant">Thanh toán một chạm qua ứng dụng Ví MoMo</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+                                    </label>
+
+                                    <!-- ATM Nội địa -->
+                                    <label class="flex items-center justify-between p-4 rounded-xl bg-white hover:bg-surface-container-low cursor-pointer transition-all shadow-sm border border-gray-100">
+                                        <div class="flex items-center gap-3">
+                                            <input class="w-4 h-4 text-primary accent-primary cursor-pointer" name="payment_method" type="radio" value="atm">
+                                            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+                                                <span class="material-symbols-outlined text-[22px]">credit_card</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-bold text-on-surface">Thẻ ATM nội địa / Internet Banking</span>
+                                                <p class="text-xs text-on-surface-variant">Hỗ trợ cổng Napas / VNPAY liên kết các ngân hàng nội địa</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+                                    </label>
+
+                                    <!-- Thẻ quốc tế -->
+                                    <label class="flex items-center justify-between p-4 rounded-xl bg-white hover:bg-surface-container-low cursor-pointer transition-all shadow-sm border border-gray-100">
+                                        <div class="flex items-center gap-3">
+                                            <input class="w-4 h-4 text-primary accent-primary cursor-pointer" name="payment_method" type="radio" value="card">
+                                            <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 shrink-0">
+                                                <span class="material-symbols-outlined text-[22px]">payments</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-sm font-bold text-on-surface">Thẻ quốc tế (Visa / Mastercard / JCB)</span>
+                                                <p class="text-xs text-on-surface-variant">Miễn phí xử lý giao dịch qua cổng bảo mật quốc tế</p>
+                                            </div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                            <!-- Quy định hoàn cọc -->
+                            <div class="bg-surface-container-low p-4 rounded-2xl flex items-start gap-3 border border-gray-200">
+                                <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-primary shrink-0 shadow-sm">
+                                    <span class="material-symbols-outlined text-[20px]">rule</span>
+                                </div>
+                                <div class="flex flex-col gap-0.5 text-xs text-on-surface-variant">
+                                    <h4 class="font-bold text-on-surface text-sm">Quy định giữ chỗ &amp; hoàn cọc</h4>
+                                    <p class="leading-relaxed">
+                                        • Hủy trước 12 tiếng: Hoàn lại 100% tiền cọc về tài khoản nguồn.<br/>
+                                        • Quý khách vui lòng đến trước giờ đấu 10 phút để nhận sân và chuẩn bị trang phục thi đấu.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CỘT PHẢI: TÓM TẮT ĐƠN & NÚT XÁC NHẬN BƯỚC 2 (5 cols) -->
+                        <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
+                            <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex flex-col gap-space-md border border-gray-100">
+                               
+                                <!-- Header mã giữ chỗ -->
+                                <div class="flex items-center justify-between pb-3 border-b">
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] text-gray-400 uppercase font-bold">Mã giữ chỗ tạm thời</span>
+                                        <span class="font-mono text-sm text-primary font-bold" id="displaySidebarOrderId">#SB-89201</span>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        <span>Đang giữ slot</span>
+                                    </span>
+                                </div>
+
+                                <!-- Thông tin sân tóm tắt -->
+                                <div class="flex gap-3 items-start">
+                                    <img id="sidebarVenueImg" class="w-16 h-16 rounded-xl object-cover shrink-0 border" alt="Sân thi đấu" src="https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80"/>
+                                    <div class="flex flex-col min-w-0">
+                                        <span id="sidebarSportLabel" class="text-[10px] text-primary font-bold uppercase truncate">Bóng đá mini</span>
+                                        <h3 id="sidebarCourtName" class="text-sm font-bold text-on-surface leading-tight mt-0.5 truncate">Sân 5A (Cỏ nhân tạo)</h3>
+                                        <p id="sidebarVenueName" class="text-xs text-gray-500 mt-0.5 truncate">Sân bóng mini Đông Đô</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-surface-container-low p-3 rounded-xl flex flex-col gap-1.5 text-xs border border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-500 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">calendar_today</span> Ngày chơi:
+                                        </span>
+                                        <span class="font-bold text-on-surface" id="displaySidebarDate">31/10/2026</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-500 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">schedule</span> Khung giờ:
+                                        </span>
+                                        <span class="font-bold text-primary font-mono" id="displaySidebarTimeSlot">17:00 - 18:00</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-500 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[15px]">person</span> Người đặt:
+                                        </span>
+                                        <span class="font-bold text-on-surface" id="displaySidebarUser">Trúc Lam (0988***456)</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tính toán chi phí chuẩn xác -->
+                                <div class="flex flex-col gap-2 pt-1 text-xs">
+                                    <div class="flex items-center justify-between text-on-surface-variant">
+                                        <span>Giá thuê sân:</span>
+                                        <span class="font-semibold text-on-surface" id="displaySidebarCourtPrice">360.000 đ</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-on-surface-variant">
+                                        <span>Chiếu sáng &amp; vệ sinh:</span>
+                                        <span class="text-primary font-bold">0 đ (Miễn phí)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-on-surface-variant">
+                                        <span class="italic">Thanh toán nốt tại quầy:</span>
+                                        <span class="italic font-bold text-on-surface" id="displaySidebarRemainingPrice">171.000 đ</span>
+                                    </div>
+
+                                    <div class="p-3 bg-secondary-fixed/50 rounded-xl flex items-center justify-between mt-1 border border-secondary-fixed">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-bold text-on-secondary-fixed uppercase" id="sidebarPaymentLabel">TIỀN CỌC GIỮ SÂN</span>
+                                            <span class="text-[11px] text-gray-600">Thanh toán ngay</span>
+                                        </div>
+                                        <span class="text-xl font-bold text-secondary" id="displaySidebarDepositPrice">171.000 đ</span>
+                                    </div>
+                                </div>
+
+                                <!-- Nút hành động xác nhận thanh toán -->
+                                <div class="flex flex-col gap-2 mt-2">
+                                    <button onclick="handleExecutePayment()" class="w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95" id="btn-submit-payment" type="button">
+                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                        <span>XÁC NHẬN THANH TOÁN MÔ PHỎNG</span>
+                                    </button>
+                                    <button onclick="goToStep(1)" type="button" class="w-full py-2.5 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold text-center transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                                        <span>Quay lại Bước 1: Xác nhận thông tin</span>
+                                    </button>
+                                </div>
+
+                                <div class="pt-2 text-center text-xs text-gray-400 flex flex-col gap-1">
+                                    <div class="flex items-center justify-center gap-1">
+                                        <span class="material-symbols-outlined text-sm text-primary">lock</span>
+                                        <span>Giao dịch được mã hóa an toàn</span>
+                                    </div>
+                                    <span>Hotline hỗ trợ: <strong class="text-secondary font-bold">1900 8899</strong></span>
+                                </div>
+                            </div>
+                        </aside>
+
+                    </div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- BƯỚC 3: HOÀN TẤT ĐẶT LỊCH (VÉ ĐIỆN TỬ)      -->
+                <!-- ========================================== -->
+                <div id="step-panel-3" class="step-panel hidden">
+                    <section class="flex flex-col items-center text-center max-w-2xl mx-auto mb-space-lg">
+                        <div class="relative mb-space-md">
+                            <div class="w-20 h-20 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg transform transition-transform hover:scale-105">
+                                <span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </div>
+                            <span class="absolute -top-1 -right-2 px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold shadow-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">verified</span>
+                                Thành công
+                            </span>
+                        </div>
+                        <h1 class="text-3xl font-extrabold text-on-surface tracking-tight mb-2">
+                            ĐẶT SÂN THÀNH CÔNG!
+                        </h1>
+                        <p class="text-sm text-on-surface-variant max-w-xl mb-4">
+                            Cảm ơn bạn! Lịch đặt sân của bạn đã được xác nhận và thông báo chi tiết đã gửi về hòm thư
+                            <span class="font-bold text-on-surface" id="step3ConfirmEmail">truclam@gmail.com</span>.
+                        </p>
+                        <div class="flex flex-wrap items-center justify-center gap-space-md bg-surface-container-lowest px-space-lg py-space-sm rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-space-xs">
+                                <span class="text-xs text-on-surface-variant">Mã đặt sân:</span>
+                                <span class="font-bold text-base text-primary tracking-wide" id="step3BookingIdText">#SB-89201</span>
+                                <button aria-label="Sao chép mã đặt sân" onclick="copyBookingId()" class="p-1 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary cursor-pointer" type="button">
+                                    <span class="material-symbols-outlined text-base align-middle">content_copy</span>
+                                </button>
+                                <span class="text-xs text-primary opacity-0 transition-opacity duration-200" id="copyFeedback">Đã chép!</span>
+                            </div>
+                            <span class="text-gray-300">•</span>
+                            <div class="inline-flex items-center gap-1 px-space-sm py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide">
+                                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                Đã xác nhận
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Khung Thẻ Vé Điện Tử & Cột phụ theo chuẩn Bước 1 -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                        
+                        <!-- Cột Trái: Chi tiết Vé điện tử (7 cols) -->
+                        <div class="lg:col-span-7 flex flex-col gap-space-lg">
+                            <article class="relative bg-surface-container-lowest rounded-2xl shadow-md overflow-hidden border border-gray-100">
+                                <div class="h-3 w-full bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
+                                <div class="p-space-lg flex flex-col gap-space-lg">
+                                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+                                        <div class="flex items-start gap-space-md">
+                                            <div class="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0 shadow-sm" id="step3SportIconBox">
+                                                <span class="material-symbols-outlined text-3xl" id="step3SportIcon">sports_soccer</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-[11px] uppercase tracking-wider text-secondary font-bold">Vé Điện Tử Thể Thao</span>
+                                                <h2 class="text-xl font-bold text-on-surface mt-0.5" id="step3VenueName">Sân bóng mini Đông Đô</h2>
+                                                <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-1">
+                                                    <span class="material-symbols-outlined text-base text-primary">location_on</span>
+                                                    <span id="step3Address">Ngõ 39 Triều Khúc, Thanh Xuân, Hà Nội</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex md:flex-col items-center md:items-end justify-between bg-surface-container-low md:bg-transparent p-space-sm md:p-0 rounded-xl">
+                                            <span class="text-xs text-on-surface-variant">Trạng thái slot</span>
+                                            <span class="text-xs font-bold text-primary bg-primary/10 px-space-sm py-0.5 rounded-full">Đã giữ sân</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="relative py-1">
+                                        <div class="h-[1px] w-full bg-surface-container-highest"></div>
+                                    </div>
+
+                                    <!-- 4 thông số chi tiết vé -->
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border border-gray-100">
+                                            <span class="text-xs uppercase text-on-surface-variant flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">stadium</span> Vị trí sân
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="step3CourtName">Sân 5A</p>
+                                            <p class="text-[11px] text-gray-500">Cỏ nhân tạo</p>
+                                        </div>
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border border-gray-100">
+                                            <span class="text-xs uppercase text-on-surface-variant flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">schedule</span> Khung giờ
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="step3TimeDisplay">17:00 - 18:00</p>
+                                            <p class="text-[11px] text-gray-500">Thời lượng: 60 phút</p>
+                                        </div>
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border border-gray-100">
+                                            <span class="text-xs uppercase text-on-surface-variant flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">calendar_today</span> Ngày chơi
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="step3DateDisplay">31/10/2026</p>
+                                            <p class="text-[11px] text-primary font-bold">Đã chốt lịch</p>
+                                        </div>
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border border-gray-100">
+                                            <span class="text-xs uppercase text-on-surface-variant flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">person</span> Người đặt
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="step3UserName">Trúc Lam</p>
+                                            <p class="text-[11px] text-gray-500" id="step3UserPhone">0988 123 456</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tính toán tiền & QR Code -->
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-gray-100">
+                                        <div class="md:col-span-8 flex flex-col gap-space-xs text-xs">
+                                            <div class="flex justify-between items-center py-1">
+                                                <span class="text-on-surface-variant">Tổng giá trị đặt sân:</span>
+                                                <span class="font-bold text-on-surface" id="step3TotalPriceDisplay">342.000đ</span>
+                                            </div>
+                                            <div class="flex justify-between items-center py-1">
+                                                <span class="text-on-surface-variant flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-base text-primary">check_circle</span>
+                                                    Đã thanh toán (Mô phỏng):
+                                                </span>
+                                                <span class="text-base font-bold text-primary" id="step3DepositDisplay">171.000đ</span>
+                                            </div>
+                                            <div class="flex justify-between items-center py-1.5 bg-secondary-fixed/30 px-space-sm rounded-lg">
+                                                <span class="text-on-secondary-fixed-variant font-medium">Còn lại thanh toán tại quầy lễ tân:</span>
+                                                <span class="text-base font-bold text-secondary" id="step3RemainingDisplay">171.000đ</span>
+                                            </div>
+                                        </div>
+                                        <div class="md:col-span-4 flex flex-col items-center justify-center p-space-sm bg-surface rounded-xl border border-gray-100">
+                                            <div class="p-2 bg-surface-container-lowest rounded-lg shadow-sm">
+                                                <img id="step3QrImage" class="w-28 h-28 object-contain" src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=SB-89201" alt="QR Check-in">
+                                            </div>
+                                            <span class="text-[10px] text-on-surface-variant mt-1 text-center font-bold" id="step3QrCodeText">Quét QR tại quầy để nhận sân</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-space-sm bg-surface-container-high/60 p-space-md rounded-xl text-on-surface">
+                                        <span class="material-symbols-outlined text-secondary text-xl mt-0.5">info</span>
+                                        <div class="flex flex-col gap-0.5">
+                                            <span class="text-xs font-bold text-on-surface">Lưu ý quan trọng khi đến sân:</span>
+                                            <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                                                Vui lòng mang theo trang phục thi đấu phù hợp. Có mặt trước 10 phút để nhận sân và làm thủ tục thanh toán phần còn lại tại lễ tân.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Hàng nút hành động dưới vé -->
+                            <div class="flex flex-wrap items-center gap-space-md">
+                                <a id="step3GoDetailLink" href="chi-tiet-don-dat-san.html" class="flex-1 min-w-[200px] h-12 px-space-lg rounded-xl bg-secondary-container text-white text-sm font-bold flex items-center justify-center gap-space-xs shadow-md hover:bg-secondary transition-all">
+                                    <span class="material-symbols-outlined text-xl">receipt_long</span>
+                                    <span>Xem chi tiết đơn này</span>
+                                </a>
+                                <a href="lich-su-dat-san.html" class="h-12 px-space-lg rounded-xl bg-primary text-white text-sm font-bold flex items-center justify-center gap-space-xs shadow-md hover:bg-primary-container transition-all">
+                                    <span class="material-symbols-outlined text-xl">calendar_month</span>
+                                    <span>Lịch sử đặt sân</span>
+                                </a>
+                                <button onclick="window.print()" class="h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface text-xs font-bold flex items-center justify-center gap-space-xs shadow-sm hover:bg-surface-container-high border transition-all cursor-pointer" type="button">
+                                    <span class="material-symbols-outlined text-lg text-on-surface-variant">print</span>
+                                    <span>In vé</span>
+                                </button>
+                                <a href="trangchu-user.html" class="h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface text-xs font-bold flex items-center justify-center gap-space-xs shadow-sm hover:bg-surface-container-high border transition-all">
+                                    <span class="material-symbols-outlined text-lg text-on-surface-variant">home</span>
+                                    <span>Về trang chủ</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Cột Phải: Rủ bạn bè thi đấu HOẶC Widget Live Radar MatchMaker (5 cols) -->
+                        <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
+                            
+                            <!-- 1. KHỐI RỦ BẠN BÈ THI ĐẤU (HIỂN THỊ KHI isMatchMaker = false) -->
+                            <div id="friendInviteCard" class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
+                                <div class="flex items-center gap-space-sm">
+                                    <div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-xl">share</span>
+                                    </div>
+                                    <h3 class="text-sm font-bold text-on-surface">Rủ bạn bè thi đấu</h3>
+                                </div>
+                                <p class="text-xs text-on-surface-variant leading-relaxed">
+                                    Chia sẻ nhanh lịch thi đấu kèm định vị sân và mã trận cho bạn bè qua mạng xã hội:
+                                </p>
+                                <div class="grid grid-cols-2 gap-space-sm">
+                                    <button onclick="alert('Đã gửi thông tin lịch thi đấu qua Zalo!')" class="py-2.5 px-space-sm rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-tertiary-fixed-dim transition-colors cursor-pointer" type="button">
+                                        <span class="material-symbols-outlined text-base">forum</span>
+                                        <span>Gửi Zalo</span>
+                                    </button>
+                                    <button onclick="alert('Đã chia sẻ lịch thi đấu qua Messenger!')" class="py-2.5 px-space-sm rounded-xl bg-surface-container text-on-surface text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-surface-container-high transition-colors cursor-pointer" type="button">
+                                        <span class="material-symbols-outlined text-base">chat</span>
+                                        <span>Messenger</span>
+                                    </button>
+                                </div>
+                                <button class="w-full py-2.5 px-space-sm rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface text-xs font-bold flex items-center justify-center gap-1 transition-colors cursor-pointer border border-gray-200" onclick="copyInviteLink(this)" type="button">
+                                    <span class="material-symbols-outlined text-sm">link</span>
+                                    <span>Sao chép đường dẫn lời mời</span>
+                                </button>
+                            </div>
+
+                            <!-- 2. WIDGET RADAR QUÉT ĐỐI NHỎ GỌN (LIVE MATCHMAKER MINI-CARD) (HIỂN THỊ KHI isMatchMaker = true) -->
+                            <div id="matchmakerMiniCard" class="hidden bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-primary/30 relative overflow-hidden transition-all duration-300">
+                                
+                                <!-- Header khối -->
+                                <div class="flex items-center justify-between pb-3 border-b border-gray-100" id="miniCardHeader">
+                                    <div class="flex items-center gap-2">
+                                        <span id="miniCardStatusDot" class="relative flex h-3 w-3">
+                                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                            <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                                        </span>
+                                        <div class="flex flex-col">
+                                            <h3 id="miniCardTitle" class="text-sm font-bold text-on-surface leading-tight">Trạng thái ghép đối (Live Radar)</h3>
+                                            <span id="miniCardSubtitle" class="text-[10px] text-primary font-bold uppercase tracking-wider flex items-center gap-1">
+                                                <span class="animate-pulse">Đang quét tìm kiếm...</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div id="miniCardBadgeContainer">
+                                        <div id="miniRadarBadgeLive" class="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary font-mono font-bold text-xs shadow-xs border border-primary/20">
+                                            <span class="material-symbols-outlined text-[15px]">timer</span>
+                                            <span id="miniRadarCountdown">09:59</span>
+                                        </div>
+                                        <div id="miniRadarBadgeExpired" class="hidden px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700 font-bold text-[10px] border border-gray-300 uppercase tracking-tight">
+                                            ĐÃ KẾT THÚC QUÉT TRỰC TIẾP
+                                        </div>
+                                        <div id="miniRadarBadgeMatched" class="hidden px-2.5 py-1 rounded-lg bg-emerald-100 text-primary font-extrabold text-[11px] border border-emerald-300 flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                            <span>ĐÃ ĐỦ NGƯỜI (4/4)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- THÂN KHỐI 1: ĐANG QUÉT RADAR (LIVE SCANNING) -->
+                                <div id="miniCardScanningBody" class="flex flex-col items-center text-center py-1 relative">
+                                    <!-- Mini Radar Animation Sonar -->
+                                    <div class="relative w-28 h-28 flex items-center justify-center my-1">
+                                        <div class="absolute inset-0 rounded-full border border-primary/20 animate-ping" style="animation-duration: 2.6s;"></div>
+                                        <div class="absolute inset-3 rounded-full border border-primary/35 animate-pulse"></div>
+                                        <div class="absolute inset-6 rounded-full bg-primary/5 flex items-center justify-center"></div>
+
+                                        <!-- Tia Quét Radar Scanner Mini -->
+                                        <svg class="absolute inset-0 w-full h-full animate-spin" style="animation-duration: 4s; transform-origin: center center;" viewBox="0 0 100 100">
+                                            <defs>
+                                                <linearGradient id="mini-scanner-beam" x1="0%" x2="100%" y1="0%" y2="100%">
+                                                    <stop offset="0%" stop-color="#006b2c" stop-opacity="0.45"></stop>
+                                                    <stop offset="100%" stop-color="#006b2c" stop-opacity="0"></stop>
+                                                </linearGradient>
+                                            </defs>
+                                            <path d="M 50 50 L 50 0 A 50 50 0 0 1 95 25 Z" fill="url(#mini-scanner-beam)"></path>
+                                        </svg>
+
+                                        <!-- Tâm Radar Icon -->
+                                        <div class="relative z-10 w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center text-primary border border-primary/25">
+                                            <span class="material-symbols-outlined text-2xl" id="miniRadarSportIcon">sports_soccer</span>
+                                        </div>
+
+                                        <!-- Điểm ping đối thủ gần -->
+                                        <div class="absolute top-2 right-4 w-3.5 h-3.5 rounded-full bg-secondary-container text-white flex items-center justify-center text-[8px] font-bold shadow-xs animate-bounce" title="Có 1 ứng viên tiềm năng">1</div>
+                                        <div class="absolute bottom-3 left-3 w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></div>
+                                    </div>
+
+                                    <!-- Dòng chữ trạng thái -->
+                                    <p class="text-xs font-semibold text-on-surface mt-2 max-w-xs leading-relaxed" id="miniRadarStatusText">
+                                        Đang quét tìm người chơi trình độ <strong class="text-primary font-bold" id="miniRadarLevel">Trung bình</strong> quanh bán kính 5km...
+                                    </p>
+
+                                    <!-- Tóm tắt tiêu chí đã chọn -->
+                                    <div class="flex flex-wrap items-center justify-center gap-1.5 mt-2.5" id="miniRadarBadges">
+                                        <span class="px-2 py-0.5 rounded-md bg-surface-container-low text-on-surface text-[11px] font-semibold border border-gray-200" id="miniBadgeGender">Nữ</span>
+                                        <span class="text-gray-300">•</span>
+                                        <span class="px-2 py-0.5 rounded-md bg-surface-container-low text-on-surface text-[11px] font-semibold border border-gray-200" id="miniBadgeFormat">Đánh đôi</span>
+                                        <span class="text-gray-300">•</span>
+                                        <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-primary text-[11px] font-bold border border-emerald-200">Chia đôi tiền</span>
+                                    </div>
+                                </div>
+
+                                <!-- THÂN KHỐI 2: HẾT GIỜ ĐẾM NGƯỢC (TRƯỜNG HỢP 1 - 00:00) -->
+                                <div id="miniCardExpiredBody" class="hidden flex-col items-center text-center py-2 relative">
+                                    <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200 shadow-xs mb-2">
+                                        <span class="material-symbols-outlined text-3xl">hourglass_disabled</span>
+                                    </div>
+                                    <div class="p-3 bg-amber-50/90 rounded-xl border border-amber-200 text-xs text-amber-950 text-center leading-relaxed">
+                                        Chưa tìm thấy tay vợt phù hợp trong phiên quét nhanh. Kèo đấu của bạn vẫn đang được treo công khai trên bảng lịch sân để người khác có thể thấy và bấm <strong>"Xin ghép"</strong>.
+                                    </div>
+                                    <p class="text-[11px] text-gray-500 mt-2">
+                                        ✓ Slot sân của bạn vẫn giữ nguyên hợp lệ và không bị hủy.
+                                    </p>
+                                </div>
+
+                                <!-- THÂN KHỐI 3: GHÉP ĐỐI THÀNH CÔNG (TRƯỜNG HỢP 2 - KHỚP KÈO) -->
+                                <div id="miniCardMatchedBody" class="hidden flex-col items-center text-center py-1 relative">
+                                    <div class="w-14 h-14 rounded-full bg-emerald-100 text-primary flex items-center justify-center border-2 border-emerald-300 my-1 shadow-sm animate-bounce">
+                                        <span class="material-symbols-outlined text-3xl">handshake</span>
+                                    </div>
+                                    
+                                    <div class="w-full bg-surface-container-low rounded-xl p-3.5 border border-gray-200 text-left flex flex-col gap-2 mt-1">
+                                        <div class="flex items-center gap-3">
+                                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" alt="Lê Minh Trang" class="w-12 h-12 rounded-full object-cover border-2 border-primary shrink-0 shadow-xs">
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex items-center gap-1.5">
+                                                    <span class="font-extrabold text-sm text-slate-900 truncate">Lê Minh Trang</span>
+                                                    <span class="px-1.5 py-0.2 rounded text-[10px] font-bold bg-pink-100 text-pink-700">♀ Nữ</span>
+                                                </div>
+                                                <p class="text-xs text-slate-600 mt-0.5">Trình độ: <strong class="text-primary font-bold">Trung bình</strong> • 5.0 ★ (24 trận)</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between pt-2 border-t border-gray-200/80 text-xs">
+                                            <span class="text-slate-500 flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[15px] text-primary">call</span> Liên hệ nhanh:
+                                            </span>
+                                            <a href="tel:0977234567" class="font-mono font-bold text-primary hover:underline flex items-center gap-1">
+                                                <span>0977 234 567</span>
+                                                <span class="material-symbols-outlined text-xs">call</span>
+                                            </a>
+                                        </div>
+                                        <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center gap-1.5">
+                                            <span class="material-symbols-outlined text-[16px] text-primary shrink-0">payments</span>
+                                            <span>Đối thủ sẽ gửi <strong>38.000đ</strong> cho bạn khi đến sân thi đấu.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CÁC HÀNG NÚT BẤM HÀNH ĐỘNG THEO TỪNG TRẠNG THÁI -->
+                                
+                                <!-- 1. Nút khi đang quét LIVE -->
+                                <div id="miniCardScanningActions" class="flex flex-col gap-2 pt-2 border-t border-gray-100">
+                                 
+                                     
+                                    </a>
+                                    <button id="btnStopMatchmaking" onclick="handleStopMatchmaking()" type="button" class="w-full py-2 px-4 rounded-xl bg-surface-container hover:bg-red-50 hover:text-error text-on-surface-variant text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[16px]">pause_circle</span>
+                                        <span>Dừng tìm đối</span>
+                                    </button>
+                                </div>
+
+                                <!-- 2. Nút khi Hết giờ (Trường hợp 1) -->
+                                <div id="miniCardExpiredActions" class="hidden flex-col gap-2 pt-2 border-t border-gray-100">
+                                    <button onclick="window.location.href='lich-su-dat-san.html'" type="button" class="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[17px]">calendar_month</span>
+                                        <span>Xem trong Lịch sử đặt sân</span>
+                                    </button>
+                                    <button onclick="copyInviteLink(this)" type="button" class="w-full py-2 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer border border-gray-200">
+                                        <span class="material-symbols-outlined text-[16px]">share</span>
+                                        <span>Sao chép link mời bạn bè</span>
+                                    </button>
+                                </div>
+
+                                <!-- 3. Nút khi Khớp kèo thành công (Trường hợp 2) -->
+                                <div id="miniCardMatchedActions" class="hidden flex-col gap-2 pt-2 border-t border-gray-100">
+                                    <button onclick="goToMatchedOrderDetail()" type="button" class="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+                                        <span class="material-symbols-outlined text-[17px]">receipt_long</span>
+                                        <span>Xem chi tiết trận đấu & Lịch hẹn</span>
+                                    </button>
+                                    <a href="tel:0977234567" class="w-full py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-primary text-xs font-bold transition-colors flex items-center justify-center gap-1 border border-emerald-200">
+                                        <span class="material-symbols-outlined text-[16px]">call</span>
+                                        <span>Gọi điện cho đối thủ</span>
+                                    </a>
+                                </div>
+
+                                <!-- Link mời bạn riêng ở dưới cùng -->
+                                <div class="text-center pt-1 border-t border-gray-100" id="miniCardInviteFooter">
+                                    <button onclick="copyInviteLink(this)" type="button" class="text-[11px] text-gray-500 hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[13px]">link</span>
+                                        <span>Hoặc sao chép link rủ bạn riêng</span>
+                                    </button>
+                                </div>
+
+                                <!-- BỘ ĐIỀU KHIỂN MÔ PHỎNG TEST CẢ 3 TRẠNG THÁI -->
+                                <div class="bg-gray-50 border-t border-gray-100 -mx-6 -mb-6 p-2.5 px-6 flex items-center justify-between text-[11px] text-slate-500">
+                                    <span class="font-bold flex items-center gap-1 text-slate-700">
+                                        <span class="material-symbols-outlined text-[14px] text-secondary">science</span> Test kịch bản:
+                                    </span>
+                                    <div class="flex items-center gap-1">
+                                        <button onclick="setMiniRadarScenario('scanning')" type="button" class="px-2 py-0.5 rounded bg-white hover:bg-slate-100 border text-slate-700 font-semibold shadow-2xs">1. Live</button>
+                                        <button onclick="setMiniRadarScenario('expired')" type="button" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold shadow-2xs">2. Hết giờ</button>
+                                        <button onclick="setMiniRadarScenario('matched')" type="button" class="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-primary font-bold shadow-2xs">3. Khớp kèo</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- KHỐI VỊ TRÍ & HOTLINE (LUÔN HIỂN THỊ) -->
+                            <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-space-sm">
+                                        <div class="w-9 h-9 rounded-lg bg-surface-container text-primary flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xl">navigation</span>
+                                        </div>
+                                        <h3 class="text-sm font-bold text-on-surface">Vị trí &amp; Hotline</h3>
+                                    </div>
+                                    <a id="btnMapSidebar" class="text-xs text-primary font-bold hover:underline flex items-center gap-0.5" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
+                                        <span>Mở Maps</span>
+                                        <span class="material-symbols-outlined text-xs">open_in_new</span>
+                                    </a>
+                                </div>
+                                <div class="flex flex-col gap-2 pt-1 text-xs">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-500">Hotline sân:</span>
+                                        <a class="font-bold text-primary hover:underline" href="tel:02439887766">024 3988 7766</a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-500">Bãi đỗ xe:</span>
+                                        <span class="font-semibold text-on-surface">Ô tô &amp; Xe máy miễn phí</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER ĐỒNG BỘ CHUẨN BƯỚC 1 -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================== -->
+    <!-- JAVASCRIPT ĐIỀU KHIỂN ĐỒNG BỘ 3 BƯỚC & ĐẾM NGƯỢC 10 PHÚT      -->
+    <!-- ============================================================== -->
+    <script>
+        // Kho ảnh sân thực tế chuẩn theo môn thể thao
+        const VENUE_IMAGES = {
+            badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
+            soccer: "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80",
+            pickleball: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80"
+        };
+
+        let currentStep = 1;
+        let countdownTimer = null;
+        let timeLeft = 599; // 9 phút 59 giây (10 phút)
+        let bookingData = null;
+        let targetFacilityId = "fac-011";
+
+        // 1. LẤY THÔNG TIN USER ĐĂNG NHẬP
+        function getLoggedInUser() {
+            try {
+                return JSON.parse(sessionStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('currentUser')) ||
+                       JSON.parse(localStorage.getItem('current_user')) || null;
+            } catch (e) { return null; }
+        }
+
+        function syncHeaderUserInfo() {
+            const userContainer = document.getElementById('userHeaderArea');
+            if (!userContainer) return;
+
+            const user = getLoggedInUser();
+
+            if (user) {
+                const displayName = user.fullName || user.full_name || user.name || user.phone || 'Trúc Lam';
+                const firstLetter = displayName.trim().charAt(0).toUpperCase();
+                const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'Thành viên';
+
+                userContainer.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity" onclick="window.location.href='ho-so-ca-nhan.html'" title="Xem hồ sơ cá nhân">
+                            <div class="w-9 h-9 rounded-full bg-emerald-100 text-primary font-bold text-sm flex items-center justify-center shrink-0 border border-emerald-300">
+                                ${firstLetter}
+                            </div>
+                            <div class="flex flex-col text-left">
+                                <span class="text-sm font-bold text-slate-900 leading-tight">
+                                    ${displayName}
+                                </span>
+                                <span class="text-xs font-bold leading-tight" style="color: #9d4300;">
+                                    ${roleText}
+                                </span>
+                            </div>
+                        </div>
+
+                        <button onclick="handleLogout()" type="button" title="Đăng xuất" class="p-1 text-slate-400 hover:text-red-500 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer flex items-center justify-center outline-none">
+                            <span class="material-symbols-outlined text-[20px]">logout</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                userContainer.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <a href="dang-nhap.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                            Đăng nhập
+                        </a>
+                        <a href="dang-ky.html" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-container transition-colors shadow-sm">
+                            Đăng ký
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản?')) {
+                sessionStorage.removeItem('sb_session');
+                localStorage.removeItem('sb_session');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('current_user');
+                localStorage.removeItem('sb_current_user');
+                window.location.href = 'trangchu-user.html';
+            }
+        }
+
+        // 2. QUẢN LÝ THÔNG BÁO POPUP
+        function loadUserNotifications() {
+            const user = getLoggedInUser();
+            const uid = user ? (user.id || user.phone || 'user') : 'guest';
+            const key = `sb_notifs_user_${uid}`;
+
+            let notifs = [];
+            try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+            if (notifs.length === 0) {
+                try { notifs = JSON.parse(localStorage.getItem('sb_notifications_list')) || []; } catch(e) {}
+            }
+
+            const unreadCount = notifs.filter(n => !n.read && n.unread !== false).length;
+            const badgeCount = document.getElementById('badgeQuickCount');
+            const badgeUnread = document.getElementById('badgePopoverUnread');
+            const listContainer = document.getElementById('quickNotifList');
+
+            if (badgeCount) {
+                if (unreadCount > 0) badgeCount.classList.remove('hidden');
+                else badgeCount.classList.add('hidden');
+            }
+
+            if (badgeUnread) {
+                badgeUnread.textContent = `${unreadCount} chưa đọc`;
+                badgeUnread.className = `px-2 py-0.5 rounded-full ${unreadCount > 0 ? 'bg-red-100 text-error' : 'bg-gray-100 text-gray-500'} text-[10px] font-bold`;
+            }
+
+            if (listContainer) {
+                if (notifs.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="py-8 text-center text-gray-400 text-xs">
+                            <span class="material-symbols-outlined text-3xl mb-1 text-gray-300">notifications_off</span>
+                            <p>Chưa có thông báo nào</p>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = notifs.map(n => `
+                        <div onclick="window.location.href='thong-bao.html'" class="p-3.5 hover:bg-surface-container-low transition-colors flex items-start gap-3 cursor-pointer ${n.read ? 'bg-white opacity-85' : 'bg-green-50/50'}">
+                            <div class="w-10 h-10 rounded-xl ${n.color || 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="material-symbols-outlined text-[20px]">${n.icon || 'notifications'}</span>
+                            </div>
+                            <div class="flex-1 min-w-0 flex flex-col gap-0.5 text-xs">
+                                <div class="flex items-baseline justify-between">
+                                    <span class="font-bold text-on-surface truncate">${n.title}</span>
+                                    <span class="text-[10px] text-gray-400 shrink-0 ml-1">${n.time || ''}</span>
+                                </div>
+                                <p class="text-gray-600 line-clamp-2 leading-relaxed mt-0.5">${n.desc || n.content}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        // 3. QUAY LẠI CHỌN KHUNG GIỜ CỦA ĐÚNG SÂN VÀ NGÀY ĐANG ĐẶT
+        function goBackToPreviousStep() {
+            if (currentStep === 2) {
+                goToStep(1);
+                return;
+            }
+            const params = new URLSearchParams(window.location.search);
+            const facId = bookingData.facility_id || params.get('facilityId') || params.get('id') || 'fac-011';
+            const date = bookingData.raw_date || params.get('date') || '';
+
+            let targetUrl = `chon-khung-gio.html?facilityId=${encodeURIComponent(facId)}`;
+            if (date) targetUrl += `&date=${encodeURIComponent(date)}`;
+            window.location.href = targetUrl;
+        }
+
+        // 4. BỘ ĐẾM NGƯỢC 10 PHÚT - HẾT GIỜ TỰ ĐỘNG QUAY VỀ CHỌN KHUNG GIỜ
+        function startCountdownTimer() {
+            if (countdownTimer) clearInterval(countdownTimer);
+            const badge = document.getElementById('countdown-badge');
+
+            function updateTime() {
+                if (!badge) return;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                badge.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+                if (timeLeft > 0) {
+                    timeLeft--;
+                } else {
+                    clearInterval(countdownTimer);
+                    badge.textContent = "00:00";
+                    badge.classList.add('bg-error');
+
+                    alert("Đã hết thời gian giữ chỗ tạm thời (10 phút)!\n\nHệ thống sẽ tự động chuyển bạn quay lại trang Chọn khung giờ của sân để chọn lại slot thi đấu.");
+                    const facId = bookingData.facility_id || targetFacilityId || 'fac-011';
+                    const rawDate = bookingData.raw_date || '2026-10-31';
+                    window.location.href = `chon-khung-gio.html?facilityId=${encodeURIComponent(facId)}&date=${encodeURIComponent(rawDate)}&timeout=1`;
+                }
+            }
+
+            countdownTimer = setInterval(updateTime, 1000);
+            updateTime();
+        }
+
+        // 5. HÀM CHUYỂN BƯỚC MƯỢT MÀ TỪ BƯỚC 1 -> BƯỚC 2 -> BƯỚC 3
+        function goToStep(targetStep) {
+            targetStep = parseInt(targetStep) || 1;
+            if (targetStep === currentStep) return;
+
+            // Ẩn toàn bộ các panel
+            document.querySelectorAll('.step-panel').forEach(p => p.classList.add('hidden'));
+
+            // Hiển thị panel mục tiêu
+            const targetPanel = document.getElementById(`step-panel-${targetStep}`);
+            if (targetPanel) {
+                targetPanel.classList.remove('hidden');
+            }
+
+            // Cập nhật Stepper theo layout Bước 1
+            updateStepperUI(targetStep);
+
+            // Bật / Tắt Banner đếm ngược
+            const banner = document.getElementById('countdownBanner');
+            const topNav = document.getElementById('topNavArea');
+            if (targetStep === 3) {
+                if (banner) banner.classList.add('hidden');
+                if (topNav) topNav.classList.add('hidden');
+                if (countdownTimer) clearInterval(countdownTimer);
+            } else {
+                if (banner) banner.classList.remove('hidden');
+                if (topNav) topNav.classList.remove('hidden');
+            }
+
+            // Đồng bộ dữ liệu khi chuyển sang Bước 2
+            if (targetStep === 2) {
+                syncStep2Data();
+            }
+
+            // Đồng bộ dữ liệu khi chuyển sang Bước 3
+            if (targetStep === 3) {
+                syncStep3Data();
+            }
+
+            currentStep = targetStep;
+
+            // Cuộn mượt lên đầu trang
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Cập nhật tham số URL
+            try {
+                const url = new URL(window.location);
+                url.searchParams.set('step', targetStep);
+                window.history.replaceState({}, '', url);
+            } catch(e) {}
+        }
+
+        // CẬP NHẬT GIAO DIỆN STEPPER
+        function updateStepperUI(step) {
+            const icon1 = document.getElementById('step-icon-1');
+            const tag1 = document.getElementById('step-tag-1');
+            const title1 = document.getElementById('step-title-1');
+
+            const icon2 = document.getElementById('step-icon-2');
+            const tag2 = document.getElementById('step-tag-2');
+            const title2 = document.getElementById('step-title-2');
+
+            const icon3 = document.getElementById('step-icon-3');
+            const tag3 = document.getElementById('step-tag-3');
+            const title3 = document.getElementById('step-title-3');
+
+            const progressBar = document.getElementById('stepperProgressBar');
+
+            if (step === 1) {
+                if (icon1) {
+                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
+                    icon1.innerHTML = "1";
+                }
+                if (tag1) tag1.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
+                if (title1) title1.className = "text-sm font-bold text-on-surface truncate";
+
+                if (icon2) {
+                    icon2.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
+                    icon2.innerHTML = "2";
+                }
+                if (tag2) tag2.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
+                if (title2) title2.className = "text-sm font-medium text-on-surface-variant truncate";
+
+                if (icon3) {
+                    icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
+                    icon3.innerHTML = "3";
+                }
+                if (tag3) tag3.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
+                if (title3) title3.className = "text-sm font-medium text-on-surface-variant truncate";
+
+                if (progressBar) progressBar.style.width = "0%";
+            } 
+            else if (step === 2) {
+                if (icon1) {
+                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
+                    icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
+                }
+                if (tag1) tag1.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
+                if (title1) title1.className = "text-sm font-bold text-on-surface truncate";
+
+                if (icon2) {
+                    icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20";
+                    icon2.innerHTML = "2";
+                }
+                if (tag2) tag2.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
+                if (title2) title2.className = "text-sm font-bold text-primary truncate";
+
+                if (icon3) {
+                    icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
+                    icon3.innerHTML = "3";
+                }
+                if (tag3) tag3.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
+                if (title3) title3.className = "text-sm font-medium text-on-surface-variant truncate";
+
+                if (progressBar) progressBar.style.width = "50%";
+            } 
+            else if (step === 3) {
+                if (icon1) {
+                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
+                    icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
+                }
+                if (icon2) {
+                    icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
+                    icon2.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
+                }
+                if (icon3) {
+                    icon3.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20";
+                    icon3.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">done_all</span>';
+                }
+                if (tag3) tag3.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
+                if (title3) title3.className = "text-sm font-bold text-primary truncate";
+
+                if (progressBar) progressBar.style.width = "100%";
+            }
+        }
+
+        // 6. THAO TÁC KHI NGƯỜI DÙNG BẤM "TIẾP TỤC ĐẾN THANH TOÁN" Ở BƯỚC 1
+        function handleProceedToPayment() {
+            const termsCheckbox = document.getElementById('terms-checkbox');
+            if (termsCheckbox && !termsCheckbox.checked) {
+                alert('Vui lòng đánh dấu đồng ý với Chính sách hủy sân và Nội quy SportBooking trước khi tiếp tục!');
+                termsCheckbox.focus();
+                return;
+            }
+
+            const nameInput = document.getElementById('bookerName');
+            const phoneInput = document.getElementById('bookerPhone');
+
+            if (!nameInput || !nameInput.value.trim() || !phoneInput || !phoneInput.value.trim()) {
+                alert('Vui lòng nhập đầy đủ Họ tên và Số điện thoại liên hệ để nhận mã sân.');
+                if (nameInput && !nameInput.value.trim()) nameInput.focus();
+                else if (phoneInput) phoneInput.focus();
+                return;
+            }
+
+            // Cập nhật thông tin vào bookingData
+            bookingData.user_name = nameInput.value.trim();
+            bookingData.user_phone = phoneInput.value.trim();
+            bookingData.user_email = (document.getElementById('bookerEmail') ? document.getElementById('bookerEmail').value.trim() : '') || 'truclam@gmail.com';
+            bookingData.user_notes = (document.getElementById('bookerNotes') ? document.getElementById('bookerNotes').value.trim() : '');
+
+            const matchingToggle = document.getElementById('matching-toggle');
+            bookingData.is_matching_enabled = matchingToggle ? matchingToggle.checked : false;
+            bookingData.matching_criteria = { ...matchingCriteria };
+
+            // Kiểm tra phương thức thanh toán đã chọn (cọc hay toàn bộ)
+            const choice = document.querySelector('input[name="payment_choice"]:checked');
+            if (choice && choice.value === 'full') {
+                bookingData.is_full_payment = true;
+                bookingData.deposit_paid = bookingData.final_total;
+                bookingData.remaining_amount = 0;
+            } else {
+                bookingData.is_full_payment = false;
+                bookingData.deposit_paid = Math.round(bookingData.final_total / 2);
+                bookingData.remaining_amount = bookingData.final_total - bookingData.deposit_paid;
+            }
+
+            // Lưu dữ liệu nháp vào LocalStorage
+            localStorage.setItem('sb_current_booking_draft', JSON.stringify(bookingData));
+
+            // Chuyển sang Bước 2 mượt mà
+            goToStep(2);
+        }
+
+        // ĐỒNG BỘ DỮ LIỆU SANG BƯỚC 2
+        function syncStep2Data() {
+            document.getElementById('displaySidebarOrderId').innerText = `#${bookingData.order_id}`;
+            document.getElementById('sidebarVenueImg').src = bookingData.image;
+            document.getElementById('sidebarSportLabel').innerText = bookingData.sport_label;
+            document.getElementById('sidebarCourtName').innerText = bookingData.court_number;
+            document.getElementById('sidebarVenueName').innerText = bookingData.venue_name;
+
+            document.getElementById('displaySidebarDate').innerText = bookingData.date;
+            document.getElementById('displaySidebarTimeSlot').innerText = bookingData.time_slot;
+
+            const phoneStr = bookingData.user_phone || "0988123456";
+            const masked = phoneStr.length >= 7 ? `(${phoneStr.slice(0, 4)}***${phoneStr.slice(-3)})` : `(${phoneStr})`;
+            document.getElementById('displaySidebarUser').innerText = `${bookingData.user_name} ${masked}`;
+
+            document.getElementById('displaySidebarCourtPrice').innerText = `${bookingData.base_price.toLocaleString('vi-VN')} đ`;
+            document.getElementById('displaySidebarRemainingPrice').innerText = `${bookingData.remaining_amount.toLocaleString('vi-VN')} đ`;
+            document.getElementById('displaySidebarDepositPrice').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')} đ`;
+            document.getElementById('qrDepositAmount').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')} đ`;
+
+            if (bookingData.is_full_payment) {
+                document.getElementById('sidebarPaymentLabel').innerText = "THANH TOÁN TOÀN BỘ (100%)";
+            } else {
+                document.getElementById('sidebarPaymentLabel').innerText = "TIỀN CỌC GIỮ SÂN (50%)";
+            }
+
+            document.getElementById('displayTransferMemo').innerText = `SB ${bookingData.order_id.replace(/[^0-9]/g, '')} ${phoneStr.replace(/[^0-9]/g, '')}`;
+
+            // Cập nhật ảnh VietQR với số tiền thật
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=2|99|098888886886|MB|${bookingData.deposit_paid}|SPORTBOOKING%20${bookingData.order_id}`;
+            document.getElementById('vietqr-image').src = qrApiUrl;
+        }
+
+        // 7. THAO TÁC XÁC NHẬN THANH TOÁN (BƯỚC 2 -> BƯỚC 3)
+        function handleExecutePayment() {
+            const payButton = document.getElementById('btn-submit-payment');
+            if (payButton) {
+                payButton.disabled = true;
+                payButton.innerHTML = `
+                    <span class="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+                    <span>ĐANG XÁC THỰC GIAO DỊCH...</span>
+                `;
+            }
+
+            setTimeout(() => {
+                // 1. Lưu đơn hàng hoàn tất vào sb_final_order
+                const finalOrder = {
+                    ...bookingData,
+                    status: 'upcoming',
+                    status_label: 'Đã xác nhận',
+                    created_at: Date.now()
+                };
+                localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
+
+                // 2. Thêm vào sb_my_booking_history để trang Lịch sử đặt sân cộng tiền chính xác
+                let history = [];
+                try {
+                    history = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
+                } catch(e) {}
+
+                history = history.filter(h => h.id !== finalOrder.order_id);
+                history.unshift({
+                    id: finalOrder.order_id,
+                    venue_name: finalOrder.venue_name,
+                    sport: finalOrder.sport,
+                    sport_label: finalOrder.sport_label,
+                    court_number: finalOrder.court_number,
+                    address: finalOrder.address,
+                    time_slot: finalOrder.time_slot,
+                    time_badge: "Sắp tới",
+                    date: finalOrder.date,
+                    raw_date: finalOrder.raw_date,
+                    price: finalOrder.final_total,
+                    total_price: finalOrder.final_total,
+                    deposit_paid: finalOrder.deposit_paid,
+                    status: 'upcoming',
+                    status_label: 'Đã xác nhận',
+                    image: finalOrder.image
+                });
+                localStorage.setItem('sb_my_booking_history', JSON.stringify(history));
+
+                // 3. Khóa khung giờ trong sb_booked_slots
+                let bookedSlots = {};
+                try {
+                    bookedSlots = JSON.parse(localStorage.getItem('sb_booked_slots') || '{}');
+                } catch(e) {}
+                const slotKey = `${finalOrder.facility_id}_${finalOrder.raw_date}_${finalOrder.time_slot}`;
+                bookedSlots[slotKey] = true;
+                localStorage.setItem('sb_booked_slots', JSON.stringify(bookedSlots));
+
+                // 4. Bắn thông báo mới vào danh sách thông báo
+                let notifs = [];
+                try {
+                    notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
+                } catch(e) {}
+                notifs.unshift({
+                    id: 'notif-' + Date.now(),
+                    category: 'booking',
+                    title: 'Đặt sân thành công!',
+                    content: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.order_id}.`,
+                    desc: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.order_id}.`,
+                    time: 'Vừa xong',
+                    timestamp: Date.now(),
+                    unread: true,
+                    link: `chi-tiet-don-dat-san.html?id=${finalOrder.order_id}`,
+                    actionText: 'Xem sân đã đặt',
+                    icon: finalOrder.sport === 'soccer' ? 'sports_soccer' : (finalOrder.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball'),
+                    color: 'text-primary',
+                    bgIcon: 'bg-green-100'
+                });
+                localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
+
+                const user = getLoggedInUser();
+                const uid = user ? (user.id || user.phone || 'user') : 'guest';
+                localStorage.setItem(`sb_notifs_user_${uid}`, JSON.stringify(notifs));
+
+                if (payButton) {
+                    payButton.disabled = false;
+                    payButton.innerHTML = `
+                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                        <span>XÁC NHẬN THANH TOÁN MÔ PHỎNG</span>
+                    `;
+                }
+
+                // Chuyển sang Bước 3
+                goToStep(3);
+            }, 600);
+        }
+
+        // ĐỒNG BỘ DỮ LIỆU SANG BƯỚC 3
+        function syncStep3Data() {
+            document.getElementById('step3ConfirmEmail').innerText = bookingData.user_email || 'truclam@gmail.com';
+            document.getElementById('step3BookingIdText').innerText = `#${bookingData.order_id}`;
+            document.getElementById('step3VenueName').innerText = bookingData.venue_name;
+            document.getElementById('step3Address').innerText = bookingData.address;
+            document.getElementById('step3CourtName').innerText = bookingData.court_number;
+            document.getElementById('step3TimeDisplay').innerText = bookingData.time_slot;
+            document.getElementById('step3DateDisplay').innerText = bookingData.date;
+            document.getElementById('step3UserName').innerText = bookingData.user_name;
+            document.getElementById('step3UserPhone').innerText = bookingData.user_phone;
+
+            document.getElementById('step3TotalPriceDisplay').innerText = `${bookingData.final_total.toLocaleString('vi-VN')}đ`;
+            document.getElementById('step3DepositDisplay').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')}đ`;
+            document.getElementById('step3RemainingDisplay').innerText = `${bookingData.remaining_amount.toLocaleString('vi-VN')}đ`;
+
+            document.getElementById('step3QrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(bookingData.order_id)}`;
+            document.getElementById('step3QrCodeText').innerText = `Mã vé: #${bookingData.order_id}`;
+
+            document.getElementById('step3GoDetailLink').href = `chi-tiet-don-dat-san.html?id=${bookingData.order_id}`;
+
+            const iconSpan = document.getElementById('step3SportIcon');
+            const sportIconName = bookingData.sport === 'soccer' ? 'sports_soccer' : (bookingData.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball');
+            if (iconSpan) iconSpan.innerText = sportIconName;
+
+            // XỬ LÝ HIỂN THỊ CỘT PHẢI THEO TRẠNG THÁI TÌM ĐỐI (isMatchMaker)
+            const isMatchMaker = !!bookingData.is_matching_enabled;
+            const friendCard = document.getElementById('friendInviteCard');
+            const matchmakerCard = document.getElementById('matchmakerMiniCard');
+
+            if (isMatchMaker) {
+                if (friendCard) friendCard.classList.add('hidden');
+                if (matchmakerCard) matchmakerCard.classList.remove('hidden');
+
+                // Đồng bộ dữ liệu Live Radar Mini
+                const criteria = bookingData.matching_criteria || matchingCriteria;
+                const genderMap = { female: 'Nữ', male: 'Nam', any: 'Bất kỳ (Nam/Nữ)' };
+                const levelMap = { beginner: 'Mới chơi', intermediate: 'Trung bình', advanced: 'Khá / Chuyên' };
+                const formatMap = { single: 'Đánh đơn (1vs1)', double: 'Đánh đôi (2vs2)' };
+
+                const genderText = genderMap[criteria.gender] || 'Nữ';
+                const levelText = levelMap[criteria.level] || 'Trung bình';
+                const formatText = formatMap[criteria.format] || 'Đánh đôi';
+
+                const levelEl = document.getElementById('miniRadarLevel');
+                if (levelEl) levelEl.innerText = levelText;
+
+                const genderBadge = document.getElementById('miniBadgeGender');
+                if (genderBadge) genderBadge.innerText = genderText;
+
+                const formatBadge = document.getElementById('miniBadgeFormat');
+                if (formatBadge) formatBadge.innerText = formatText;
+
+                const radarIcon = document.getElementById('miniRadarSportIcon');
+                if (radarIcon) radarIcon.innerText = sportIconName;
+
+                // Nối link sang màn hình radar toàn cảnh với đúng dữ liệu đơn
+                const fullRadarBtn = document.getElementById('btnOpenFullRadar');
+                if (fullRadarBtn) {
+                    fullRadarBtn.href = `tim-doi-choi-status.html?id=${encodeURIComponent(bookingData.order_id)}&facilityId=${encodeURIComponent(bookingData.facility_id)}&date=${encodeURIComponent(bookingData.raw_date)}&time_slot=${encodeURIComponent(bookingData.time_slot)}&sport=${encodeURIComponent(bookingData.sport)}`;
+                }
+
+                // Bắt đầu đếm ngược mini radar
+                startMiniRadarCountdown();
+            } else {
+                if (friendCard) friendCard.classList.remove('hidden');
+                if (matchmakerCard) matchmakerCard.classList.add('hidden');
+                if (miniRadarInterval) clearInterval(miniRadarInterval);
+            }
+        }
+
+        // ĐIỀU KHIỂN CÁC TRẠNG THÁI WIDGET TÌM ĐỐI (LIVE RADAR MINI-CARD)
+        let miniRadarSeconds = 599; // 9 phút 59 giây
+        let miniRadarInterval = null;
+        let currentMiniRadarScenario = 'scanning'; // 'scanning' | 'expired' | 'matched'
+
+        function setMiniRadarScenario(scenario) {
+            currentMiniRadarScenario = scenario;
+            
+            const cardEl = document.getElementById('matchmakerMiniCard');
+            const dotEl = document.getElementById('miniCardStatusDot');
+            const titleEl = document.getElementById('miniCardTitle');
+            const subTitleEl = document.getElementById('miniCardSubtitle');
+            
+            const badgeLive = document.getElementById('miniRadarBadgeLive');
+            const badgeExpired = document.getElementById('miniRadarBadgeExpired');
+            const badgeMatched = document.getElementById('miniRadarBadgeMatched');
+
+            const bodyScanning = document.getElementById('miniCardScanningBody');
+            const bodyExpired = document.getElementById('miniCardExpiredBody');
+            const bodyMatched = document.getElementById('miniCardMatchedBody');
+
+            const actionsScanning = document.getElementById('miniCardScanningActions');
+            const actionsExpired = document.getElementById('miniCardExpiredActions');
+            const actionsMatched = document.getElementById('miniCardMatchedActions');
+
+            if (scenario === 'expired') {
+                // TRƯỜNG HỢP 1: HẾT GIỜ ĐẾM NGƯỢC (00:00)
+                if (miniRadarInterval) clearInterval(miniRadarInterval);
+                if (cardEl) {
+                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-amber-300 relative overflow-hidden transition-all duration-300";
+                }
+                
+                // Chấm xanh đổi sang xám
+                if (dotEl) {
+                    dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-gray-400"></span>`;
+                }
+                if (titleEl) titleEl.innerText = "Trạng thái ghép đối";
+                if (subTitleEl) subTitleEl.innerHTML = `<span class="text-gray-500 font-semibold">Treo công khai trên lịch sân</span>`;
+
+                if (badgeLive) badgeLive.classList.add('hidden');
+                if (badgeMatched) badgeMatched.classList.add('hidden');
+                if (badgeExpired) badgeExpired.classList.remove('hidden');
+
+                if (bodyScanning) bodyScanning.classList.add('hidden');
+                if (bodyMatched) bodyMatched.classList.add('hidden');
+                if (bodyExpired) {
+                    bodyExpired.classList.remove('hidden');
+                    bodyExpired.classList.add('flex');
+                }
+
+                if (actionsScanning) actionsScanning.classList.add('hidden');
+                if (actionsMatched) actionsMatched.classList.add('hidden');
+                if (actionsExpired) {
+                    actionsExpired.classList.remove('hidden');
+                    actionsExpired.classList.add('flex');
+                }
+
+                // Cập nhật trạng thái slot trong ma trận thành 'waiting' (Chờ người ghép thông thường trên lịch)
+                updateSystemSlotMatchState('waiting');
+            } 
+            else if (scenario === 'matched') {
+                // TRƯỜNG HỢP 2: TÌM ĐƯỢC ĐỐI THÀNH CÔNG (KHỚP KÈO)
+                if (miniRadarInterval) clearInterval(miniRadarInterval);
+                if (cardEl) {
+                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-emerald-500 relative overflow-hidden transition-all duration-300";
+                }
+
+                // Tiêu đề card đổi thành "GHÉP ĐỐI THÀNH CÔNG!"
+                if (titleEl) titleEl.innerText = "GHÉP ĐỐI THÀNH CÔNG!";
+                if (subTitleEl) subTitleEl.innerHTML = `<span class="text-primary font-bold">Đã chốt danh sách người chơi</span>`;
+
+                if (dotEl) {
+                    dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>`;
+                }
+
+                if (badgeLive) badgeLive.classList.add('hidden');
+                if (badgeExpired) badgeExpired.classList.add('hidden');
+                if (badgeMatched) badgeMatched.classList.remove('hidden');
+
+                if (bodyScanning) bodyScanning.classList.add('hidden');
+                if (bodyExpired) bodyExpired.classList.add('hidden');
+                if (bodyMatched) {
+                    bodyMatched.classList.remove('hidden');
+                    bodyMatched.classList.add('flex');
+                }
+
+                if (actionsScanning) actionsScanning.classList.add('hidden');
+                if (actionsExpired) actionsExpired.classList.add('hidden');
+                if (actionsMatched) {
+                    actionsMatched.classList.remove('hidden');
+                    actionsMatched.classList.add('flex');
+                }
+
+                // Khóa khung giờ trên ma trận chung (chon-khung-gio.html) sang màu xám/Đã đủ người (4/4)
+                updateSystemSlotMatchState('matched');
+            }
+            else {
+                // TRẠNG THÁI MẶC ĐỊNH: ĐANG QUÉT LIVE
+                if (cardEl) {
+                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-primary/30 relative overflow-hidden transition-all duration-300";
+                }
+                if (dotEl) {
+                    dotEl.innerHTML = `
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                    `;
+                }
+                if (titleEl) titleEl.innerText = "Trạng thái ghép đối (Live Radar)";
+                if (subTitleEl) subTitleEl.innerHTML = `<span class="animate-pulse">Đang quét tìm kiếm...</span>`;
+
+                if (badgeExpired) badgeExpired.classList.add('hidden');
+                if (badgeMatched) badgeMatched.classList.add('hidden');
+                if (badgeLive) badgeLive.classList.remove('hidden');
+
+                if (bodyExpired) bodyExpired.classList.add('hidden');
+                if (bodyMatched) bodyMatched.classList.add('hidden');
+                if (bodyScanning) bodyScanning.classList.remove('hidden');
+
+                if (actionsExpired) actionsExpired.classList.add('hidden');
+                if (actionsMatched) actionsMatched.classList.add('hidden');
+                if (actionsScanning) actionsScanning.classList.remove('hidden');
+
+                startMiniRadarCountdown();
+                updateSystemSlotMatchState('live');
+            }
+        }
+
+        // ĐỒNG BỘ TRẠNG THÁI KHUNG GIỜ VÀO LOCALSTORAGE CHO MA TRẬN SÂN (chon-khung-gio.html)
+        function updateSystemSlotMatchState(status) {
+            if (!bookingData) return;
+            try {
+                let states = JSON.parse(localStorage.getItem('sb_matchmaking_slots') || '{}');
+                const slotKey = `${bookingData.court_number}_${bookingData.time_slot}`;
+                
+                if (status === 'matched') {
+                    states[slotKey] = {
+                        status: 'matched',
+                        current: 4,
+                        max: 4,
+                        host: bookingData.user_name || "Trúc Lam",
+                        price: bookingData.base_price,
+                        opponent: { name: "Lê Minh Trang", phone: "0977 234 567", gender: "Nữ", level: "Trung bình" }
+                    };
+
+                    // Cập nhật vào sb_final_order
+                    let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || '{}');
+                    finalOrder.match_status = 'matched';
+                    finalOrder.matched_opponent = { name: "Lê Minh Trang", phone: "0977 234 567" };
+                    localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
+                } else if (status === 'waiting') {
+                    states[slotKey] = {
+                        status: 'waiting',
+                        current: 3,
+                        max: 4,
+                        host: bookingData.user_name || "Trúc Lam",
+                        price: bookingData.base_price
+                    };
+                } else {
+                    states[slotKey] = {
+                        status: 'live',
+                        current: 3,
+                        max: 4,
+                        host: bookingData.user_name || "Trúc Lam",
+                        price: bookingData.base_price,
+                        isMyMatch: true
+                    };
+                }
+                localStorage.setItem('sb_matchmaking_slots', JSON.stringify(states));
+            } catch(e) {}
+        }
+
+        function goToMatchedOrderDetail() {
+            const orderId = bookingData ? bookingData.order_id : 'SB-89201';
+            window.location.href = `chi-tiet-don-dat-san.html?id=${encodeURIComponent(orderId)}`;
+        }
+
+        function startMiniRadarCountdown() {
+            if (miniRadarInterval) clearInterval(miniRadarInterval);
+            const badge = document.getElementById('miniRadarCountdown');
+
+            function tick() {
+                if (!badge) return;
+                const mins = Math.floor(miniRadarSeconds / 60);
+                const secs = miniRadarSeconds % 60;
+                badge.innerText = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+                if (miniRadarSeconds > 0) {
+                    miniRadarSeconds--;
+                } else {
+                    clearInterval(miniRadarInterval);
+                    badge.innerText = "00:00";
+                    // TỰ ĐỘNG CHUYỂN SANG TRƯỜNG HỢP 1 KHI HẾT 10 PHÚT
+                    setMiniRadarScenario('expired');
+                }
+            }
+            miniRadarInterval = setInterval(tick, 1000);
+            tick();
+        }
+
+        function handleStopMatchmaking() {
+            if (confirm("Bạn có chắc chắn muốn dừng tìm kiếm đối thủ cho trận này?")) {
+                bookingData.is_matching_enabled = false;
+                if (miniRadarInterval) clearInterval(miniRadarInterval);
+
+                // Cập nhật lại trong sb_final_order
+                let finalOrder = null;
+                try { finalOrder = JSON.parse(localStorage.getItem('sb_final_order')); } catch(e) {}
+                if (finalOrder) {
+                    finalOrder.is_matching_enabled = false;
+                    localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
+                }
+
+                // Chuyển lại hiển thị card Rủ bạn bè
+                const friendCard = document.getElementById('friendInviteCard');
+                const matchmakerCard = document.getElementById('matchmakerMiniCard');
+                if (friendCard) friendCard.classList.remove('hidden');
+                if (matchmakerCard) matchmakerCard.classList.add('hidden');
+
+                alert("Đã dừng tìm đối. Bạn có thể sao chép link hoặc gửi lời mời riêng cho bạn bè!");
+            }
+        }
+
+        // 8. CÁC HÀM TIỆN ÍCH PHỤ
+        function copyBookingId() {
+            const text = document.getElementById('step3BookingIdText').textContent.replace('#', '').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                const fb = document.getElementById('copyFeedback');
+                if (fb) {
+                    fb.classList.remove('opacity-0');
+                    setTimeout(() => fb.classList.add('opacity-0'), 2000);
+                }
+            });
+        }
+
+        function copyInviteLink(btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Đã chép link mời!';
+            setTimeout(() => { btn.innerHTML = original; }, 2000);
+        }
+
+        // Quản lý tiêu chí ghép đối
+        let matchingCriteria = {
+            gender: 'female',
+            level: 'intermediate',
+            format: 'double',
+            note: 'Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!'
+        };
+
+        function selectGender(gender, btn) {
+            matchingCriteria.gender = gender;
+            document.querySelectorAll('.gender-btn').forEach(b => {
+                b.className = "gender-btn py-2.5 px-3 rounded-xl bg-surface-container-low text-on-surface font-semibold border border-gray-200 hover:border-primary/50 transition-all text-center";
+                if (b.innerText.includes('Đang chọn')) {
+                    b.innerText = b.innerText.replace(' (Đang chọn)', '');
+                }
+            });
+            btn.className = "gender-btn active py-2.5 px-3 rounded-xl bg-primary text-white font-bold shadow-sm transition-all text-center";
+            if (!btn.innerText.includes('Đang chọn')) {
+                btn.innerText = btn.innerText + ' (Đang chọn)';
+            }
+        }
+
+        function selectSkillLevel(level, card) {
+            matchingCriteria.level = level;
+            document.querySelectorAll('.skill-card').forEach(c => {
+                c.className = "skill-card p-3.5 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex flex-col justify-between";
+                const radio = c.querySelector('.skill-radio');
+                if (radio) {
+                    radio.className = "skill-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]";
+                    radio.innerText = "";
+                }
+                const title = c.querySelector('span.font-bold');
+                if (title) title.className = "text-xs font-bold text-on-surface";
+            });
+
+            card.className = "skill-card active p-3.5 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex flex-col justify-between";
+            const currentRadio = card.querySelector('.skill-radio');
+            if (currentRadio) {
+                currentRadio.className = "skill-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]";
+                currentRadio.innerText = "✓";
+            }
+            const currentTitle = card.querySelector('span.font-bold');
+            if (currentTitle) currentTitle.className = "text-xs font-bold text-primary";
+        }
+
+        function selectMatchFormat(format, card) {
+            matchingCriteria.format = format;
+            document.querySelectorAll('.format-card').forEach(c => {
+                c.className = "format-card p-3 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex items-center gap-3";
+                const radio = c.querySelector('.format-radio');
+                if (radio) {
+                    radio.className = "format-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]";
+                    radio.innerText = "";
+                }
+                const title = c.querySelector('span.font-bold');
+                if (title) title.className = "text-xs font-bold text-on-surface block";
+            });
+
+            card.className = "format-card active p-3 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex items-center gap-3";
+            const currentRadio = card.querySelector('.format-radio');
+            if (currentRadio) {
+                currentRadio.className = "format-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]";
+                currentRadio.innerText = "●";
+            }
+            const currentTitle = card.querySelector('span.font-bold');
+            if (currentTitle) currentTitle.className = "text-xs font-bold text-primary block";
+        }
+
+        function resetMatchingCriteria() {
+            const genderBtns = document.querySelectorAll('.gender-btn');
+            if (genderBtns[1]) selectGender('female', genderBtns[1]);
+
+            const skillCards = document.querySelectorAll('.skill-card');
+            if (skillCards[1]) selectSkillLevel('intermediate', skillCards[1]);
+
+            const formatCards = document.querySelectorAll('.format-card');
+            if (formatCards[1]) selectMatchFormat('double', formatCards[1]);
+
+            const textarea = document.getElementById('matchingNoteText');
+            if (textarea) textarea.value = 'Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!';
+        }
+
+        // 9. KHỞI TẠO DỮ LIỆU TOÀN TRANG KHI DOM SẴN SÀNG
+        document.addEventListener('DOMContentLoaded', function () {
+            syncHeaderUserInfo();
+            loadUserNotifications();
+
+            // Khởi tạo đối tượng bookingData mặc định
+            const params = new URLSearchParams(window.location.search);
+            let orderId = params.get('id');
+            if (!orderId) {
+                orderId = `SB-${Math.floor(10000 + Math.random() * 90000)}`;
+            }
+
+            // Đọc dữ liệu từ localStorage
+            let currentBooking = null;
+            try { currentBooking = JSON.parse(localStorage.getItem('sb_current_booking')); } catch(e) {}
+            let venueObj = null;
+            try { venueObj = JSON.parse(localStorage.getItem('selected_venue')); } catch(e) {}
+            let draftBooking = null;
+            try { draftBooking = JSON.parse(localStorage.getItem('sb_current_booking_draft')); } catch(e) {}
+
+            targetFacilityId = params.get('facilityId') || (venueObj ? venueObj.id : null) || (currentBooking ? currentBooking.facilityId : null) || 'fac-011';
+
+            const venueName = (venueObj ? venueObj.name : null) || (currentBooking ? currentBooking.facilityName : null) || params.get('venue') || "Sân bóng mini Đông Đô";
+            const sportType = (venueObj ? venueObj.sport : null) || (currentBooking ? currentBooking.sport : null) || params.get('sport') || "soccer";
+            const address = (venueObj ? venueObj.address : null) || (currentBooking ? currentBooking.facilityAddress : null) || "Ngõ 39 Triều Khúc, Thanh Xuân, Hà Nội";
+            const courtNumber = (currentBooking && currentBooking.slots && currentBooking.slots[0] && currentBooking.slots[0].courtName) || params.get('court') || (sportType === 'soccer' ? "Sân 5A (Cỏ nhân tạo)" : (sportType === 'badminton' ? "Sân 1 (Thảm Yonex)" : "Sân số 2"));
+
+            const rawDate = params.get('date') || (currentBooking ? currentBooking.date : null) || "2026-10-31";
+            let displayDate = rawDate;
+            if (rawDate && rawDate.includes('-')) {
+                const p = rawDate.split('-');
+                if (p.length === 3) displayDate = `${p[2]}/${p[1]}/${p[0]}`;
+            }
+
+            let timeSlot = params.get('time_slot') || params.get('slot') || (currentBooking && currentBooking.slots && currentBooking.slots[0] ? (currentBooking.slots[0].hour || currentBooking.slots[0].time) : "17:00 - 18:00");
+            if (currentBooking && currentBooking.slots && currentBooking.slots.length > 1) {
+                timeSlot = currentBooking.slots.map(s => s.hour || s.time).join(', ');
+            }
+
+            // Tính giá tiền
+            let basePrice = 360000;
+            if (currentBooking && currentBooking.totalPrice) {
+                basePrice = Number(String(currentBooking.totalPrice).replace(/[^0-9]/g, '')) || 360000;
+            } else if (venueObj && (venueObj.price || venueObj.price_peak)) {
+                basePrice = Number(venueObj.price || venueObj.price_peak);
+            } else if (sportType === 'badminton') {
+                basePrice = 160000;
+            } else if (sportType === 'pickleball') {
+                basePrice = 180000;
+            }
+
+            // Ưu đãi thành viên -5%
+            const discount = Math.round(basePrice * 0.05);
+            const finalTotal = basePrice - discount;
+            const depositPrice = Math.round(finalTotal / 2);
+            const remainingPrice = finalTotal - depositPrice;
+
+            let venueImgUrl = VENUE_IMAGES.soccer;
+            let sportText = "Bóng đá mini";
+            if (sportType === 'badminton' || venueName.toLowerCase().includes('cầu lông')) {
+                venueImgUrl = VENUE_IMAGES.badminton;
+                sportText = "Cầu lông tiêu chuẩn";
+            } else if (sportType === 'pickleball' || venueName.toLowerCase().includes('pickleball')) {
+                venueImgUrl = VENUE_IMAGES.pickleball;
+                sportText = "Pickleball tiêu chuẩn";
+            }
+
+            const loggedUser = getLoggedInUser();
+            const defName = loggedUser ? (loggedUser.fullName || loggedUser.full_name || loggedUser.name || "Trúc Lam") : "Trúc Lam";
+            const defPhone = loggedUser ? (loggedUser.phone || "0988 123 456") : "0988 123 456";
+            const defEmail = loggedUser ? (loggedUser.email || "truclam@gmail.com") : "truclam@gmail.com";
+
+            bookingData = {
+                order_id: orderId,
+                facility_id: targetFacilityId,
+                venue_name: venueName,
+                sport: sportType,
+                sport_label: sportText,
+                court_number: courtNumber,
+                address: address,
+                date: displayDate,
+                raw_date: rawDate,
+                time_slot: timeSlot,
+                base_price: basePrice,
+                discount: discount,
+                final_total: finalTotal,
+                deposit_paid: depositPrice,
+                remaining_amount: remainingPrice,
+                is_full_payment: false,
+                user_name: defName,
+                user_phone: defPhone,
+                user_email: defEmail,
+                image: (venueObj && venueObj.image) ? venueObj.image : venueImgUrl
+            };
+
+            // Điền vào giao diện Bước 1
+            document.getElementById('breadcrumbVenueName').innerText = venueName;
+            // CẬP NHẬT MỌI LINK GOOGLE MAP CHUẨN XÁC ĐẾN ĐÚNG ĐỊA CHỈ SÂN (KHÔNG RA MAP CHUNG CHUNG)
+            const mapQuery = encodeURIComponent(`${bookingData.venue_name} ${bookingData.address}`);
+            const accurateMapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+
+            const step1MapBtn = document.getElementById('btnMapDirections');
+            if (step1MapBtn) step1MapBtn.href = accurateMapUrl;
+
+            const sidebarMapBtn = document.getElementById('btnMapSidebar');
+            if (sidebarMapBtn) sidebarMapBtn.href = accurateMapUrl;
+
+            document.getElementById('displaySportBadge').innerText = sportText;
+            document.getElementById('displayVenueName').innerText = venueName;
+            document.getElementById('displayVenueAddress').innerText = address;
+            document.getElementById('displayCourtSubName').innerText = courtNumber;
+            document.getElementById('displaySelectedDate').innerText = displayDate;
+            document.getElementById('displaySelectedSlot').innerText = timeSlot;
+
+            document.getElementById('bookerName').value = defName;
+            document.getElementById('bookerPhone').value = defPhone;
+            document.getElementById('bookerEmail').value = defEmail;
+
+            document.getElementById('displayDraftCode').innerText = `Mã: ${orderId}`;
+            document.getElementById('displayBasePriceText').innerText = `${basePrice.toLocaleString('vi-VN')}đ`;
+            document.getElementById('displayDiscountText').innerText = `-${discount.toLocaleString('vi-VN')}đ`;
+            document.getElementById('displayFinalTotal').innerText = `${finalTotal.toLocaleString('vi-VN')}đ`;
+            document.getElementById('fullPriceBadge').innerText = `${finalTotal.toLocaleString('vi-VN')}đ`;
+            document.getElementById('depositPriceOptionBadge').innerText = `${depositPrice.toLocaleString('vi-VN')}đ`;
+            document.getElementById('depositRemainingText').innerText = `Thanh toán nốt ${remainingPrice.toLocaleString('vi-VN')}đ tại quầy`;
+            document.getElementById('amount-payable').innerText = `${depositPrice.toLocaleString('vi-VN')}đ`;
+            document.getElementById('cta-text').innerText = `TIẾP TỤC ĐẾN THANH TOÁN (${depositPrice.toLocaleString('vi-VN')}đ)`;
+
+            // Đổi icon theo môn thể thao
+            const spIcon = document.getElementById('step1SportIcon');
+            if (spIcon) {
+                if (sportType === 'soccer') spIcon.innerText = 'sports_soccer';
+                else if (sportType === 'badminton') spIcon.innerText = 'sports_tennis';
+                else spIcon.innerText = 'sports_baseball';
+            }
+
+            // Bắt sự kiện chọn Radio cọc / toàn bộ ở Bước 1
+            const radios = document.querySelectorAll('input[name="payment_choice"]');
+            radios.forEach((radio) => {
+                radio.addEventListener('change', (e) => {
+                    const amountPayableEl = document.getElementById('amount-payable');
+                    const ctaTextEl = document.getElementById('cta-text');
+                    if (e.target.value === 'full') {
+                        amountPayableEl.textContent = `${finalTotal.toLocaleString('vi-VN')}đ`;
+                        ctaTextEl.textContent = `TIẾP TỤC ĐẾN THANH TOÁN (${finalTotal.toLocaleString('vi-VN')}đ)`;
+                    } else {
+                        amountPayableEl.textContent = `${depositPrice.toLocaleString('vi-VN')}đ`;
+                        ctaTextEl.textContent = `TIẾP TỤC ĐẾN THANH TOÁN (${depositPrice.toLocaleString('vi-VN')}đ)`;
+                    }
+                });
+            });
+
+            // Toggle Ghép đội
+            const matchingToggle = document.getElementById('matching-toggle');
+            const matchingOptionsWrapper = document.getElementById('matching-options-wrapper');
+            if (matchingToggle && matchingOptionsWrapper) {
+                matchingToggle.addEventListener('change', (e) => {
+                    if (e.target.checked) matchingOptionsWrapper.classList.remove('hidden');
+                    else matchingOptionsWrapper.classList.add('hidden');
+                });
+            }
+
+            // Tab Ghép ngẫu nhiên vs Tiêu chí
+            const tabRandom = document.getElementById('tab-random');
+            const tabCriteria = document.getElementById('tab-criteria');
+            const viewRandom = document.getElementById('view-random');
+            const viewCriteria = document.getElementById('view-criteria');
+            if (tabRandom && tabCriteria && viewRandom && viewCriteria) {
+                tabRandom.addEventListener('click', () => {
+                    tabRandom.className = "py-2 rounded-lg text-xs font-bold bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+                    tabCriteria.className = "py-2 rounded-lg text-xs font-semibold text-gray-500 hover:text-on-surface transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+                    viewRandom.classList.remove('hidden');
+                    viewCriteria.classList.add('hidden');
+                });
+
+                tabCriteria.addEventListener('click', () => {
+                    tabCriteria.className = "py-2 rounded-lg text-xs font-bold bg-white text-primary shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+                    tabRandom.className = "py-2 rounded-lg text-xs font-semibold text-gray-500 hover:text-on-surface transition-all flex items-center justify-center gap-1.5 cursor-pointer";
+                    viewCriteria.classList.remove('hidden');
+                    viewRandom.classList.add('hidden');
+                });
+            }
+
+            // Popover chuông thông báo
+            const notifBtn = document.getElementById('btnToggleNotifDropdown');
+            const popover = document.getElementById('quickNotifPopover');
+            const container = document.getElementById('notifDropdownContainer');
+            const btnMarkAll = document.getElementById('btnMarkAllNotifs');
+
+            if (notifBtn && popover) {
+                notifBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    popover.classList.toggle('hidden');
+                    popover.classList.toggle('flex');
+                };
+
+                document.onclick = (e) => {
+                    if (container && !container.contains(e.target)) {
+                        popover.classList.add('hidden');
+                        popover.classList.remove('flex');
+                    }
+                };
+            }
+
+            if (btnMarkAll) {
+                btnMarkAll.onclick = () => {
+                    const user = getLoggedInUser();
+                    const uid = user ? (user.id || user.phone || 'user') : 'guest';
+                     const key = `sb_notifs_user_${uid}`;
+                    let notifs = [];
+                    try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+                    notifs.forEach(n => n.read = true);
+                    localStorage.setItem(key, JSON.stringify(notifs));
+                    loadUserNotifications();
+                };
+            }
+
+            // Khởi động đồng hồ đếm ngược 10 phút
+            startCountdownTimer();
+
+            // Kiểm tra nếu URL có chỉ định bước (?step=2 hoặc ?step=3)
+            const initialStep = parseInt(params.get('step')) || 1;
+            if (initialStep > 1 && initialStep <= 3) {
+                goToStep(initialStep);
+            }
+        });
+    </script>
+</body>
+</html>

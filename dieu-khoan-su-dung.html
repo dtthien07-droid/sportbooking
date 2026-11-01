@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportBooking - Điều khoản sử dụng</title>
+
+    <!-- Font chữ & Icon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    spacing: { "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem" }
+                }
+            }
+        };
+    </script>
+    <style>
+        @layer base { 
+            html, body { margin: 0; padding: 0; } 
+            body { overscroll-behavior: none; } 
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="h-20 max-w-[1440px] mx-auto px-4 lg:px-8 flex items-center justify-between gap-6">
+            <div class="flex items-center gap-8 lg:gap-12">
+             
+                    <span class="text-2xl text-primary font-bold tracking-tight">SportBooking</span>
+                </a>
+            </div>
+
+            <div class="flex items-center gap-4">
+            
+
+                <!-- KHU VỰC USER -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2 cursor-pointer" onclick="window.location.href='ho-so-ca-nhan.html'">
+                    <div class="w-10 h-10 rounded-full bg-[#e8f5e9] text-primary flex items-center justify-center font-bold text-base border border-green-200">
+                        K
+                    </div>
+                    <div class="flex flex-col text-left">
+                        <span id="headerUsername" class="text-sm font-bold text-gray-900 leading-tight">Khách vãng lai</span>
+                        <span id="headerUserRole" class="text-[11px] font-bold text-gray-500 leading-tight">User</span>
+                    </div>
+                    <span class="material-symbols-outlined text-gray-400 text-[20px] ml-1">logout</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="w-full pt-28 pb-16 min-h-screen bg-surface">
+        <div class="max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- TIÊU ĐỀ TRANG -->
+            <div class="bg-surface-container-lowest rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 mb-8">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-3">
+                    <span class="material-symbols-outlined text-[16px]">gavel</span>
+                    <span>Văn bản pháp lý nền tảng</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-bold text-on-surface tracking-tight mb-2">
+                    Điều khoản sử dụng dịch vụ SportBooking
+                </h1>
+                <p class="text-xs sm:text-sm text-on-surface-variant flex items-center gap-2">
+                    <span>Áp dụng từ: Tháng 10/2026</span>
+                    <span>•</span>
+                    <span>Khu vực: Thành phố Hà Nội</span>
+                </p>
+            </div>
+
+            <!-- CÁC ĐIỀU KHOẢN CHI TIẾT -->
+            <div class="bg-surface-container-lowest rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100 flex flex-col gap-8 text-sm sm:text-base leading-relaxed text-gray-700">
+                
+                <!-- Điều 1 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 1. Chấp thuận Điều khoản
+                    </h2>
+                    <p>
+                        1. Bằng việc truy cập, tạo tài khoản, tra cứu cơ sở hoặc thực hiện bất kỳ giao dịch đặt sân nào trên website và ứng dụng của <strong>SportBooking Hà Nội</strong> (sau đây gọi tắt là "SportBooking"), người dùng ("Bạn" hoặc "Khách hàng") xác nhận đã đọc, hiểu và đồng ý chịu sự ràng buộc vô điều kiện bởi bản Điều khoản này.
+                    </p>
+                    <p>
+                        2. SportBooking có quyền cập nhật, chỉnh sửa nội dung điều khoản bất kỳ lúc nào để phù hợp với quy định pháp luật và hoạt động thực tế. Phiên bản điều chỉnh có hiệu lực ngay khi được đăng tải công khai trên hệ thống.
+                    </p>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 2 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 2. Định nghĩa thuật ngữ
+                    </h2>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><strong>Cụm sân / Cơ sở thể thao:</strong> Các sân bóng đá mini, cầu lông, pickleball, tennis liên kết trên hệ thống SportBooking.</li>
+                        <li><strong>Slot / Khung giờ:</strong> Khoảng thời gian cụ thể của một sân đấu mà khách hàng đăng ký sử dụng.</li>
+                        <li><strong>Khóa giữ chỗ (Slot-locking):</strong> Trạng thái giữ chỗ tạm thời trong 10 phút để người dùng thanh toán, ngăn ngừa tình trạng hai người cùng đặt một sân (double-booking).</li>
+                        <li><strong>Mã đặt sân (#SB-xxxxx):</strong> Mã định danh xác nhận giao dịch thành công giữa khách hàng và cụm sân.</li>
+                    </ul>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 3 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 3. Tài khoản và Bảo mật
+                    </h2>
+                    <p>
+                        1. Khách hàng cam kết cung cấp thông tin liên hệ chính xác (Số điện thoại, Họ tên, Email). Người dùng tự chịu trách nhiệm bảo mật mật khẩu và các hoạt động thực hiện dưới tài khoản của mình.
+                    </p>
+                    <p>
+                        2. SportBooking có quyền đình chỉ hoặc hủy tài khoản nếu phát hiện hành vi gian lận thanh toán, giữ slot ảo nhiều lần hoặc vi phạm văn hóa giao lưu thể thao.
+                    </p>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 4 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 4. Quy trình Đặt sân và Khóa giữ chỗ (10 phút)
+                    </h2>
+                    <p>
+                        1. Khi chọn khung giờ và bấm <strong>"Đặt sân ngay"</strong>, hệ thống sẽ tự động khóa giữ chỗ trong <strong>10 phút</strong> để khách hàng điền thông tin và thanh toán.
+                    </p>
+                    <p>
+                        2. Sau 10 phút nếu khách hàng chưa hoàn tất thanh toán, hệ thống sẽ tự động giải phóng slot sân để phục vụ người chơi khác.
+                    </p>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 5 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 5. Chính sách Hủy sân và Hoàn tiền
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-2">
+                        <div class="p-4 rounded-2xl bg-green-50 border border-green-100 flex flex-col gap-1">
+                            <span class="text-xs font-bold text-primary uppercase">Trước 24 giờ</span>
+                            <span class="text-lg font-bold text-primary">Hoàn 100%</span>
+                            <span class="text-xs text-gray-600">Hoàn toàn bộ tiền cọc về tài khoản nguồn.</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-orange-50 border border-orange-100 flex flex-col gap-1">
+                            <span class="text-xs font-bold text-secondary uppercase">Từ 6 đến 24 giờ</span>
+                            <span class="text-lg font-bold text-secondary">Hoàn 50%</span>
+                            <span class="text-xs text-gray-600">50% còn lại bồi hoàn chi phí giữ chỗ cho cụm sân.</span>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-red-50 border border-red-100 flex flex-col gap-1">
+                            <span class="text-xs font-bold text-error uppercase">Dưới 6 giờ / Vắng mặt</span>
+                            <span class="text-lg font-bold text-error">Không hoàn cọc</span>
+                            <span class="text-xs text-gray-600">Không áp dụng hoàn cọc đối với lịch hủy sát giờ.</span>
+                        </div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-500 italic">
+                        * Trường hợp thời tiết mưa bão (đối với sân ngoài trời) hoặc sự cố kỹ thuật từ phía nhà thi đấu: Khách hàng được quyền dời lịch chơi hoặc nhận hoàn tiền 100%.
+                    </p>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 6 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 6. Giới hạn Trách nhiệm
+                    </h2>
+                    <p>
+                        1. Khách hàng tự chịu trách nhiệm về tình trạng sức khỏe cá nhân và rủi ro chấn thương khi vận động thể thao tại cụm sân.
+                    </p>
+                    <p>
+                        2. SportBooking không chịu trách nhiệm đối với tư trang, tài sản cá nhân bị mất mát hoặc hư hỏng tại cơ sở thi đấu.
+                    </p>
+                </section>
+
+                <hr class="border-gray-100">
+
+                <!-- Điều 7 -->
+                <section class="flex flex-col gap-2">
+                    <h2 class="text-lg sm:text-xl font-bold text-on-surface flex items-center gap-2">
+                        <span class="w-2 h-6 bg-primary rounded-full inline-block"></span>
+                        Điều 7. Thông tin Liên hệ
+                    </h2>
+                    <p>Mọi thắc mắc và khiếu nại về dịch vụ xin vui lòng liên hệ:</p>
+                    <div class="p-4 rounded-2xl bg-surface-container-low border border-gray-100 text-xs sm:text-sm flex flex-col gap-1.5">
+                        <p><strong>Đơn vị vận hành:</strong> SportBooking Hà Nội</p>
+                        <p><strong>Hotline hỗ trợ 24/7:</strong> <span class="text-secondary font-bold">1900 8899</span></p>
+                        <p><strong>Email tiếp nhận:</strong> support@sportbooking.vn</p>
+                        <p><strong>Trụ sở:</strong> Tầng 6, Tháp Thể Thao Đống Đa, TP. Hà Nội</p>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER ĐỒNG BỘ -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors font-bold text-primary" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT AUTH DÙNG CHUNG -->
+    <script src="auth.js"></script>
+</body>
+</html>

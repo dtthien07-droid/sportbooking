@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportBooking - Tìm cụm sân thể thao tại Hà Nội</title>
+
+    <!-- Font chữ & Icon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    spacing: { "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem" }
+                }
+            }
+        };
+    </script>
+    <style>
+        @layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER ĐỒNG BỘ 100% VỚI TRANG CHỦ (LOGO & NÚT CHUÔNG THANH LỊCH) -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <!-- LOGO CHỮ SPORTBOOKING NGUYÊN BẢN -->
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-xl text-primary font-bold tracking-tight">SportBooking</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-space-lg">
+                <!-- NÚT CHUÔNG ĐỒNG BỘ Y HỆT TRANG CHỦ (BỎ VIỀN ĐEN THÔ, CHẤM ĐỎ TINH TẾ) -->
+                <div class="relative" id="notifDropdownContainer">
+                    <button aria-label="Thông báo" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" id="btnToggleNotifDropdown" type="button">
+                        <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse" id="badgeQuickCount"></span>
+                    </button>
+
+                    <!-- KHUNG XEM NHANH THÔNG BÁO (ĐÃ ĐƯỢC CHỈNH GỌN GÀNG, KHÔNG BỊ TRÙNG LẶP HAY CHE CHỮ) -->
+                    <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
+                        <!-- Header Popover -->
+            
+
+                        <!-- Footer Popover: Duy nhất 1 link chuyển trang -->
+                        <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
+                            <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
+                                <span>Xem tất cả thông báo</span>
+                                <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ ĐỘNG THEO TÀI KHOẢN -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 min-h-screen bg-surface">
+        
+        <!-- TIÊU ĐỀ & THANH CÔNG CỤ TÌM KIẾM -->
+        <section class="w-full bg-surface-container-low/70 py-6">
+            <div class="max-w-[1440px] mx-auto px-margin flex flex-col gap-4">
+                <h1 class="text-2xl md:text-3xl font-extrabold text-on-surface tracking-tight">
+                    Tìm cụm sân thể thao tại Hà Nội
+                </h1>
+
+                <!-- Tabs chọn môn nhanh -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1" id="quickSportTabs">
+                    <button data-sport="all" class="sport-tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-primary text-on-primary shadow-sm flex items-center gap-1.5 cursor-pointer" type="button">
+                        <span class="material-symbols-outlined text-[18px]">sports</span>
+                        <span>Tất cả môn</span>
+                    </button>
+                    <button data-sport="badminton" class="sport-tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-surface-container text-on-surface flex items-center gap-1.5 cursor-pointer" type="button">
+                        <span class="material-symbols-outlined text-[18px]">sports_tennis</span>
+                        <span>Cầu lông</span>
+                    </button>
+                    <button data-sport="soccer" class="sport-tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-surface-container text-on-surface flex items-center gap-1.5 cursor-pointer" type="button">
+                        <span class="material-symbols-outlined text-[18px]">sports_soccer</span>
+                        <span>Bóng đá mini</span>
+                    </button>
+                    <button data-sport="pickleball" class="sport-tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-surface-container text-on-surface flex items-center gap-1.5 cursor-pointer" type="button">
+                        <span class="material-symbols-outlined text-[18px]">sports_cricket</span>
+                        <span>Pickleball</span>
+                    </button>
+                </div>
+
+                <!-- THANH TÌM KIẾM CHÍNH -->
+                <form id="topSearchForm" class="bg-surface-container-lowest rounded-2xl p-4 shadow-md flex flex-col lg:flex-row items-stretch lg:items-center gap-4 border border-gray-100">
+                    <input type="hidden" name="sport" id="paramSport" value="all">
+
+                    <!-- Tên sân / Địa chỉ -->
+                    <div class="flex-1 flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl">
+                        <span class="material-symbols-outlined text-gray-500 text-[20px]">search</span>
+                        <div class="flex flex-col flex-1">
+                            <label class="text-[11px] uppercase font-bold text-gray-500">Tên sân hoặc khu vực</label>
+                            <input name="q" id="queryInput" class="bg-transparent text-sm text-on-surface focus:outline-none w-full" placeholder="Nhập tên sân, địa chỉ..." type="text">
+                        </div>
+                    </div>
+
+                    <!-- Chọn Quận/Khu vực (Nạp động từ Database) -->
+                    <div class="w-full lg:w-60 flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl">
+                        <span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+                        <div class="flex flex-col flex-1">
+                            <span class="text-[11px] uppercase font-bold text-gray-500">Quận / Khu vực</span>
+                            <select name="district" id="paramDistrict" class="bg-transparent text-sm font-semibold text-on-surface focus:outline-none cursor-pointer w-full">
+                                <option value="" selected>-- Đang nạp khu vực... --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Chọn Ngày -->
+                    <div class="w-full lg:w-56 flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl">
+                        <span class="material-symbols-outlined text-secondary text-[20px]">calendar_today</span>
+                        <div class="flex flex-col flex-1">
+                            <span class="text-[11px] uppercase font-bold text-gray-500">Ngày chơi</span>
+                            <input type="date" name="date" id="paramDate" class="bg-transparent text-sm font-semibold text-on-surface focus:outline-none cursor-pointer w-full">
+                        </div>
+                    </div>
+
+                    <!-- Chọn Khung giờ -->
+                    <div class="w-full lg:w-60 flex items-center gap-2 bg-surface-container-low px-4 py-2.5 rounded-xl">
+                        <span class="material-symbols-outlined text-secondary text-[20px]">schedule</span>
+                        <div class="flex flex-col flex-1">
+                            <span class="text-[11px] uppercase font-bold text-gray-500">Khung giờ</span>
+                            <select name="time_slot" id="timeSlotSelect" class="bg-transparent text-sm font-semibold text-on-surface focus:outline-none cursor-pointer w-full">
+                                <option value="" selected>-- Tất cả khung giờ --</option>
+                                <option value="morning">Sáng (05:00 - 12:00)</option>
+                                <option value="afternoon">Chiều (12:00 - 17:00)</option>
+                                <option value="evening">Tối giờ vàng (17:00 - 22:00)</option>
+                                <option value="night">Đêm (22:00 - 23:59)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full lg:w-auto px-6 py-3 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm flex items-center justify-center gap-1 shadow-md transition-all cursor-pointer active:scale-95">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                        <span>Tìm kiếm</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <section class="max-w-[1440px] mx-auto px-margin py-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- BỘ LỌC CỘT TRÁI -->
+                <aside class="lg:col-span-4 xl:col-span-3 flex flex-col gap-6 sticky top-24">
+                    <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col gap-6 border">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-base text-on-surface">Bộ lọc chi tiết</h4>
+                            <button id="clearFiltersBtn" class="text-xs font-bold text-secondary hover:underline cursor-pointer" type="button">
+                                Đặt lại bộ lọc
+                            </button>
+                        </div>
+
+                        <!-- Môn thể thao -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs font-bold uppercase text-gray-500">Môn thể thao</span>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-sport-check w-4 h-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox" value="badminton">
+                                <span class="text-sm">Cầu lông</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-sport-check w-4 h-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox" value="soccer">
+                                <span class="text-sm">Bóng đá mini</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-sport-check w-4 h-4 rounded text-primary focus:ring-primary accent-primary" type="checkbox" value="pickleball">
+                                <span class="text-sm">Pickleball</span>
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <!-- Khung giờ -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs font-bold uppercase text-gray-500">Khung giờ</span>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-slot-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="morning">
+                                <span class="text-sm">Sáng (05:00 - 12:00)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-slot-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="afternoon">
+                                <span class="text-sm">Chiều (12:00 - 17:00)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-slot-check w-4 h-4 rounded text-secondary accent-secondary" type="checkbox" value="evening">
+                                <span class="text-sm font-semibold text-secondary">Tối giờ vàng (17:00 - 22:00)</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input class="filter-slot-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="night">
+                                <span class="text-sm">Đêm (22:00 - 23:59)</span>
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <!-- Tiện ích -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs font-bold uppercase text-gray-500">Tiện ích</span>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input id="amenityWc" class="filter-amenity-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="wc">
+                                <span class="text-sm">Nhà vệ sinh sạch sẽ</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input id="amenityParking" class="filter-amenity-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="parking">
+                                <span class="text-sm">Bãi đỗ ô tô / xe máy</span>
+                            </label>
+                            <label class="flex items-center gap-2 p-1.5 hover:bg-surface-container rounded-lg cursor-pointer">
+                                <input id="amenityWifi" class="filter-amenity-check w-4 h-4 rounded text-primary accent-primary" type="checkbox" value="wifi">
+                                <span class="text-sm">Wifi miễn phí / Căng tin</span>
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- CỘT PHẢI: KẾT QUẢ & PHÂN TRANG -->
+                <div class="lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
+                    
+                    <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex items-center justify-between border">
+                        <p class="font-bold text-sm">
+                            Tìm thấy <span id="countResults" class="text-primary font-extrabold text-base">0</span> cụm sân thể thao phù hợp
+                        </p>
+                    </div>
+
+                    <!-- Danh sách sân render động -->
+                    <div id="venuesListContainer" class="flex flex-col gap-6">
+                        <div class="col-span-full py-16 text-center text-on-surface-variant flex flex-col items-center justify-center gap-3">
+                            <span class="material-symbols-outlined text-4xl animate-spin text-primary">sync</span>
+                            <span class="font-medium text-base">Đang tải danh sách sân từ cơ sở dữ liệu...</span>
+                        </div>
+                    </div>
+
+                    <!-- BANNER TÌM ĐỐI CHƠI (MATCHMAKER) -->
+                    
+
+                    <!-- KHỐI PHÂN TRANG -->
+                    <div id="paginationContainer" class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 border">
+                        <span class="text-sm text-on-surface-variant">
+                            Hiển thị <span class="font-bold text-on-surface" id="paginationRange">0 - 0</span> trong tổng số <span class="font-bold text-on-surface" id="totalCountText">0</span> cụm sân
+                        </span>
+                        <nav id="paginationButtons" aria-label="Pagination" class="flex items-center gap-1.5 text-sm"></nav>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT GỌI API MYSQL & XỬ LÝ SỰ KIỆN -->
+    <script>
+        let ALL_VENUES = [];
+        const ITEMS_PER_PAGE = 4;
+        let currentPage = 1;
+        let currentFilteredList = [];
+
+        function syncHeaderUserInfo() {
+            const userContainer = document.getElementById('userHeaderArea');
+            if (!userContainer) return;
+
+            let user = null;
+            try {
+                user = JSON.parse(sessionStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('currentUser')) ||
+                       JSON.parse(localStorage.getItem('current_user'));
+            } catch (e) {}
+
+            if (user) {
+                const displayName = user.fullName || user.full_name || user.name || user.phone || 'Người dùng';
+                const firstLetter = displayName.trim().charAt(0).toUpperCase();
+                const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'User';
+
+                userContainer.innerHTML = `
+                    <div id="userProfileTrigger" class="flex items-center gap-2 cursor-pointer p-1 rounded-xl hover:bg-gray-100 transition-all group" title="Bấm để xem hồ sơ cá nhân" onclick="window.location.href='ho-so-ca-nhan.html'">
+                        <div class="w-8 h-8 rounded-full bg-green-100 text-primary font-bold text-xs flex items-center justify-center shrink-0 border border-green-300 shadow-xs group-hover:scale-105 transition-transform">
+                            ${firstLetter}
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span id="headerUsername" class="text-xs font-bold text-gray-900 leading-tight truncate max-w-[130px]">
+                                ${displayName}
+                            </span>
+                            <span id="headerUserRole" style="color: #9d4300 !important; font-weight: 700 !important; font-size: 10px !important;">
+                                ${roleText}
+                            </span>
+                        </div>
+                        <button onclick="event.stopPropagation(); handleLogout()" type="button" title="Đăng xuất" class="ml-1 p-1 text-gray-400 hover:text-error hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">logout</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                userContainer.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <a href="dang-nhap.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                            Đăng nhập
+                        </a>
+                        <a href="dang-ky.html" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-container transition-colors shadow-sm">
+                            Đăng ký
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                sessionStorage.removeItem('sb_session');
+                localStorage.removeItem('sb_session');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('current_user');
+                window.location.href = 'dang-nhap.html';
+            }
+        }
+
+        const SPORT_IMAGE_POOLS = {
+            badminton: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuAhN6PEydVGh4M7mwCq5YLYnDvBICS5U5FVmrYYPismbhwZ_hR4d6KvTZTZJO7_xv-k6MbTOoKV9lzgGbCabD2x3JPtl_onsVlsInMdfbpqfsnq4dBHbTjXEmYY1X_nbt44MaE2AIxoKglsk0fQ10bsAVATZ7YJuP3k1qgkXrUTx9SCbdgsGJRAxCDiQvN_pNOq5O3HfcMlLFeYJpzkT7sV3PTUFV7bHHP_mS6DAEagFBcoXn8TzOBi",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuC8-JlFZbOpOMlCODXssh6Ln6uxayPdTeeoN1g7jEuZ5WEsTMiX-ADzOnrj-ezmbXaV6HWDE3OIwPq2aU5VZ12E4X19CeTWetajjP6a3iasw7q2ZRjoaRGkHNWPaaamuT8Tb-oNvYy34638va5n0C_TrI20aiW7PLn86iCde3cGQZlSOZ0UvHJq3IqXBtW_1QcXj0C1CLyYtD5B0tmZRSJ-dIK4tFSgFtvHgwMk0ChiZocMOnnqDR_V"
+            ],
+            soccer: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuC1OHmkNHYZKT9Q2UYljurG6OFeMyqUmxS2R36AP5tAH4w80dQ3AYOPBiNY3HziwSSW5JtJNZUPcHAlC1j-unw2kzuAmwmF_h-XRDxeIrIvune7-hAO032ej-sYqaRN6juFV4vvKMgT-Ngs86s2pO0w5b4TkKOkeHuqUFS_EhJgoMDvwb77s6hgNxRXXM7PkfO9fONLURzDW2SHQTicX4wE6V9Ea4XqZ2GKSiLDPVklQQg7BbCTrnu4"
+            ],
+            pickleball: [
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuChsd7BPmxVTlt3N_1J5kXeINj6G_VrlePE7xjz0DRGxK_iJAdtxzjoco95aVBSGX5UVo1kgqvxB1QmOF6y5X6MbWH8np8-4rDKAguY6aVDWDq-hCSSyUuYivMdM92J9G0POokWoHTSUOtBshXBPfV8yV92EEN0xe-Bx4xx7Jzr4QzsAcFknYp7j0Y2QjWtzmtd4r2X2OV_Zzhz6POon880YeTYTxcvsfbyqrV3Gq33HN1yoGHLpASL"
+            ]
+        };
+
+        const TIME_PERIOD_RANGES = {
+            morning:   { start: 5 * 60,  end: 12 * 60 },
+            afternoon: { start: 12 * 60, end: 17 * 60 },
+            evening:   { start: 17 * 60, end: 22 * 60 },
+            night:     { start: 22 * 60, end: 24 * 60 }
+        };
+
+        function detectSport(name) {
+            const lower = (name || '').toLowerCase();
+            if (lower.includes('bóng') || lower.includes('đá')) return 'soccer';
+            if (lower.includes('pickleball')) return 'pickleball';
+            return 'badminton';
+        }
+
+        function timeToMinutes(timeStr, isClosing = false) {
+            if (!timeStr) return isClosing ? 1380 : 300;
+            const parts = timeStr.trim().split(':');
+            const h = parseInt(parts[0], 10);
+            const m = parseInt(parts[1] || '0', 10);
+            const total = h * 60 + m;
+            if (isClosing && total === 0) return 1440;
+            return total;
+        }
+
+        function isVenueOpenInPeriod(openMin, closeMin, periodKey) {
+            const range = TIME_PERIOD_RANGES[periodKey];
+            if (!range) return true;
+            const overlapStart = Math.max(openMin, range.start);
+            const overlapEnd = Math.min(closeMin, range.end);
+            return (overlapEnd - overlapStart) >= 30;
+        }
+
+        function buildGoogleMapsUrl(fac) {
+            if (fac.google_maps_url && fac.google_maps_url.trim().startsWith('http')) {
+                return fac.google_maps_url.trim();
+            }
+            const searchQuery = encodeURIComponent(`${fac.name}, ${fac.address}, Hà Nội`);
+            return `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
+        }
+
+        function getSportMatchingImage(fac, sportCounter) {
+            const sportType = detectSport(fac.name);
+            const pool = SPORT_IMAGE_POOLS[sportType] || SPORT_IMAGE_POOLS.badminton;
+            return pool[sportCounter % pool.length];
+        }
+
+        function populateDynamicDistricts(venues, currentSelected = '') {
+            const districtSelect = document.getElementById('paramDistrict');
+            if (!districtSelect) return;
+
+            const rawAreas = venues.map(v => (v.area || '').trim()).filter(Boolean);
+            const uniqueAreas = Array.from(new Set(rawAreas)).sort((a, b) => a.localeCompare(b, 'vi'));
+
+            let optionsHtml = `<option value="" ${!currentSelected ? 'selected' : ''}>-- Tất cả quận/khu vực --</option>`;
+            uniqueAreas.forEach(area => {
+                const isSelected = (currentSelected.toLowerCase() === area.toLowerCase() || 
+                                    currentSelected.toLowerCase().includes(area.toLowerCase()) || 
+                                    area.toLowerCase().includes(currentSelected.toLowerCase())) ? 'selected' : '';
+                optionsHtml += `<option value="${area}" ${isSelected}>${area.startsWith('Quận') ? area : 'Quận ' + area}</option>`;
+            });
+
+            districtSelect.innerHTML = optionsHtml;
+        }
+
+        async function fetchVenuesFromDB() {
+            try {
+                const res = await fetch('http://localhost:3000/api/facilities');
+                if (!res.ok) throw new Error('API server không phản hồi');
+                const rawData = await res.json();
+                mapAndSetVenues(rawData);
+            } catch (err) {
+                console.warn('Sử dụng bộ dữ liệu dự phòng chuẩn:', err);
+                const fallbackData = [
+                    { id: 1, name: "Sân bóng Đông Đô", area: "Cầu Giấy", address: "Ngõ 11 Duy Tân, Dịch Vọng Hậu, Cầu Giấy", phone: "0899234260", base_price: 350000, rating: 4.8, opening_time: "05:00", closing_time: "23:30", amenities: "[\"Bãi đỗ xe\", \"Nhà vệ sinh\", \"Căng tin\"]" },
+                    { id: 2, name: "Sân Bóng Thành Phát", area: "Cầu Giấy", address: "2 Đ. Hoàng Minh Giám, Yên Hòa, Cầu Giấy", phone: "0975611652", base_price: 320000, rating: 4.7, opening_time: "06:00", closing_time: "23:45", amenities: "[\"Bãi đỗ xe ô tô\", \"Đèn cao áp\"]" },
+                    { id: 3, name: "Nhà Thi Đấu Cầu Giấy", area: "Cầu Giấy", address: "35 P. Trần Quý Kiên, Dịch Vọng, Cầu Giấy", phone: "0972272112", base_price: 80000, rating: 4.5, opening_time: "05:00", closing_time: "23:00", amenities: "[\"Nhà vệ sinh sạch sẽ\", \"Có bãi đỗ xe\"]" },
+                    { id: 4, name: "Sân Cầu Lông Swin THPT Cầu Giấy", area: "Cầu Giấy", address: "8 Ng. 118 Đ. Nguyễn Khánh Toàn, Nghĩa Đô, Cầu Giấy", phone: "0972914307", base_price: 90000, rating: 4.9, opening_time: "05:00", closing_time: "23:30", amenities: "[\"Thảm BWF\", \"Bãi đỗ xe\"]" },
+                    { id: 8, name: "Pickleball Arena Tây Hồ", area: "Tây Hồ", address: "691 Đ. Lạc Long Quân, Tây Hồ, Hà Nội", phone: "0973708228", base_price: 180000, rating: 4.9, opening_time: "07:00", closing_time: "22:00", amenities: "[\"Mặt sân USAPA\", \"Đèn chống lóa\"]" }
+                ];
+                mapAndSetVenues(fallbackData);
+            }
+        }
+
+        function mapAndSetVenues(rawData) {
+            const counters = { badminton: 0, soccer: 0, pickleball: 0 };
+
+            ALL_VENUES = rawData.map((fac) => {
+                const sportType = detectSport(fac.name);
+                const sportTitle = sportType === 'soccer' ? 'Bóng đá mini' : (sportType === 'pickleball' ? 'Pickleball' : 'Cầu lông');
+                
+                let amenitiesArr = [];
+                try {
+                    amenitiesArr = typeof fac.amenities === 'string' ? JSON.parse(fac.amenities) : (fac.amenities || []);
+                } catch(e) {
+                    amenitiesArr = ['Bãi đỗ xe', 'Nhà vệ sinh'];
+                }
+
+                const amenitiesStr = amenitiesArr.join(' ').toLowerCase();
+                const openStr = (fac.opening_time || '05:00').slice(0, 5);
+                const closeStr = (fac.closing_time || '23:00').slice(0, 5);
+
+                const courtImage = (fac.image_url && fac.image_url.trim() !== '') 
+                                   ? fac.image_url 
+                                   : getSportMatchingImage(fac, counters[sportType]++);
+
+                return {
+                    id: fac.id,
+                    name: fac.name,
+                    sport: sportType,
+                    sportName: sportTitle,
+                    area: (fac.area || '').trim(),
+                    address: fac.address,
+                    phone: fac.phone || '0988 8899',
+                    rating: fac.rating || '4.8',
+                    basePrice: Number(fac.base_price || 90000),
+                    openingTime: openStr,
+                    closingTime: closeStr,
+                    openMinutes: timeToMinutes(openStr, false),
+                    closeMinutes: timeToMinutes(closeStr, true),
+                    googleMapsUrl: buildGoogleMapsUrl(fac),
+                    amenities: amenitiesArr,
+                    hasWc: amenitiesStr.includes('vệ sinh') || amenitiesStr.includes('wc'),
+                    hasParking: amenitiesStr.includes('xe') || amenitiesStr.includes('đỗ'),
+                    hasWifi: amenitiesStr.includes('wifi') || amenitiesStr.includes('nước') || amenitiesStr.includes('căng tin'),
+                    img: courtImage
+                };
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialDistrict = urlParams.get('district') || '';
+            populateDynamicDistricts(ALL_VENUES, initialDistrict);
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const q = document.getElementById('queryInput')?.value.trim().toLowerCase() || '';
+            const district = document.getElementById('paramDistrict')?.value.trim().toLowerCase() || '';
+            const topSelectedPeriod = document.getElementById('timeSlotSelect')?.value || '';
+            const checkedSports = Array.from(document.querySelectorAll('.filter-sport-check:checked')).map(cb => cb.value);
+            const currentTopTabSport = document.getElementById('paramSport')?.value || 'all';
+
+            const checkWc = document.getElementById('amenityWc')?.checked;
+            const checkParking = document.getElementById('amenityParking')?.checked;
+            const checkWifi = document.getElementById('amenityWifi')?.checked;
+
+            const sideCheckedPeriods = Array.from(document.querySelectorAll('.filter-slot-check:checked')).map(cb => cb.value);
+            const activeTimeFilters = new Set(sideCheckedPeriods);
+            if (topSelectedPeriod && TIME_PERIOD_RANGES[topSelectedPeriod]) {
+                activeTimeFilters.add(topSelectedPeriod);
+            }
+
+            currentFilteredList = ALL_VENUES.filter(item => {
+                if (q && !item.name.toLowerCase().includes(q) && !item.address.toLowerCase().includes(q) && !item.area.toLowerCase().includes(q)) {
+                    return false;
+                }
+                if (district && !item.area.toLowerCase().includes(district) && !district.includes(item.area.toLowerCase())) {
+                    return false;
+                }
+                if (checkedSports.length > 0) {
+                    if (!checkedSports.includes(item.sport)) return false;
+                } else if (currentTopTabSport !== 'all') {
+                    if (item.sport !== currentTopTabSport) return false;
+                }
+                if (checkWc && !item.hasWc) return false;
+                if (checkParking && !item.hasParking) return false;
+                if (checkWifi && !item.hasWifi) return false;
+
+                if (activeTimeFilters.size > 0) {
+                    for (const periodKey of activeTimeFilters) {
+                        if (!isVenueOpenInPeriod(item.openMinutes, item.closeMinutes, periodKey)) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            currentPage = 1;
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const totalItems = currentFilteredList.length;
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+            document.getElementById('countResults').textContent = totalItems;
+            document.getElementById('totalCountText').textContent = totalItems;
+
+            const container = document.getElementById('venuesListContainer');
+            const paginationNav = document.getElementById('paginationButtons');
+
+            if (totalItems === 0) {
+                container.innerHTML = `
+                    <div class="bg-surface-container-lowest rounded-2xl p-12 text-center border">
+                        <span class="material-symbols-outlined text-[48px] text-gray-400 mb-2">search_off</span>
+                        <h3 class="font-bold text-base text-on-surface">Không tìm thấy sân phù hợp</h3>
+                        <p class="text-on-surface-variant text-sm mt-1">Không có sân nào phù hợp với bộ lọc bạn vừa chọn.</p>
+                        <button onclick="document.getElementById('clearFiltersBtn').click()" class="inline-block mt-4 px-4 py-2 bg-primary text-on-primary rounded-xl font-bold text-sm cursor-pointer shadow-sm">
+                            Xem tất cả cụm sân
+                        </button>
+                    </div>
+                `;
+                document.getElementById('paginationRange').textContent = "0 - 0";
+                paginationNav.innerHTML = '';
+                return;
+            }
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+            const pageVenues = currentFilteredList.slice(startIndex, endIndex);
+
+            document.getElementById('paginationRange').textContent = `${startIndex + 1} - ${endIndex}`;
+
+            container.innerHTML = pageVenues.map(v => `
+                <article class="bg-surface-container-lowest rounded-2xl shadow-sm hover:shadow-md transition-all p-5 flex flex-col md:flex-row gap-5 border border-gray-100 group">
+                    <!-- Click vào ảnh -> Xem chi tiết sân -->
+                    <div class="relative md:w-64 h-52 rounded-xl overflow-hidden shrink-0 cursor-pointer" onclick="goToDetail('${v.id}')">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="${v.name}" src="${v.img}">
+                        <span class="absolute bottom-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-sm">
+                            ${v.sportName}
+                        </span>
+                        <div class="absolute top-2.5 right-2.5 bg-surface/90 backdrop-blur-sm px-2 py-0.5 rounded-lg text-xs font-bold text-amber-500 shadow-sm flex items-center gap-0.5">
+                            ⭐ ${v.rating}
+                        </div>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2">
+                                <h3 onclick="goToDetail('${v.id}')" class="font-bold text-lg text-on-surface leading-tight hover:text-primary transition-colors cursor-pointer" title="${v.name}">
+                                    ${v.name}
+                                </h3>
+                                <span class="px-2.5 py-0.5 bg-surface-container text-xs font-semibold rounded-md text-on-surface-variant shrink-0">${v.area}</span>
+                            </div>
+                            
+                            <p class="text-sm text-on-surface-variant flex items-center gap-1 mt-1.5">
+                                <span class="material-symbols-outlined text-primary text-[16px] shrink-0">pin_drop</span>
+                                <span class="truncate" title="${v.address}">${v.address}</span>
+                            </p>
+
+                            <p class="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                                <span class="material-symbols-outlined text-[15px] shrink-0">call</span>
+                                <span>Liên hệ: <strong>${v.phone}</strong></span>
+                                <span class="mx-1">•</span>
+                                <span class="material-symbols-outlined text-[15px] shrink-0">schedule</span>
+                                <span>Mở cửa: <strong>${v.openingTime} - ${v.closingTime}</strong></span>
+                            </p>
+
+                            <div class="flex flex-wrap items-center gap-1.5 mt-3">
+                                ${v.amenities.slice(0, 3).map(tag => `<span class="px-2 py-0.5 rounded-lg bg-surface-container text-xs text-on-surface-variant font-medium">✓ ${tag}</span>`).join('')}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t mt-4">
+                            <div>
+                                <span class="text-xs text-gray-500">Giá thường từ:</span>
+                                <div class="font-bold text-primary text-lg">
+                                    ${v.basePrice.toLocaleString('vi-VN')} đ <span class="text-xs font-normal text-gray-500">/h</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="${v.googleMapsUrl}" target="_blank" rel="noopener noreferrer" title="Xem vị trí trên Google Maps" class="px-3.5 py-2.5 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-100 font-bold text-xs flex items-center gap-1 transition-all shadow-sm">
+                                    <span class="material-symbols-outlined text-[18px]">location_on</span>
+                                    <span>Bản đồ</span>
+                                </a>
+                                <!-- BẤM "ĐẶT SÂN NGAY": SANG TRANG CHỌN KHUNG GIỜ -->
+                                <button onclick="selectAndBook('${v.id}')" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white font-bold text-sm shadow-sm transition-all flex items-center gap-1 cursor-pointer active:scale-95">
+                                    <span>Đặt sân ngay</span>
+                                    <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            // Phân trang
+            if (totalPages <= 1) {
+                paginationNav.innerHTML = `<button class="w-9 h-9 rounded-xl bg-primary text-white font-bold shadow-sm" type="button">1</button>`;
+            } else {
+                let buttonsHtml = `
+                    <button onclick="changePage(${currentPage - 1})" class="w-9 h-9 rounded-xl ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer'} flex items-center justify-center" ${currentPage === 1 ? 'disabled' : ''} type="button">
+                        <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                    </button>
+                `;
+
+                for (let p = 1; p <= totalPages; p++) {
+                    if (p === currentPage) {
+                        buttonsHtml += `<button class="w-9 h-9 rounded-xl bg-primary text-white font-bold shadow-sm" type="button">${p}</button>`;
+                    } else {
+                        buttonsHtml += `<button onclick="changePage(${p})" class="w-9 h-9 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-colors cursor-pointer" type="button">${p}</button>`;
+                    }
+                }
+
+                buttonsHtml += `
+                    <button onclick="changePage(${currentPage + 1})" class="px-3 h-9 rounded-xl ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-200 text-gray-700 cursor-pointer'} font-semibold flex items-center gap-1 transition-colors" ${currentPage === totalPages ? 'disabled' : ''} type="button">
+                        <span>Tiếp</span>
+                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                    </button>
+                `;
+                paginationNav.innerHTML = buttonsHtml;
+            }
+        }
+
+        window.changePage = function(targetPage) {
+            const totalPages = Math.ceil(currentFilteredList.length / ITEMS_PER_PAGE);
+            if (targetPage < 1 || targetPage > totalPages) return;
+            currentPage = targetPage;
+            renderCurrentPage();
+            window.scrollTo({ top: 200, behavior: 'smooth' });
+        };
+
+        // Click Tên/Ảnh -> Xem chi tiết cơ sở
+        function goToDetail(facilityId) {
+            localStorage.setItem('selected_facility_id', facilityId);
+            const venue = ALL_VENUES.find(v => String(v.id) === String(facilityId));
+            if (venue) {
+                localStorage.setItem('selected_venue', JSON.stringify(venue));
+            }
+            window.location.href = `chi-tiet-san.html?id=${encodeURIComponent(facilityId)}`;
+        }
+
+        // Bấm "Đặt sân ngay" -> Sang trang chọn khung giờ (chon-khung-gio.html)
+        function selectAndBook(facilityId) {
+            localStorage.setItem('selected_facility_id', facilityId);
+            const venue = ALL_VENUES.find(v => String(v.id) === String(facilityId));
+            if (venue) {
+                localStorage.setItem('selected_venue', JSON.stringify(venue));
+            }
+
+            const chosenDate = document.getElementById('paramDate')?.value || '';
+            const dateParam = chosenDate ? `&date=${encodeURIComponent(chosenDate)}` : '';
+
+            window.location.href = `chon-khung-gio.html?facilityId=${encodeURIComponent(facilityId)}${dateParam}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            syncHeaderUserInfo();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialSport = urlParams.get('sport') || 'all';
+            const initialDate = urlParams.get('date') || '';
+            const initialTimeSlot = urlParams.get('timeSlot') || urlParams.get('time_slot') || '';
+            const initialQuery = urlParams.get('q') || '';
+            const initialDistrict = urlParams.get('district') || '';
+
+            if (document.getElementById('paramSport')) document.getElementById('paramSport').value = initialSport;
+            if (document.getElementById('paramDate') && initialDate) document.getElementById('paramDate').value = initialDate;
+            if (document.getElementById('timeSlotSelect') && initialTimeSlot) document.getElementById('timeSlotSelect').value = initialTimeSlot;
+            if (document.getElementById('queryInput') && initialQuery) document.getElementById('queryInput').value = initialQuery;
+
+            function updateTopTabs(activeSport) {
+                document.querySelectorAll('#quickSportTabs .sport-tab-btn').forEach(tab => {
+                    const sport = tab.getAttribute('data-sport');
+                    if (sport === activeSport) {
+                        tab.className = "sport-tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-primary text-on-primary shadow-sm flex items-center gap-1.5 cursor-pointer";
+                    } else {
+                        tab.className = "sport-tab-btn px-4 py-2 rounded-xl text-sm font-medium bg-surface-container text-on-surface flex items-center gap-1.5 cursor-pointer";
+                    }
+                });
+            }
+            updateTopTabs(initialSport);
+
+            if (initialSport === 'badminton') document.querySelector('.filter-sport-check[value="badminton"]').checked = true;
+            if (initialSport === 'soccer') document.querySelector('.filter-sport-check[value="soccer"]').checked = true;
+            if (initialSport === 'pickleball') document.querySelector('.filter-sport-check[value="pickleball"]').checked = true;
+
+            document.querySelectorAll('#quickSportTabs .sport-tab-btn').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const sport = tab.getAttribute('data-sport');
+                    document.getElementById('paramSport').value = sport;
+                    updateTopTabs(sport);
+
+                    document.querySelectorAll('.filter-sport-check').forEach(cb => {
+                        cb.checked = (sport !== 'all' && cb.value === sport);
+                    });
+                    applyFilters();
+                });
+            });
+
+            document.getElementById('paramDistrict')?.addEventListener('change', applyFilters);
+
+            document.querySelectorAll('.filter-sport-check, .filter-slot-check, .filter-amenity-check').forEach(el => {
+                el.addEventListener('change', () => {
+                    applyFilters();
+                });
+            });
+
+            document.getElementById('topSearchForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                applyFilters();
+            });
+
+            document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                document.getElementById('queryInput').value = '';
+                document.getElementById('paramDistrict').value = '';
+                document.getElementById('paramDate').value = '';
+                document.getElementById('timeSlotSelect').value = '';
+                document.getElementById('paramSport').value = 'all';
+
+                updateTopTabs('all');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                applyFilters();
+            });
+
+            fetchVenuesFromDB();
+
+            // ĐIỀU KHIỂN BẬT / TẮT POPOVER THÔNG BÁO HEADER
+            const notifBtn = document.getElementById('btnToggleNotifDropdown');
+            const notifPopover = document.getElementById('quickNotifPopover');
+            const notifContainer = document.getElementById('notifDropdownContainer');
+            const btnQuickMarkAll = document.getElementById('btnQuickMarkAll');
+            const badgeQuickCount = document.getElementById('badgeQuickCount');
+            const badgePopoverUnread = document.getElementById('badgePopoverUnread');
+
+            const STORAGE_READ_KEY = 'sport_read_notif_ids';
+            function getReadIds() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_READ_KEY)) || [];
+                } catch(e) { return []; }
+            }
+
+            function syncNotifCount() {
+                const readIds = getReadIds();
+                const totalSample = 3;
+                const unread = Math.max(0, totalSample - readIds.length);
+                if (badgeQuickCount) {
+                    if (unread > 0) {
+                        badgeQuickCount.classList.remove('hidden');
+                    } else {
+                        badgeQuickCount.classList.add('hidden');
+                    }
+                }
+                if (badgePopoverUnread) {
+                    badgePopoverUnread.textContent = `${unread} chưa đọc`;
+                }
+
+                document.querySelectorAll('.quick-item[data-id]').forEach(item => {
+                    const id = item.getAttribute('data-id');
+                    if (readIds.includes(id)) {
+                        item.classList.remove('bg-green-50/50', 'bg-orange-50/50', 'bg-red-50/50');
+                        item.classList.add('bg-white');
+                    }
+                });
+            }
+
+            if (notifBtn && notifPopover) {
+                notifBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    notifPopover.classList.toggle('hidden');
+                    notifPopover.classList.toggle('flex');
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (notifContainer && !notifContainer.contains(e.target)) {
+                        notifPopover.classList.add('hidden');
+                        notifPopover.classList.remove('flex');
+                    }
+                });
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        notifPopover.classList.add('hidden');
+                        notifPopover.classList.remove('flex');
+                    }
+                });
+            }
+
+            if (btnQuickMarkAll) {
+                btnQuickMarkAll.addEventListener('click', function() {
+                    const allIds = ['today-1', 'today-2', 'today-3'];
+                    localStorage.setItem(STORAGE_READ_KEY, JSON.stringify(allIds));
+                    syncNotifCount();
+                });
+            }
+
+            syncNotifCount();
+        });
+    </script>
+    <script src="auth.js"></script>
+</body>
+</html>

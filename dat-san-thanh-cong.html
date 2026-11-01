@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SportBooking - Đặt sân thành công</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#341100",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#0051d5",
+                        "tertiary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#00174b",
+                        "on-tertiary-fixed-variant": "#003ea8",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-highest": "#dce2f7",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#6e7b6c",
+                        "outline-variant": "#bdcaba",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    spacing: { "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem" },
+                    fontFamily: {
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-xl text-primary font-bold tracking-tight">SportBooking</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-space-lg">
+                <button aria-label="Thông báo" class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+                    <span class="material-symbols-outlined align-middle">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+                </button>
+
+                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ QUA AUTH.JS -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
+                    <div class="flex flex-col text-right">
+                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Khách vãng lai</span>
+                        <span id="headerUserRole" class="text-[11px] font-bold text-secondary">User</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 min-h-screen bg-surface">
+        <div class="flex flex-col w-full">
+            <div class="relative w-full overflow-hidden bg-gradient-to-b from-surface via-surface to-surface-container-low py-space-xl">
+                <div class="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-primary/10 rounded-full blur-3xl"></div>
+                <div class="pointer-events-none absolute top-48 right-12 w-[380px] h-[380px] bg-secondary-container/10 rounded-full blur-2xl"></div>
+
+                <div class="max-w-[1280px] mx-auto px-margin flex flex-col gap-space-xl relative z-10">
+                    
+                    <!-- Stepper Tiến trình đặt sân (Hoàn tất 3/3) -->
+                    <nav aria-label="Tiến trình đặt sân" class="w-full max-w-3xl mx-auto bg-surface-container-lowest shadow-sm rounded-2xl px-space-lg py-space-md border border-gray-100">
+                        <ol class="flex items-center justify-between relative">
+                            <div class="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-1 bg-primary z-0"></div>
+                            
+                            <li class="relative z-10 flex items-center gap-space-xs bg-surface-container-lowest px-space-xs">
+                                <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow-sm">
+                                    <span class="material-symbols-outlined text-base">check</span>
+                                </span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] uppercase tracking-wider text-primary font-bold">Bước 1</span>
+                                    <span class="text-xs font-semibold text-on-surface">Xác nhận</span>
+                                </div>
+                            </li>
+
+                            <li class="relative z-10 flex items-center gap-space-xs bg-surface-container-lowest px-space-xs">
+                                <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm shadow-sm">
+                                    <span class="material-symbols-outlined text-base">check</span>
+                                </span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] uppercase tracking-wider text-primary font-bold">Bước 2</span>
+                                    <span class="text-xs font-semibold text-on-surface">Thanh toán</span>
+                                </div>
+                            </li>
+
+                            <li class="relative z-10 flex items-center gap-space-xs bg-surface-container-lowest px-space-xs">
+                                <span class="w-8 h-8 rounded-full bg-primary-container text-white ring-4 ring-primary/20 flex items-center justify-center text-sm shadow-sm">
+                                    <span class="material-symbols-outlined text-base">done_all</span>
+                                </span>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] uppercase tracking-wider text-primary font-bold">Bước 3</span>
+                                    <span class="text-xs font-bold text-primary">Hoàn tất</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </nav>
+
+                    <!-- Banner chúc mừng thành công -->
+                    <section class="flex flex-col items-center text-center max-w-2xl mx-auto">
+                        <div class="relative mb-space-md">
+                            <div class="w-20 h-20 rounded-full bg-primary-container text-white flex items-center justify-center shadow-lg transform transition-transform hover:scale-105">
+                                <span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </div>
+                            <span class="absolute -top-1 -right-2 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold shadow-sm flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">verified</span>
+                                <span>Thành công</span>
+                            </span>
+                        </div>
+
+                        <h1 class="text-3xl md:text-4xl font-bold text-on-surface tracking-tight mb-2">
+                            ĐẶT SÂN THÀNH CÔNG!
+                        </h1>
+                        <p class="text-sm text-on-surface-variant max-w-xl mb-space-md">
+                            Cảm ơn bạn! Lịch đặt sân đã được xác nhận và thông báo chi tiết kèm mã QR đã được gửi về hòm thư
+                            <span class="font-bold text-on-surface" id="displayNotificationEmail">tuananh.nguyen@email.com</span>.
+                        </p>
+
+                        <div class="flex flex-wrap items-center justify-center gap-space-md bg-surface-container-lowest px-6 py-2.5 rounded-2xl shadow-sm border border-gray-100">
+                            <div class="flex items-center gap-space-xs">
+                                <span class="text-xs text-on-surface-variant">Mã đặt sân:</span>
+                                <span class="text-base font-bold text-primary tracking-wide font-mono" id="bookingIdText">#SB-89241</span>
+                                <button aria-label="Sao chép mã đặt sân" class="p-1 rounded-lg hover:bg-surface-container transition-colors text-on-surface-variant hover:text-primary cursor-pointer" id="copyBtn" type="button">
+                                    <span class="material-symbols-outlined text-base align-middle">content_copy</span>
+                                </button>
+                                <span class="text-xs text-primary font-bold opacity-0 transition-opacity duration-200" id="copyFeedback">Đã chép!</span>
+                            </div>
+                            <span class="text-gray-300 text-xs">•</span>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wide">
+                                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                <span>Đã xác nhận</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Khung Vé Điện Tử 2 Cột -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+                        
+                        <!-- CỘT TRÁI: Vé điện tử & Chi tiết đặt sân (8 cols) -->
+                        <div class="lg:col-span-8 flex flex-col gap-space-lg">
+                            <article class="relative bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+                                <div class="h-2.5 w-full bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
+                                
+                                <div class="p-space-lg lg:p-space-xl flex flex-col gap-space-lg">
+                                    
+                                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+                                        <div class="flex items-start gap-space-md">
+                                            <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-primary shrink-0 shadow-sm">
+                                                <span class="material-symbols-outlined text-3xl">sports_tennis</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-xs uppercase tracking-wider text-secondary font-bold">Vé Điện Tử Thể Thao</span>
+                                                <h2 class="text-xl font-bold text-on-surface mt-0.5">CLB Cầu Lông Ngôi Sao Cầu Giấy</h2>
+                                                <p class="text-xs text-on-surface-variant flex items-center gap-1 mt-1">
+                                                    <span class="material-symbols-outlined text-base text-primary">location_on</span>
+                                                    <span>Số 35 Phố Dịch Vọng Hậu, Cầu Giấy, Hà Nội</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="flex md:flex-col items-center md:items-end justify-between bg-surface-container-low md:bg-transparent p-space-sm md:p-0 rounded-xl">
+                                            <span class="text-xs text-on-surface-variant">Trạng thái slot</span>
+                                            <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full mt-1">Đã giữ sân</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="relative py-1">
+                                        <div class="h-px w-full bg-surface-container-highest"></div>
+                                        <div class="absolute -left-10 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface"></div>
+                                        <div class="absolute -right-10 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface"></div>
+                                    </div>
+
+                                    <!-- 4 ô thông số chi tiết -->
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border">
+                                            <span class="text-[11px] uppercase text-on-surface-variant font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">stadium</span> Vị trí sân
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1">Sân 1</p>
+                                            <p class="text-[11px] text-gray-500">Yonex - Thảm BWF</p>
+                                        </div>
+
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border">
+                                            <span class="text-[11px] uppercase text-on-surface-variant font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">schedule</span> Khung giờ
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="displayMatchSlot">20:00 - 21:00</p>
+                                            <p class="text-[11px] text-gray-500">Thời lượng: 60 phút</p>
+                                        </div>
+
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border">
+                                            <span class="text-[11px] uppercase text-on-surface-variant font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">calendar_today</span> Ngày thi đấu
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="displayMatchDayOfWeek">Thứ Hai</p>
+                                            <p class="text-[11px] text-gray-500" id="displayMatchDate">21/10/2026</p>
+                                        </div>
+
+                                        <div class="bg-surface-container-low p-space-md rounded-xl border">
+                                            <span class="text-[11px] uppercase text-on-surface-variant font-bold flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-sm text-primary">person</span> Người đặt sân
+                                            </span>
+                                            <p class="text-sm font-bold text-on-surface mt-1" id="displayBookerName">Nguyễn Tuấn Anh</p>
+                                            <p class="text-[11px] text-gray-500" id="displayBookerPhone">0988 123 456</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bảng tính toán & Mã QR -->
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center bg-surface-container-low p-space-md rounded-xl border">
+                                        <div class="md:col-span-8 flex flex-col gap-1 text-xs">
+                                            <div class="flex justify-between items-center py-1">
+                                                <span class="text-on-surface-variant">Tổng giá trị đặt sân:</span>
+                                                <span class="text-sm font-bold text-on-surface">152.000đ</span>
+                                            </div>
+                                            <div class="flex justify-between items-center py-1">
+                                                <span class="text-on-surface-variant flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-base text-primary">check_circle</span>
+                                                    <span>Đã thanh toán cọc (Mô phỏng):</span>
+                                                </span>
+                                                <span class="text-sm font-bold text-primary">100.000đ</span>
+                                            </div>
+                                            <div class="flex justify-between items-center py-2 bg-secondary-fixed/50 px-3 rounded-lg mt-1 border border-secondary-fixed">
+                                                <span class="font-bold text-on-secondary-fixed-variant">Còn lại thanh toán tại quầy lễ tân:</span>
+                                                <span class="text-base font-bold text-secondary">52.000đ</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="md:col-span-4 flex flex-col items-center justify-center p-3 bg-white rounded-xl border shadow-sm">
+                                            <div class="p-2 bg-surface-container-lowest rounded-lg">
+                                                <span class="material-symbols-outlined text-7xl text-on-surface">qr_code_2</span>
+                                            </div>
+                                            <span class="text-[10px] text-gray-500 font-medium mt-1">Quét QR tại quầy để nhận sân</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Lưu ý quan trọng -->
+                                    <div class="flex items-start gap-space-sm bg-amber-50 p-space-md rounded-xl text-amber-900 border border-amber-100">
+                                        <span class="material-symbols-outlined text-amber-600 text-xl mt-0.5">info</span>
+                                        <div class="flex flex-col gap-0.5 text-xs">
+                                            <span class="font-bold text-amber-900">Lưu ý khi đến sân:</span>
+                                            <p class="leading-relaxed">
+                                                Vui lòng mang theo giày thể thao đế mềm chuyên dụng. Có mặt trước 10 phút để nhận sân và làm thủ tục thanh toán phần còn lại 52.000đ tại quầy lễ tân.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </article>
+
+                            <!-- Cụm nút hành động bên dưới vé -->
+                            <div class="flex flex-wrap items-center gap-space-md">
+                                <a class="flex-1 min-w-[200px] h-12 px-space-lg rounded-xl bg-secondary-container text-white font-bold text-sm flex items-center justify-center gap-1.5 shadow-md hover:bg-secondary transition-all cursor-pointer active:scale-95" href="tim-doi-choi.html">
+                                    <span class="material-symbols-outlined text-xl">group_add</span>
+                                    <span>Tìm đối chơi cùng trận này</span>
+                                </a>
+                                <a class="h-12 px-space-lg rounded-xl bg-primary text-white font-bold text-sm flex items-center justify-center gap-1.5 shadow-md hover:bg-primary-container transition-all cursor-pointer active:scale-95" href="lich-su-dat-san.html">
+                                    <span class="material-symbols-outlined text-xl">calendar_month</span>
+                                    <span>Xem lịch sử đặt sân</span>
+                                </a>
+                                <button class="h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface font-semibold text-xs flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container-high transition-all border cursor-pointer" id="downloadPdfBtn" type="button">
+                                    <span class="material-symbols-outlined text-lg text-gray-500">download</span>
+                                    <span>Tải vé PDF</span>
+                                </button>
+                                <a class="h-12 px-space-md rounded-xl bg-surface-container-lowest text-on-surface font-semibold text-xs flex items-center justify-center gap-1 shadow-sm hover:bg-surface-container-high transition-all border cursor-pointer" href="trangchu-user.html">
+                                    <span class="material-symbols-outlined text-lg text-gray-500">home</span>
+                                    <span>Về trang chủ</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- CỘT PHẢI: Chia sẻ & Định vị sân (4 cols) -->
+                        <aside class="lg:col-span-4 flex flex-col gap-space-lg">
+                            
+                            <!-- Rủ bạn bè thi đấu -->
+                            <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-9 h-9 rounded-xl bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-xl">share</span>
+                                    </div>
+                                    <h3 class="text-base font-bold text-on-surface">Rủ bạn bè thi đấu</h3>
+                                </div>
+                                <p class="text-xs text-on-surface-variant">
+                                    Chia sẻ nhanh lịch thi đấu kèm định vị sân và mã trận cho đồng đội qua mạng xã hội:
+                                </p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="py-2.5 px-3 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-blue-100 transition-colors cursor-pointer" onclick="navigator.clipboard?.writeText(window.location.href); alert('Đã sao chép link mời gửi qua Zalo!');" type="button">
+                                        <span class="material-symbols-outlined text-base">forum</span>
+                                        <span>Gửi Zalo</span>
+                                    </button>
+                                    <button class="py-2.5 px-3 rounded-xl bg-surface-container text-on-surface text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-surface-container-high transition-colors cursor-pointer" onclick="navigator.clipboard?.writeText(window.location.href); alert('Đã sao chép link mời gửi Messenger!');" type="button">
+                                        <span class="material-symbols-outlined text-base">chat</span>
+                                        <span>Messenger</span>
+                                    </button>
+                                </div>
+                                <button class="w-full py-2 px-3 rounded-xl bg-surface-container-low text-on-surface text-xs font-semibold flex items-center justify-center gap-1 transition-colors hover:bg-surface-container cursor-pointer border" id="copyInviteLinkBtn" type="button">
+                                    <span class="material-symbols-outlined text-sm">link</span>
+                                    <span>Sao chép đường dẫn lời mời</span>
+                                </button>
+                            </div>
+
+                            <!-- Vị trí & Đường đi -->
+                            <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                            <span class="material-symbols-outlined text-xl">navigation</span>
+                                        </div>
+                                        <h3 class="text-base font-bold text-on-surface">Vị trí &amp; Đường đi</h3>
+                                    </div>
+                                    <a class="text-xs text-primary font-bold hover:underline flex items-center gap-0.5" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
+                                        <span>Mở Maps</span>
+                                        <span class="material-symbols-outlined text-xs">open_in_new</span>
+                                    </a>
+                                </div>
+
+                                <div class="w-full h-40 rounded-xl overflow-hidden relative shadow-inner border">
+                                    <img class="w-full h-full object-cover" alt="Bản đồ sân" src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end p-3">
+                                        <span class="text-white text-xs flex items-center gap-1 font-medium">
+                                            <span class="material-symbols-outlined text-sm text-green-300">directions_walk</span>
+                                            <span>35 Phố Dịch Vọng Hậu, Cầu Giấy, Hà Nội</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-2 pt-1 text-xs">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-on-surface-variant flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-base text-primary">call</span>
+                                            <span>Hotline sân:</span>
+                                        </span>
+                                        <a class="font-bold text-primary hover:underline" href="tel:0982668998">0982 668 998</a>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-on-surface-variant flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-base text-secondary">local_parking</span>
+                                            <span>Bãi đỗ xe:</span>
+                                        </span>
+                                        <span class="font-bold text-on-surface">Ô tô &amp; Xe máy miễn phí</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thẻ chính sách hoàn tiền -->
+                            <div class="bg-surface-container-low p-4 rounded-2xl flex items-start gap-3 border">
+                                <span class="material-symbols-outlined text-2xl text-primary shrink-0 mt-0.5">shield</span>
+                                <div class="flex flex-col gap-0.5 text-xs text-on-surface-variant">
+                                    <span class="font-bold text-on-surface text-sm">Chính sách hủy sân SportBooking</span>
+                                    <p class="leading-relaxed">
+                                        Bạn có thể hủy trước giờ thi đấu ≥ 12 tiếng để được hoàn lại 100% tiền cọc về tài khoản thanh toán ban đầu.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </aside>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER ĐỒNG BỘ -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT ĐIỀU KHIỂN DỮ LIỆU ĐỘNG & TƯƠNG TÁC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const params = new URLSearchParams(window.location.search);
+            let orderId = params.get('id');
+
+            // 1. Tự sinh mã đơn nếu không có
+            if (!orderId) {
+                const randomNum = Math.floor(10000 + Math.random() * 90000);
+                orderId = `SB-${randomNum}`;
+            }
+
+            // Gán mã đơn vào giao diện
+            document.getElementById('bookingIdText').innerText = `#${orderId}`;
+
+            // 2. Nhận ngày & giờ thi đấu từ URL (nếu có)
+            const dateParam = params.get('date');
+            const slotParam = params.get('time_slot') || '20:00 - 21:00';
+            let formattedDate = "";
+            let dayOfWeekName = "Thứ Hai";
+
+            if (dateParam) {
+                const parts = dateParam.split('-');
+                if (parts.length === 3) {
+                    formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                    const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                    const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+                    dayOfWeekName = days[dateObj.getDay()] || 'Thứ Hai';
+                } else {
+                    formattedDate = dateParam;
+                }
+            } else {
+                const d = new Date();
+                d.setDate(d.getDate() + 1);
+                const dd = String(d.getDate()).padStart(2, '0');
+                const mm = String(d.getMonth() + 1).padStart(2, '0');
+                formattedDate = `${dd}/${mm}/${d.getFullYear()}`;
+                const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+                dayOfWeekName = days[d.getDay()] || 'Thứ Hai';
+            }
+
+            document.getElementById('displayMatchSlot').innerText = slotParam;
+            document.getElementById('displayMatchDayOfWeek').innerText = dayOfWeekName;
+            document.getElementById('displayMatchDate').innerText = formattedDate;
+
+            // 3. Đọc thông tin User từ LocalStorage để hiển thị
+            try {
+                const rawUser = localStorage.getItem('current_user');
+                if (rawUser) {
+                    const u = JSON.parse(rawUser);
+                    if (u.username || u.fullname) document.getElementById('displayBookerName').innerText = u.username || u.fullname;
+                    if (u.phone) document.getElementById('displayBookerPhone').innerText = u.phone;
+                    if (u.email) document.getElementById('displayNotificationEmail').innerText = u.email;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+
+            // 4. Xử lý nút Sao chép mã đặt sân
+            const copyBtn = document.getElementById('copyBtn');
+            const copyFeedback = document.getElementById('copyFeedback');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function () {
+                    navigator.clipboard.writeText(orderId).then(() => {
+                        if (copyFeedback) {
+                            copyFeedback.classList.remove('opacity-0');
+                            setTimeout(() => {
+                                copyFeedback.classList.add('opacity-0');
+                            }, 2000);
+                        }
+                    });
+                });
+            }
+
+            // 5. Xử lý nút Sao chép lời mời bạn bè
+            const copyInviteBtn = document.getElementById('copyInviteLinkBtn');
+            if (copyInviteBtn) {
+                copyInviteBtn.addEventListener('click', function () {
+                    const originalHtml = copyInviteBtn.innerHTML;
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        copyInviteBtn.innerHTML = '<span class="material-symbols-outlined text-sm text-primary">check</span> <span class="text-primary font-bold">Đã chép link mời!</span>';
+                        setTimeout(() => {
+                            copyInviteBtn.innerHTML = originalHtml;
+                        }, 2200);
+                    });
+                });
+            }
+
+            // 6. Xử lý nút Tải vé PDF
+            const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+            if (downloadPdfBtn) {
+                downloadPdfBtn.addEventListener('click', function () {
+                    const prev = downloadPdfBtn.innerHTML;
+                    downloadPdfBtn.innerHTML = '<span class="material-symbols-outlined text-lg animate-spin">progress_activity</span> <span>Đang tạo PDF...</span>';
+                    setTimeout(() => {
+                        downloadPdfBtn.innerHTML = prev;
+                        alert(`Đã chuẩn bị xong vé điện tử định dạng PDF cho đơn #${orderId}!`);
+                    }, 800);
+                });
+            }
+        });
+    </script>
+
+    <!-- NHÚNG FILE AUTH ĐỂ ĐỒNG BỘ THÔNG TIN USER TỪ LOCALSTORAGE -->
+    <script src="auth.js"></script>
+</body>
+</html>

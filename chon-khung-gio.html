@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="web_standard" name="shell-type"/>
+    <title id="pageTitle">Chọn khung giờ & Ma trận sân - SportBooking</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "primary-fixed": "#7ffc97",
+                        "on-primary-fixed-variant": "#005320",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#341100",
+                        "tertiary": "#0051d5",
+                        "tertiary-fixed": "#dbe1ff",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-highest": "#dce2f7",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#6e7b6c",
+                        "error": "#ba1a1a"
+                    },
+                    spacing: {
+                        "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem"
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER HỆ THỐNG ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-gray-100">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <!-- LOGO CHỮ SPORTBOOKING NGUYÊN BẢN -->
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-2xl font-bold text-primary tracking-tight">SportBooking</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-1 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl bg-primary text-white shadow-sm transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-space-lg">
+                <!-- KHỐI CHUÔNG THÔNG BÁO & POPOVER XEM NHANH -->
+                <div class="relative" id="notifDropdownContainer">
+                    <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button">
+                        <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse hidden" id="badgeQuickCount"></span>
+                    </button>
+
+                    <!-- KHUNG POPOVER XEM NHANH -->
+                    <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
+                        <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-on-surface">Thông báo</h3>
+                                <span class="px-2 py-0.5 rounded-full bg-red-100 text-error text-[10px] font-bold" id="badgePopoverUnread">0 chưa đọc</span>
+                            </div>
+                            <button type="button" id="btnMarkAllNotifs" class="text-xs text-primary font-bold hover:underline cursor-pointer">
+                                Đã đọc tất cả
+                            </button>
+                        </div>
+
+                        <!-- Danh sách thông báo thực tế của User -->
+                        <div class="max-h-[340px] overflow-y-auto divide-y divide-gray-100" id="quickNotifList"></div>
+
+                        <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
+                            <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
+                                <span>Xem tất cả thông báo</span>
+                                <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHU VỰC THÔNG TIN TÀI KHOẢN -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 min-h-screen bg-surface">
+        <div class="flex flex-col w-full">
+            <div class="relative w-full max-w-[1440px] mx-auto px-margin pt-space-md pb-space-xl">
+                
+                <!-- 1. NÚT QUAY LẠI TRANG TRƯỚC -->
+                <div class="flex items-center justify-between mb-space-md">
+                    <button type="button" onclick="goBackPreviousPage()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface text-sm font-semibold border border-gray-200 shadow-sm transition-all cursor-pointer group hover:border-primary/50">
+                        <span class="material-symbols-outlined text-[20px] text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        <span id="btnBackText">Quay lại chi tiết sân</span>
+                    </button>
+                    
+                    <span class="text-xs text-on-surface-variant hidden sm:inline" id="quickNavFacilityName">Đang tải sân...</span>
+                </div>
+
+                <!-- 2. Facility Header & Quick Info Bar -->
+                <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm mb-space-lg border border-gray-100">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-md border-b">
+                        <div class="space-y-space-xs">
+                            <div class="flex flex-wrap items-center gap-space-sm">
+                                <h1 id="headerFacilityTitle" class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+                                    Đang tải cụm sân...
+                                </h1>
+                                <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-green-100 text-primary text-xs font-bold">
+                                    <span class="material-symbols-outlined text-xs text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                                    <span>Đã xác thực vận hành</span>
+                                </span>
+                                <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs font-bold">
+                                    <span class="material-symbols-outlined text-xs">local_fire_department</span>
+                                    <span>Hot đặt sân</span>
+                                </span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-space-md text-on-surface-variant text-xs">
+                                <div class="flex items-center gap-1 text-secondary">
+                                    <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span class="font-bold text-on-surface" id="headerRatingText">4.8</span>
+                                    <span class="text-on-surface-variant">(Đánh giá thực tế)</span>
+                                </div>
+                                <span class="text-outline-variant">•</span>
+                                <div class="flex items-center gap-1" id="headerAddressContainer">
+                                    <span class="material-symbols-outlined text-base text-primary">location_on</span>
+                                    <span id="headerAddressText">Đang tải địa chỉ...</span>
+                                </div>
+                                <span class="text-outline-variant">•</span>
+                                <div class="flex items-center gap-1 text-primary">
+                                    <span class="material-symbols-outlined text-base">schedule</span>
+                                    <span id="headerHoursText">Mở cửa: 06:00 - 23:00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ĐỒNG HỒ THỜI GIAN THỰC HIỆN TẠI -->
+                        <div class="flex items-center gap-2 p-1.5 bg-surface-container rounded-xl self-start lg:self-center text-xs font-bold">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                            <span class="text-primary flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[15px]">timer</span>
+                                <span>Giờ hiện tại:</span>
+                                <span id="currentLiveClock" class="font-mono text-sm font-extrabold text-slate-900">20:18</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Date Carousel Strip (7 Ngày) -->
+                    <div class="pt-space-md">
+                        <div class="flex items-center justify-between gap-space-sm mb-space-sm">
+                            <div class="flex items-center gap-space-xs">
+                                <span class="material-symbols-outlined text-primary text-xl">event</span>
+                                <span class="font-bold text-sm text-on-surface" id="weekRangeTitle">Lịch thi đấu các ngày trong tuần</span>
+                            </div>
+                            <span class="text-[11px] text-gray-500 italic">* Các ca trong quá khứ của hôm nay sẽ tự động khóa</span>
+                        </div>
+                        <div id="weekDaysTrack" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+                            <!-- Render 7 ngày -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Chú thích trạng thái ô giờ & Bộ lọc sân con -->
+                <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-lg flex flex-col xl:flex-row xl:items-center justify-between gap-space-md border border-gray-100">
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs font-bold text-on-surface flex items-center gap-1">
+                            <span class="material-symbols-outlined text-primary text-base">filter_alt</span>
+                            <span>Lọc sân con:</span>
+                        </span>
+                        <div class="inline-flex p-1 bg-surface-container rounded-xl text-xs" id="courtFilterPillGroup">
+                            <!-- Nạp động nút lọc sân con tương ứng bộ môn -->
+                        </div>
+                    </div>
+
+                    <!-- Chú thích trạng thái ô giờ (Bao gồm ĐÃ QUA GIỜ) -->
+                    <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-white border border-gray-300 text-primary flex items-center justify-center font-bold text-[10px]">✓</span>
+                            <span>Còn trống</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-primary text-white flex items-center justify-center font-bold text-[10px]">●</span>
+                            <span class="text-primary font-bold">Đang chọn</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-orange-100 border-2 border-secondary text-secondary flex items-center justify-center text-[10px] font-bold">👥</span>
+                            <span class="text-secondary font-bold">Ghép đội (Xin ghép)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-gray-200 text-gray-500 flex items-center justify-center text-[10px]">✕</span>
+                            <span class="text-error font-semibold">Đã kín</span>
+                        </div>
+                        <!-- TRẠNG THÁI MỚI: ĐÃ QUA GIỜ (QUÁ KHỨ KHÔNG THỂ ĐẶT) -->
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-gray-100 border border-gray-300 text-gray-400 flex items-center justify-center text-[10px]">
+                                <span class="material-symbols-outlined text-[11px]">history_toggle_off</span>
+                            </span>
+                            <span class="text-gray-400 font-semibold">Đã qua giờ (Khóa)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Layout 2 cột: Trái ma trận (8 cols) - Phải tóm tắt đặt sân (4 cols) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+                    
+                    <!-- CỘT TRÁI: MA TRẬN KHUNG GIỜ -->
+                    <div class="lg:col-span-8 flex flex-col gap-space-md">
+                        <div class="bg-primary/5 border border-green-200 p-space-md rounded-2xl flex items-center justify-between gap-space-md">
+                            <div class="flex items-center gap-space-sm">
+                                <span class="material-symbols-outlined text-primary text-2xl">touch_app</span>
+                                <div>
+                                    <p class="text-xs font-bold text-primary">Các ca giờ cách nhau đúng 1 tiếng:</p>
+                                    <p class="text-xs text-on-surface-variant">Hệ thống tự động khóa các khung giờ đã qua trong ngày. Bạn chỉ có thể chọn các ca thi đấu từ giờ hiện tại trở đi.</p>
+                                </div>
+                            </div>
+                            <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary text-white text-[11px] font-bold whitespace-nowrap">Khóa ca quá giờ</span>
+                        </div>
+
+                        <div class="bg-surface-container-lowest rounded-2xl p-space-md sm:p-space-lg shadow-sm border border-gray-100 overflow-hidden">
+                            <div class="flex items-center justify-between pb-space-sm mb-space-sm border-b">
+                                <div class="flex items-center gap-space-xs">
+                                    <span class="text-base font-bold text-on-surface" id="matrixCurrentDateTitle">Lịch chi tiết</span>
+                                    <span class="px-2 py-0.5 rounded bg-surface-container text-primary font-bold text-xs">Cập nhật tức thời</span>
+                                </div>
+                                <span class="text-gray-400 text-xs hidden sm:inline">Khung giờ vàng: 17:00 - 21:00</span>
+                            </div>
+
+                            <div class="overflow-x-auto pb-space-sm">
+                                <div class="min-w-[760px] flex flex-col gap-space-md" id="matrixCourtsList">
+                                    <!-- Render động ma trận các sân -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CỘT PHẢI: TÓM TẮT ĐẶT SÂN / PANEL XIN GHÉP -->
+                    <div class="lg:col-span-4 sticky top-24 space-y-space-md">
+                        <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-md border border-gray-200 space-y-space-md">
+                            
+                            <div class="flex items-center justify-between pb-space-xs border-b">
+                                <h2 class="text-base font-bold text-on-surface flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-primary">receipt_long</span>
+                                    <span id="panelMainHeading">Tóm tắt đặt sân nhanh</span>
+                                </h2>
+                                <span class="px-2.5 py-0.5 rounded-full bg-green-100 text-primary text-xs font-bold" id="badgeSelectedCount">0 ca đã chọn</span>
+                            </div>
+
+                            <!-- DANH SÁCH CÁC CA ĐƯỢC CHỌN -->
+                            <div class="space-y-2 max-h-[220px] overflow-y-auto" id="selectedSlotsContainer">
+                                <!-- Render danh sách các ca -->
+                            </div>
+
+                            <!-- KHUNG THÔNG BÁO KHI XIN GHÉP -->
+                            <div id="matchmakingAlertBox" class="hidden p-3.5 rounded-xl bg-orange-50 border-2 border-secondary/40 space-y-2">
+                                <div class="flex items-center gap-2 text-secondary font-bold text-xs">
+                                    <span class="material-symbols-outlined text-[18px]">handshake</span>
+                                    <span>PHƯƠNG ÁN GHÉP TRẬN TẠI SÂN</span>
+                                </div>
+                                <div class="p-2.5 bg-white rounded-lg border border-orange-200 text-xs text-gray-800 space-y-1">
+                                    <p class="font-bold text-secondary text-sm" id="matchContributionFeeText">Số tiền bạn cần đóng góp tại sân: 40.000đ</p>
+                                    <p class="text-[11px] text-gray-500 leading-relaxed">
+                                        Chủ sân đã thanh toán cọc giữ chỗ trước đó. Bạn <strong>không bị trừ tiền online</strong>. Khi đến sân, bạn tự thanh toán tiền mặt hoặc chuyển khoản cho chủ kèo.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- PHỤ PHÍ NẾU ĐẶT SÂN THƯỜNG -->
+                            <div id="regularAddonsContainer" class="space-y-2 pt-1 text-xs">
+                                <label class="flex items-center justify-between p-3 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer select-none">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-secondary text-lg">sports_tennis</span>
+                                        <div>
+                                            <span class="font-bold text-gray-900 block">Thuê dụng cụ / Vợt thi đấu</span>
+                                            <span class="text-[11px] text-gray-500">+30.000đ khi nhận tại quầy</span>
+                                        </div>
+                                    </div>
+                                    <input id="toggleRentalGear" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+                                </label>
+                            </div>
+
+                            <!-- Voucher -->
+                            <div id="voucherContainer" class="p-3 rounded-xl bg-surface-container-low flex items-center justify-between text-xs border border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-secondary text-lg">confirmation_number</span>
+                                    <div>
+                                        <span class="font-bold text-gray-900 block">Voucher: GOLDMEMBER</span>
+                                        <span class="text-[11px] text-primary font-semibold">Ưu đãi thành viên SportBooking</span>
+                                    </div>
+                                </div>
+                                <span class="font-bold text-primary">-20.000đ</span>
+                            </div>
+
+                            <!-- Chi tiết tính tiền -->
+                            <div class="space-y-1.5 pt-2 text-xs text-on-surface-variant border-t">
+                                <div class="flex justify-between">
+                                    <span id="lblBaseTotal">Tổng tiền các ca đã chọn:</span>
+                                    <span class="text-on-surface font-semibold" id="calcBasePrice">0đ</span>
+                                </div>
+                                <div class="flex justify-between" id="rowComboDiscount">
+                                    <span>Ưu đãi Combo (>= 2 ca):</span>
+                                    <span class="text-primary font-semibold" id="calcComboDiscount">0đ</span>
+                                </div>
+                                <div class="flex justify-between" id="rowGearPrice">
+                                    <span>Thuê dụng cụ phát sinh:</span>
+                                    <span class="text-on-surface font-semibold" id="calcGearPrice">0đ</span>
+                                </div>
+                                <div class="flex justify-between" id="rowVoucherDiscount">
+                                    <span>Giảm giá Voucher:</span>
+                                    <span class="text-primary font-semibold" id="calcVoucherDiscount">-20.000đ</span>
+                                </div>
+                                
+                                <div class="flex items-baseline justify-between pt-2 border-t mt-2">
+                                    <span class="font-bold text-sm text-on-surface" id="lblFinalTotal">Tổng thanh toán:</span>
+                                    <div class="text-right">
+                                        <span class="text-2xl font-extrabold text-secondary tracking-tight" id="calcTotalPrice">0đ</span>
+                                        <p class="text-[10px] text-gray-400" id="lblVatNote">Đã bao gồm VAT</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nút Xác nhận CTA -->
+                            <button id="btnProceedBookingConfirm" class="w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95" type="button">
+                                <span id="btnProceedText">VUI LÒNG CHỌN CA SÂN</span>
+                                <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                            </button>
+
+                            <div class="p-2.5 rounded-xl bg-surface-container text-xs text-on-surface-variant space-y-1">
+                                <div class="flex items-center gap-1.5 text-primary font-bold text-[11px]">
+                                    <span class="material-symbols-outlined text-sm">shield</span>
+                                    <span>Cam kết giữ chỗ & hoàn tiền:</span>
+                                </div>
+                                <p class="text-[10px] text-gray-500 leading-tight">Khóa giữ chỗ ngay khi xác nhận. Hủy trước 24h hoàn 100%.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER HỆ THỐNG -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-on-surface-variant">
+            <div class="flex flex-col gap-1 text-left">
+                <span class="font-bold text-sm text-primary">SportBooking Hà Nội</span>
+                <p>Nền tảng đặt sân thể thao thông minh - Đặt sân trực tuyến nhanh chóng & chuẩn xác</p>
+            </div>
+            <p>© 2026 SportBooking. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT XỬ LÝ MA TRẬN & KHÓA CA ĐÃ QUA THỜI GIAN THỰC -->
+    <script>
+        const BOOKED_SLOTS_STORAGE_KEY = 'sb_booked_slots';
+
+        let currentFacility = null;
+        let selectedDateKey = '';
+        let selectedDateDisplay = '';
+        let selectedSlotsList = [];
+        let isMatchmakingMode = false;
+        let activeMatchmakingSlot = null;
+        let BASE_COURTS_CONFIG = [];
+
+        /**
+         * 1. HÀM TÍNH TOÁN THỜI GIAN THEO MÚI GIỜ VIỆT NAM (ICT / UTC+7)
+         */
+        function getVietnamNow() {
+            const now = new Date();
+            const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+            return new Date(utcMs + (7 * 3600000));
+        }
+
+        /**
+         * 2. HÀM KIỂM TRA MỘT KHUNG GIỜ ĐÃ TRÔI QUA SO VỚI HIỆN TẠI HAY CHƯA
+         * Ví dụ: Hôm nay là 31/10/2026, lúc 20:18 thì các ca:
+         * 06:00, 13:00, 19:00, 20:00 đều là ĐÃ QUA (isPast = true).
+         * Ca 21:00, 22:00 của hôm nay là CHƯA QUA (isPast = false).
+         * Các ngày tương lai (01/11, ...) toàn bộ ca là CHƯA QUA (isPast = false).
+         */
+        function isSlotInPast(dateKey, timeSlot) {
+            if (!dateKey) return false;
+            const vnNow = getVietnamNow();
+            const currentYear = vnNow.getFullYear();
+            const currentMonth = String(vnNow.getMonth() + 1).padStart(2, '0');
+            const currentDate = String(vnNow.getDate()).padStart(2, '0');
+            const todayKey = `${currentYear}-${currentMonth}-${currentDate}`;
+
+            // So sánh ngày
+            if (dateKey < todayKey) {
+                return true; // Ngày trong quá khứ -> toàn bộ ca đều đã qua
+            }
+            if (dateKey > todayKey) {
+                return false; // Ngày tương lai -> chưa qua ca nào
+            }
+
+            // Nếu là ngày hôm nay: so sánh giờ và phút
+            // timeSlot có dạng: "13:00 - 14:00" hoặc "20:00 - 21:00"
+            const startTimeStr = timeSlot.split(' - ')[0].trim();
+            const parts = startTimeStr.split(':');
+            const slotHour = parseInt(parts[0], 10);
+            const slotMinute = parseInt(parts[1] || '0', 10);
+
+            const currentHour = vnNow.getHours();
+            const currentMinute = vnNow.getMinutes();
+
+            // Nếu giờ bắt đầu nhỏ hơn giờ hiện tại -> Đã qua
+            if (slotHour < currentHour) {
+                return true;
+            }
+            // Nếu cùng giờ và phút hiện tại đã qua phút bắt đầu -> Đã qua
+            if (slotHour === currentHour && currentMinute >= slotMinute) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * 3. ĐỒNG HỒ HIỂN THỊ THỜI GIAN THỰC TẾ
+         */
+        function updateLiveClock() {
+            const vnNow = getVietnamNow();
+            const hh = String(vnNow.getHours()).padStart(2, '0');
+            const mm = String(vnNow.getMinutes()).padStart(2, '0');
+            const clockEl = document.getElementById('currentLiveClock');
+            if (clockEl) {
+                clockEl.textContent = `${hh}:${mm}`;
+            }
+        }
+
+        // 4. HÀM TỰ ĐỘNG NHẬN BIẾT NGUỒN VÀ QUAY LẠI CHUẨN XÁC
+        function detectSourceAndSetupBackButton() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromParam = urlParams.get('from');
+            const referrer = document.referrer || '';
+            const btnTextEl = document.getElementById('btnBackText');
+
+            const isFromListing = fromParam === 'tim-san' || fromParam === 'listing' || referrer.includes('tim-san.html');
+
+            if (btnTextEl) {
+                if (isFromListing) {
+                    btnTextEl.textContent = 'Quay lại danh sách sân';
+                } else {
+                    btnTextEl.textContent = 'Quay lại chi tiết sân';
+                }
+            }
+        }
+
+        function goBackPreviousPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const facId = urlParams.get('facilityId') || urlParams.get('id') || (currentFacility && currentFacility.id) || '1';
+            const fromParam = urlParams.get('from');
+            const referrer = document.referrer || '';
+
+            const isFromListing = fromParam === 'tim-san' || fromParam === 'listing' || referrer.includes('tim-san.html');
+
+            if (isFromListing) {
+                const lastSearch = sessionStorage.getItem('sb_last_search_url');
+                if (lastSearch) {
+                    window.location.href = lastSearch;
+                } else if (referrer.includes('tim-san.html')) {
+                    window.location.href = referrer;
+                } else {
+                    window.location.href = 'tim-san.html';
+                }
+            } else {
+                if (referrer.includes('chi-tiet-san.html')) {
+                    window.location.href = referrer;
+                } else {
+                    window.location.href = `chi-tiet-san.html?id=${encodeURIComponent(facId)}`;
+                }
+            }
+        }
+
+        // 5. HÀM SINH KHUNG GIỜ ĐỘNG CÁCH NHAU 1 TIẾNG THEO GIỜ MỞ/ĐÓNG CỬA CỦA SÂN
+        function generateSlotsByFacilityHours(facility) {
+            const openTimeStr = facility.opening_time || facility.open_time || "06:00";
+            const closeTimeStr = facility.closing_time || facility.close_time || "23:00";
+
+            let startHour = parseInt(openTimeStr.split(':')[0], 10);
+            let endHour = parseInt(closeTimeStr.split(':')[0], 10);
+
+            if (isNaN(startHour)) startHour = 6;
+            if (isNaN(endHour) || endHour <= startHour) endHour = 23;
+
+            const sport = facility.sport || (facility.sport_name && facility.sport_name.includes('Cầu') ? 'badminton' : (facility.sport_name && facility.sport_name.includes('Pickle') ? 'pickleball' : 'soccer'));
+            const basePrice = Number(facility.price || facility.base_price || (sport === 'soccer' ? 320000 : (sport === 'badminton' ? 90000 : 180000)));
+            const peakPrice = Math.round((basePrice * 1.35) / 10000) * 10000;
+
+            const slots = [];
+            for (let h = startHour; h < endHour; h++) {
+                const from = String(h).padStart(2, '0') + ':00';
+                const to = String(h + 1).padStart(2, '0') + ':00';
+                const isPeak = (h >= 17 && h < 21);
+
+                slots.push({
+                    time: `${from} - ${to}`,
+                    price: isPeak ? peakPrice : basePrice,
+                    isPeak: isPeak
+                });
+            }
+
+            let subCourts = [];
+            if (sport === 'soccer') {
+                subCourts = [
+                    { id: 'c1', name: 'Sân cỏ 7 - Số 1', tag: 'Cỏ FIFA Pro', subTitle: 'Mặt cỏ 50mm êm chân • Đèn cao áp 400W' },
+                    { id: 'c2', name: 'Sân cỏ 7 - Số 2', tag: 'Tiêu chuẩn', subTitle: 'Kích thước chuẩn 30m x 50m • Lưới an toàn' },
+                    { id: 'c3', name: 'Sân cỏ 7 - Số 3', tag: 'Sân đối kháng', subTitle: 'Hệ thống thoát nước ngầm tiêu chuẩn' }
+                ];
+            } else if (sport === 'badminton') {
+                subCourts = [
+                    { id: 'c1', name: 'Sân Thảm 01', tag: 'BWF Pro', subTitle: 'Thảm PVC chống trượt 4.5mm • Đèn chống chói' },
+                    { id: 'c2', name: 'Sân Thảm 02', tag: 'Tiêu chuẩn', subTitle: 'Trần cao 9m thoáng đãng • Ghế chờ riêng' },
+                    { id: 'c3', name: 'Sân Thảm 03', tag: 'VIP Thi Đấu', subTitle: 'Thảm vân cát độ bám cao chuyên nghiệp' }
+                ];
+            } else {
+                subCourts = [
+                    { id: 'c1', name: 'Sân Acrylic 01', tag: 'Tiêu chuẩn USA', subTitle: 'Sơn phủ 5 lớp giảm chấn • Kẻ line chuẩn' },
+                    { id: 'c2', name: 'Sân Acrylic 02', tag: 'Có mái che', subTitle: 'Thi đấu mọi thời tiết • Đèn LED chuyên dụng' },
+                    { id: 'c3', name: 'Sân Acrylic 03', tag: 'Sân Đôi VIP', subTitle: 'Khu vực nghỉ ngơi rộng rãi' }
+                ];
+            }
+
+            return subCourts.map((court, cIdx) => {
+                const courtSlots = slots.map(s => {
+                    const slotCopy = { ...s };
+                    // Tạo một số ca ghép mẫu vào buổi tối (từ 21:00 trở đi cho hôm nay)
+                    if ((cIdx === 0 && s.time.startsWith('21:00')) || (cIdx === 1 && s.time.startsWith('22:00'))) {
+                        slotCopy.defaultMatch = true;
+                        slotCopy.matchTag = sport === 'soccer' ? 'Tìm đối cưa đôi' : (sport === 'badminton' ? 'Ghép đội (3/4)' : 'Ghép cặp DUPR 3.0');
+                        slotCopy.contribution = sport === 'soccer' ? 40000 : (sport === 'badminton' ? 35000 : 50000);
+                    }
+                    return slotCopy;
+                });
+
+                return {
+                    ...court,
+                    slots: courtSlots
+                };
+            });
+        }
+
+        function renderCourtFilterPills(courts) {
+            const group = document.getElementById('courtFilterPillGroup');
+            if (!group) return;
+            group.innerHTML = `
+                <button onclick="filterCourtDisplay('all', this)" class="court-pill active px-3 py-1 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm" type="button">Tất cả sân</button>
+                ${courts.map(c => `
+                    <button onclick="filterCourtDisplay('${c.id}', this)" class="court-pill px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-semibold" type="button">${c.name.split(' - ')[0]}</button>
+                `).join('')}
+            `;
+        }
+
+        // 6. QUẢN LÝ TÀI KHOẢN VÀ THÔNG BÁO THEO TÀI KHOẢN
+        function getLoggedInUser() {
+            try {
+                return JSON.parse(sessionStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('currentUser')) ||
+                       JSON.parse(localStorage.getItem('current_user')) || null;
+            } catch (e) { return null; }
+        }
+
+        function pushNotificationToAccount(notif) {
+            const user = getLoggedInUser();
+            const uid = user ? (user.id || user.phone || 'user') : 'guest';
+            const key = `sb_notifs_user_${uid}`;
+
+            let notifs = [];
+            try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+
+            notifs.unshift({
+                id: 'notif_' + Date.now(),
+                title: notif.title || 'Thông báo mới',
+                desc: notif.desc || '',
+                time: 'Vừa xong',
+                read: false,
+                icon: notif.icon || 'notifications',
+                color: notif.color || 'text-primary bg-primary/10'
+            });
+
+            localStorage.setItem(key, JSON.stringify(notifs));
+            loadUserNotifications();
+        }
+
+        function loadUserNotifications() {
+            const user = getLoggedInUser();
+            const uid = user ? (user.id || user.phone || 'user') : 'guest';
+            const key = `sb_notifs_user_${uid}`;
+
+            let notifs = [];
+            try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+
+            const unreadCount = notifs.filter(n => !n.read).length;
+            const badgeCount = document.getElementById('badgeQuickCount');
+            const badgeUnread = document.getElementById('badgePopoverUnread');
+            const listContainer = document.getElementById('quickNotifList');
+
+            if (badgeCount) {
+                if (unreadCount > 0) badgeCount.classList.remove('hidden');
+                else badgeCount.classList.add('hidden');
+            }
+
+            if (badgeUnread) {
+                badgeUnread.textContent = `${unreadCount} chưa đọc`;
+                badgeUnread.className = `px-2 py-0.5 rounded-full ${unreadCount > 0 ? 'bg-red-100 text-error' : 'bg-gray-100 text-gray-500'} text-[10px] font-bold`;
+            }
+
+            if (listContainer) {
+                if (notifs.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="py-8 text-center text-gray-400 text-xs">
+                            <span class="material-symbols-outlined text-3xl mb-1 text-gray-300">notifications_off</span>
+                            <p>Chưa có thông báo nào</p>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML = notifs.map(n => `
+                        <div onclick="window.location.href='thong-bao.html'" class="p-3.5 hover:bg-surface-container-low transition-colors flex items-start gap-3 cursor-pointer ${n.read ? 'bg-white opacity-85' : 'bg-green-50/50'}">
+                            <div class="w-10 h-10 rounded-xl ${n.color || 'bg-primary/10 text-primary'} flex items-center justify-center shrink-0 mt-0.5">
+                                <span class="material-symbols-outlined text-[20px]">${n.icon || 'notifications'}</span>
+                            </div>
+                            <div class="flex-1 min-w-0 flex flex-col gap-0.5 text-xs">
+                                <div class="flex items-baseline justify-between">
+                                    <span class="font-bold text-on-surface truncate">${n.title}</span>
+                                    <span class="text-[10px] text-gray-400 shrink-0 ml-1">${n.time || ''}</span>
+                                </div>
+                                <p class="text-gray-600 line-clamp-2 leading-relaxed mt-0.5">${n.desc}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
+        function markAllNotificationsAsRead() {
+            const user = getLoggedInUser();
+            const uid = user ? (user.id || user.phone || 'user') : 'guest';
+            const key = `sb_notifs_user_${uid}`;
+
+            let notifs = [];
+            try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
+            notifs.forEach(n => n.read = true);
+            localStorage.setItem(key, JSON.stringify(notifs));
+            loadUserNotifications();
+        }
+
+        function syncHeaderUserInfo() {
+            const userContainer = document.getElementById('userHeaderArea');
+            if (!userContainer) return;
+
+            const user = getLoggedInUser();
+
+            if (user) {
+                const displayName = user.fullName || user.full_name || user.name || user.phone || 'Người dùng';
+                const firstLetter = displayName.trim().charAt(0).toUpperCase();
+                const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'Thành viên';
+
+                userContainer.innerHTML = `
+                    <div id="userProfileTrigger" class="flex items-center gap-2 cursor-pointer p-1 rounded-xl hover:bg-gray-100 transition-all group" title="Bấm để xem hồ sơ cá nhân" onclick="window.location.href='ho-so-ca-nhan.html'">
+                        <div class="w-8 h-8 rounded-full bg-green-100 text-primary font-bold text-xs flex items-center justify-center shrink-0 border border-green-300 shadow-xs group-hover:scale-105 transition-transform">
+                            ${firstLetter}
+                        </div>
+                        <div class="flex flex-col text-left">
+                            <span id="headerUsername" class="text-xs font-bold text-gray-900 leading-tight truncate max-w-[130px]">
+                                ${displayName}
+                            </span>
+                            <span id="headerUserRole" style="color: #9d4300 !important; font-weight: 700 !important; font-size: 10px !important;">
+                                ${roleText}
+                            </span>
+                        </div>
+                        <button onclick="event.stopPropagation(); handleLogout()" type="button" title="Đăng xuất" class="ml-1 p-1 text-gray-400 hover:text-error hover:bg-red-50 rounded-lg transition-colors flex items-center justify-center cursor-pointer">
+                            <span class="material-symbols-outlined text-[18px]">logout</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                userContainer.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <a href="dang-nhap.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                            Đăng nhập
+                        </a>
+                        <a href="dang-ky.html" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-container transition-colors shadow-sm">
+                            Đăng ký
+                        </a>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                sessionStorage.removeItem('sb_session');
+                localStorage.removeItem('sb_session');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('current_user');
+                window.location.href = 'dang-nhap.html';
+            }
+        }
+
+        function getBookedSlots() {
+            try { return JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY)) || []; } catch (e) { return []; }
+        }
+
+        function saveBookedSlots(slots) {
+            localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(slots));
+        }
+
+        async function fetchAllBookedSlots() {
+            let booked = getBookedSlots();
+            return booked;
+        }
+
+        // 7. KHỞI TẠO DỮ LIỆU SÂN & THIẾT LẬP LỊCH TỰ ĐỘNG
+        function initPageData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const facilityId = urlParams.get('facilityId') || urlParams.get('id') || 'fac-011';
+
+            const fallbackCourts = [
+                { id: 'fac-011', name: 'Sân bóng mini Đông Đô', sport: 'soccer', address: 'Ngõ 39 Triều Khúc, Thanh Xuân, Hà Nội', opening_time: '06:00', closing_time: '23:00', price: 320000, rating: 4.8 },
+                { id: '1', name: 'Sân bóng Đông Đô', sport: 'soccer', address: 'Ngõ 11 Duy Tân, Dịch Vọng Hậu, Cầu Giấy, Hà Nội', opening_time: '05:00', closing_time: '23:30', price: 350000, rating: 4.8 },
+                { id: '4', name: 'Sân Cầu Lông Ngôi Sao Cầu Giấy', sport: 'badminton', address: '35 Phố Dịch Vọng Hậu, Cầu Giấy, Hà Nội', opening_time: '05:30', closing_time: '23:00', price: 90000, rating: 4.9 },
+                { id: '8', name: 'Pickleball Arena Tây Hồ', sport: 'pickleball', address: 'Khu liên hợp thể thao Tây Hồ, Hà Nội', opening_time: '06:00', closing_time: '22:30', price: 180000, rating: 4.9 }
+            ];
+
+            try {
+                let cached = JSON.parse(localStorage.getItem('selected_venue'));
+                if (cached && (String(cached.id) === String(facilityId) || String(cached.facilityId) === String(facilityId))) {
+                    currentFacility = cached;
+                } else {
+                    currentFacility = fallbackCourts.find(f => String(f.id) === String(facilityId)) || fallbackCourts[0];
+                }
+            } catch (e) {
+                currentFacility = fallbackCourts[0];
+            }
+
+            document.getElementById('headerFacilityTitle').textContent = currentFacility.name;
+            document.getElementById('quickNavFacilityName').textContent = currentFacility.name;
+            
+            // Map Link chính xác
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentFacility.name + ' ' + currentFacility.address)}`;
+            document.getElementById('headerAddressContainer').innerHTML = `
+                <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors hover:underline inline-flex items-center gap-1">
+                    <span class="material-symbols-outlined text-base text-primary">location_on</span>
+                    <span id="headerAddressText">${currentFacility.address}</span>
+                    <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+                </a>
+            `;
+
+            document.getElementById('headerRatingText').textContent = currentFacility.rating || '4.8';
+            document.getElementById('headerHoursText').textContent = `Mở cửa: ${currentFacility.opening_time || '06:00'} - ${currentFacility.closing_time || '23:00'}`;
+
+            BASE_COURTS_CONFIG = generateSlotsByFacilityHours(currentFacility);
+            renderCourtFilterPills(BASE_COURTS_CONFIG);
+
+            detectSourceAndSetupBackButton();
+            renderWeekDaysTrack();
+            renderMatrix();
+            updateRightPanel();
+        }
+
+        function renderWeekDaysTrack() {
+            const track = document.getElementById('weekDaysTrack');
+            const daysOfWeek = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const vnNow = getVietnamNow();
+
+            let html = '';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(vnNow);
+                d.setDate(vnNow.getDate() + i);
+
+                const dateDisplay = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+                const dayName = i === 0 ? 'Hôm nay' : daysOfWeek[d.getDay()];
+                const fullDateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                const fullDateVN = `${dayName}, ngày ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+
+                if (i === 0 && !selectedDateKey) {
+                    selectedDateKey = fullDateKey;
+                    selectedDateDisplay = fullDateVN;
+                }
+
+                html += `
+                    <button type="button" onclick="selectWeekDay('${fullDateKey}', '${fullDateVN}', this)" class="week-day-btn flex flex-col items-center justify-between p-2.5 rounded-xl text-center transition-all ${i === 0 ? 'bg-primary text-white shadow-md' : 'bg-surface-container hover:bg-surface-container-high text-on-surface'}">
+                        <span class="text-[10px] uppercase font-bold opacity-90">${dayName}</span>
+                        <span class="text-base font-extrabold my-0.5">${dateDisplay}</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full ${i === 0 ? 'bg-primary-container text-white' : 'bg-surface-container-highest text-gray-600'}">
+                            ${i === 5 || i === 6 ? 'Sắp kín' : 'Còn slot'}
+                        </span>
+                    </button>
+                `;
+            }
+            track.innerHTML = html;
+            document.getElementById('matrixCurrentDateTitle').textContent = `Lịch chi tiết (${selectedDateDisplay})`;
+        }
+
+        function selectWeekDay(dateKey, dateVN, btn) {
+            selectedDateKey = dateKey;
+            selectedDateDisplay = dateVN;
+            document.querySelectorAll('.week-day-btn').forEach(b => {
+                b.className = 'week-day-btn flex flex-col items-center justify-between p-2.5 rounded-xl text-center transition-all bg-surface-container hover:bg-surface-container-high text-on-surface';
+            });
+            btn.className = 'week-day-btn flex flex-col items-center justify-between p-2.5 rounded-xl text-center transition-all bg-primary text-white shadow-md';
+
+            // Loại bỏ các slot đã chọn mà rơi vào quá khứ nếu chọn ngày hôm nay
+            selectedSlotsList = selectedSlotsList.filter(s => !isSlotInPast(selectedDateKey, s.time));
+
+            document.getElementById('matrixCurrentDateTitle').textContent = `Lịch chi tiết (${selectedDateDisplay})`;
+            renderMatrix();
+            updateRightPanel();
+        }
+
+        // 8. RENDER MA TRẬN KHUNG GIỜ VỚI LOGIC KHÓA CA ĐÃ QUA
+        async function renderMatrix() {
+            const container = document.getElementById('matrixCourtsList');
+            if (!container || !BASE_COURTS_CONFIG || BASE_COURTS_CONFIG.length === 0) return;
+
+            const bookedList = await fetchAllBookedSlots();
+            const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+
+            container.innerHTML = BASE_COURTS_CONFIG.map(court => `
+                <div class="p-3.5 rounded-2xl bg-surface-container-low border border-gray-100 transition-all court-row" id="courtRow_${court.id}">
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-sm text-gray-900">${court.name}</span>
+                            <span class="px-2 py-0.5 rounded-full bg-green-100 text-primary text-[10px] font-bold">${court.tag}</span>
+                            <span class="text-[11px] text-gray-500 hidden sm:inline">• ${court.subTitle}</span>
+                        </div>
+                        <span class="text-xs text-primary font-bold">Giờ mở: ${currentFacility.opening_time || '06:00'} - ${currentFacility.closing_time || '23:00'}</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+                        ${court.slots.map(slot => {
+                            // =========================================================================
+                            // 1. KIỂM TRA QUAN TRỌNG NHẤT: CA ĐÃ QUA THỜI GIAN THỰC TẾ HAY CHƯA
+                            // Nếu hôm nay là 31/10 và giờ hiện tại là 20:18:
+                            // -> Ca 13:00, 19:00, 20:00 đều là ĐÃ QUA, KHÔNG THỂ ĐẶT ĐƯỢC!
+                            // =========================================================================
+                            const isPast = isSlotInPast(selectedDateKey, slot.time);
+                            if (isPast) {
+                                return `
+                                    <div class="p-2 rounded-xl bg-gray-100/90 text-left opacity-50 cursor-not-allowed select-none flex flex-col justify-between border border-gray-200" title="Ca này đã qua giờ (${slot.time}), không thể đặt">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-gray-500 font-semibold">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[13px] text-gray-400">history_toggle_off</span>
+                                        </div>
+                                        <span class="text-[10px] text-gray-400 line-through my-1">${fmt(slot.price)}</span>
+                                        <span class="text-[9px] text-gray-500 font-bold flex items-center gap-0.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                            <span>Đã qua giờ</span>
+                                        </span>
+                                    </div>
+                                `;
+                            }
+
+                            // 2. Trạng thái: ĐÃ KÍN SÂN (CÓ NGƯỜI ĐẶT TRƯỚC)
+                            const isActuallyBooked = bookedList.some(b => 
+                                b.courtName === court.name && 
+                                b.time === slot.time && 
+                                b.date === selectedDateKey
+                            );
+                            if (isActuallyBooked) {
+                                return `
+                                    <div class="p-2 rounded-xl bg-gray-200/90 text-left opacity-60 cursor-not-allowed select-none flex flex-col justify-between border border-gray-300" title="Ca này đã có người đặt trước">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-gray-600 font-medium">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[12px] text-error">lock</span>
+                                        </div>
+                                        <span class="text-[10px] text-gray-400 line-through my-1">${fmt(slot.price)}</span>
+                                        <span class="text-[9px] text-error font-bold flex items-center gap-0.5">
+                                            <span class="material-symbols-outlined text-[11px]">block</span>
+                                            <span>Đã kín</span>
+                                        </span>
+                                    </div>
+                                `;
+                            }
+
+                            // 3. Trạng thái: GHÉP KÈO (TÌM ĐỐI)
+                            if (slot.defaultMatch) {
+                                const isCurrentMatch = isMatchmakingMode && activeMatchmakingSlot && activeMatchmakingSlot.courtName === court.name && activeMatchmakingSlot.time === slot.time;
+                                return `
+                                    <div class="p-2 rounded-xl bg-orange-50 border-2 border-secondary/70 text-left flex flex-col justify-between shadow-xs relative overflow-hidden ${isCurrentMatch ? 'ring-2 ring-secondary' : ''}">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-secondary font-bold">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[13px] text-secondary animate-pulse">handshake</span>
+                                        </div>
+                                        <div class="my-0.5">
+                                            <span class="text-[9px] font-extrabold px-1 py-0.5 rounded bg-orange-200 text-secondary block truncate">${slot.matchTag}</span>
+                                        </div>
+                                        <button type="button" onclick="joinMatchmakingSlot('${court.name}', '${slot.time}', ${slot.price}, ${slot.contribution}, '${slot.matchTag}')" class="w-full py-1 bg-secondary hover:bg-secondary-container text-white rounded-lg text-[10px] font-bold text-center shadow-xs transition-transform active:scale-95 flex items-center justify-center gap-0.5 cursor-pointer">
+                                            <span class="material-symbols-outlined text-[12px]">group_add</span>
+                                            <span>Xin ghép</span>
+                                        </button>
+                                    </div>
+                                `;
+                            }
+
+                            // 4. Trạng thái: ĐANG CHỌN
+                            const isSelected = selectedSlotsList.some(s => s.courtName === court.name && s.time === slot.time);
+                            if (isSelected) {
+                                return `
+                                    <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, ${slot.isPeak})" class="p-2 rounded-xl bg-primary text-white shadow-md text-left flex flex-col justify-between ring-2 ring-primary ring-offset-1 transform scale-[1.02] cursor-pointer">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-white font-bold">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-sm text-green-300">check_circle</span>
+                                        </div>
+                                        <span class="text-[11px] text-white font-extrabold my-1">${fmt(slot.price)}</span>
+                                        <span class="text-[9px] bg-primary-container px-1 py-0.2 rounded text-white font-semibold">Đang chọn</span>
+                                    </button>
+                                `;
+                            }
+
+                            // 5. Trạng thái: GIỜ VÀNG (17:00 - 21:00)
+                            if (slot.isPeak) {
+                                return `
+                                    <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, true)" class="p-2 rounded-xl bg-secondary-fixed/50 hover:bg-secondary-fixed text-left transition-all flex flex-col justify-between cursor-pointer border border-orange-200">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-secondary font-bold">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[13px] text-secondary">local_fire_department</span>
+                                        </div>
+                                        <span class="text-[11px] text-secondary font-extrabold my-1">${fmt(slot.price)}</span>
+                                        <span class="text-[10px] text-secondary font-semibold">Giờ vàng</span>
+                                    </button>
+                                `;
+                            }
+
+                            // 6. Trạng thái: CÒN TRỐNG (CÓ THỂ ĐẶT ĐƯỢC)
+                            return `
+                                <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, false)" class="p-2 rounded-xl bg-white hover:bg-green-100/60 text-left transition-all flex flex-col justify-between cursor-pointer border border-gray-200">
+                                    <span class="text-[11px] text-gray-800 font-semibold">${slot.time.split(' - ')[0]}</span>
+                                    <span class="text-[11px] text-primary font-bold my-1">${fmt(slot.price)}</span>
+                                    <span class="text-[10px] text-gray-500">Trống</span>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 9. THAO TÁC CHỌN / BỎ CHỌN VÀ KIỂM TRA CHẶN CA QUÁ KHỨ
+        function toggleSelectSlot(courtName, time, price, isPeak) {
+            // Chặn tuyệt đối nếu ca rơi vào quá khứ
+            if (isSlotInPast(selectedDateKey, time)) {
+                alert(`Ca thi đấu (${time}) đã trôi qua so với giờ hiện tại. Bạn không thể đặt ca này!`);
+                return;
+            }
+
+            isMatchmakingMode = false;
+            activeMatchmakingSlot = null;
+
+            const existingIndex = selectedSlotsList.findIndex(s => s.courtName === courtName && s.time === time);
+            if (existingIndex > -1) {
+                selectedSlotsList.splice(existingIndex, 1);
+            } else {
+                selectedSlotsList.push({ courtName, time, price, isPeak });
+            }
+
+            renderMatrix();
+            updateRightPanel();
+        }
+
+        function joinMatchmakingSlot(courtName, time, fullPrice, contributionFee, matchTag) {
+            // Chặn tuyệt đối nếu ca rơi vào quá khứ
+            if (isSlotInPast(selectedDateKey, time)) {
+                alert(`Ca ghép trận (${time}) đã trôi qua so với giờ hiện tại. Bạn không thể tham gia!`);
+                return;
+            }
+
+            isMatchmakingMode = true;
+            selectedSlotsList = [];
+
+            activeMatchmakingSlot = {
+                courtName,
+                time,
+                fullPrice,
+                contributionFee,
+                matchTag,
+                date: selectedDateKey,
+                dateDisplay: selectedDateDisplay
+            };
+
+            renderMatrix();
+            updateRightPanel();
+        }
+
+        function updateRightPanel() {
+            const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+            const slotsContainer = document.getElementById('selectedSlotsContainer');
+            const alertBox = document.getElementById('matchmakingAlertBox');
+            const regularAddons = document.getElementById('regularAddonsContainer');
+            const voucherBox = document.getElementById('voucherContainer');
+            const btnConfirm = document.getElementById('btnProceedBookingConfirm');
+            const btnText = document.getElementById('btnProceedText');
+
+            if (isMatchmakingMode && activeMatchmakingSlot) {
+                document.getElementById('panelMainHeading').textContent = 'Xác nhận xin ghép trận';
+                document.getElementById('badgeSelectedCount').textContent = 'Ghép đội';
+                document.getElementById('badgeSelectedCount').className = 'px-2.5 py-0.5 rounded-full bg-orange-100 text-secondary text-xs font-bold';
+
+                alertBox.classList.remove('hidden');
+                document.getElementById('matchContributionFeeText').textContent = `Số tiền bạn cần đóng góp tại sân: ${fmt(activeMatchmakingSlot.contributionFee)}`;
+
+                regularAddons.classList.add('hidden');
+                voucherBox.classList.add('hidden');
+
+                slotsContainer.innerHTML = `
+                    <div class="p-3 rounded-xl bg-orange-50/70 border border-orange-200 text-xs space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-secondary text-sm">${activeMatchmakingSlot.courtName}</span>
+                            <span class="px-2 py-0.5 rounded bg-orange-200 text-secondary text-[10px] font-bold">${activeMatchmakingSlot.matchTag}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-gray-700">
+                            <span>Ca đấu: <strong>${activeMatchmakingSlot.time}</strong></span>
+                            <span class="text-gray-400">Giá gốc: ${fmt(activeMatchmakingSlot.fullPrice)}</span>
+                        </div>
+                        <div class="text-[11px] text-gray-500 pt-1 border-t">Ngày: ${activeMatchmakingSlot.dateDisplay}</div>
+                    </div>
+                `;
+
+                document.getElementById('lblBaseTotal').textContent = 'Số tiền thanh toán online:';
+                document.getElementById('calcBasePrice').textContent = '0đ (Miễn phí)';
+                document.getElementById('rowComboDiscount').classList.add('hidden');
+                document.getElementById('rowGearPrice').classList.add('hidden');
+                document.getElementById('rowVoucherDiscount').classList.add('hidden');
+                document.getElementById('lblFinalTotal').textContent = 'Tiền đóng góp tại sân:';
+                document.getElementById('calcTotalPrice').textContent = fmt(activeMatchmakingSlot.contributionFee);
+                document.getElementById('lblVatNote').textContent = 'Thanh toán trực tiếp cho chủ kèo';
+
+                btnText.textContent = 'XÁC NHẬN THAM GIA GHÉP';
+                btnConfirm.className = 'w-full py-3.5 px-4 rounded-xl bg-secondary hover:bg-secondary-container text-white font-bold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95';
+                return;
+            }
+
+            document.getElementById('panelMainHeading').textContent = 'Tóm tắt đặt sân nhanh';
+            alertBox.classList.add('hidden');
+            regularAddons.classList.remove('hidden');
+            voucherBox.classList.remove('hidden');
+            document.getElementById('rowComboDiscount').classList.remove('hidden');
+            document.getElementById('rowGearPrice').classList.remove('hidden');
+            document.getElementById('rowVoucherDiscount').classList.remove('hidden');
+            document.getElementById('lblBaseTotal').textContent = 'Tổng tiền các ca đã chọn:';
+            document.getElementById('lblFinalTotal').textContent = 'Tổng thanh toán:';
+            document.getElementById('lblVatNote').textContent = 'Đã bao gồm VAT';
+
+            const count = selectedSlotsList.length;
+            document.getElementById('badgeSelectedCount').textContent = `${count} ca đã chọn`;
+            document.getElementById('badgeSelectedCount').className = count > 0 
+                ? 'px-2.5 py-0.5 rounded-full bg-green-100 text-primary text-xs font-bold'
+                : 'px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-500 text-xs font-bold';
+
+            if (count === 0) {
+                slotsContainer.innerHTML = `
+                    <div class="py-6 text-center text-xs text-gray-400 bg-gray-50 rounded-xl border border-dashed">
+                        Chưa chọn ca nào. Vui lòng bấm vào ô giờ trống trên ma trận.
+                    </div>
+                `;
+                document.getElementById('calcBasePrice').textContent = '0đ';
+                document.getElementById('calcComboDiscount').textContent = '0đ';
+                document.getElementById('calcGearPrice').textContent = '0đ';
+                document.getElementById('calcTotalPrice').textContent = '0đ';
+                btnText.textContent = 'VUI LÒNG CHỌN CA SÂN';
+                btnConfirm.className = 'w-full py-3.5 px-4 rounded-xl bg-gray-300 text-gray-500 font-bold text-sm cursor-not-allowed flex items-center justify-center gap-2';
+                return;
+            }
+
+            slotsContainer.innerHTML = selectedSlotsList.map((slot, idx) => `
+                <div class="p-2.5 rounded-xl bg-surface-container-low border border-green-100 text-xs flex items-center justify-between">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-gray-900">${slot.courtName} (${slot.time})</span>
+                        <span class="text-[11px] text-gray-500">${selectedDateDisplay}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-extrabold text-primary">${fmt(slot.price)}</span>
+                        <button onclick="removeSelectedSlot(${idx})" class="text-gray-400 hover:text-error p-0.5" title="Bỏ chọn">
+                            <span class="material-symbols-outlined text-[16px]">close</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const baseSum = selectedSlotsList.reduce((sum, s) => sum + s.price, 0);
+            document.getElementById('calcBasePrice').textContent = fmt(baseSum);
+
+            const comboDiscount = count >= 2 ? Math.round(baseSum * 0.05) : 0;
+            document.getElementById('calcComboDiscount').textContent = comboDiscount > 0 ? `-${fmt(comboDiscount)}` : '0đ';
+
+            const isRental = document.getElementById('toggleRentalGear').checked;
+            const gearFee = isRental ? 30000 : 0;
+            document.getElementById('calcGearPrice').textContent = fmt(gearFee);
+
+            const voucherDiscount = 20000;
+            const finalTotal = Math.max(0, baseSum - comboDiscount - voucherDiscount + gearFee);
+            document.getElementById('calcTotalPrice').textContent = fmt(finalTotal);
+
+            btnText.textContent = `TIẾP TỤC ĐẶT ${count} CA (${fmt(finalTotal)})`;
+            btnConfirm.className = 'w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95';
+        }
+
+        function removeSelectedSlot(index) {
+            selectedSlotsList.splice(index, 1);
+            renderMatrix();
+            updateRightPanel();
+        }
+
+        function filterCourtDisplay(courtId, btn) {
+            document.querySelectorAll('.court-pill').forEach(b => {
+                b.className = 'court-pill px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-semibold';
+            });
+            if (btn) {
+                btn.className = 'court-pill active px-3 py-1 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm';
+            }
+
+            document.querySelectorAll('.court-row').forEach(row => {
+                if (courtId === 'all' || row.id === `courtRow_${courtId}`) {
+                    row.style.display = 'block';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // 10. KHỞI CHẠY VÀ XỬ LÝ SỰ KIỆN
+        document.addEventListener('DOMContentLoaded', () => {
+            syncHeaderUserInfo();
+            loadUserNotifications();
+            initPageData();
+
+            updateLiveClock();
+            setInterval(updateLiveClock, 30000);
+
+            document.getElementById('toggleRentalGear').addEventListener('change', updateRightPanel);
+
+            const notifBtn = document.getElementById('btnToggleNotifDropdown');
+            const popover = document.getElementById('quickNotifPopover');
+            const container = document.getElementById('notifDropdownContainer');
+            const btnMarkAll = document.getElementById('btnMarkAllNotifs');
+
+            if (notifBtn && popover) {
+                notifBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    popover.classList.toggle('hidden');
+                    popover.classList.toggle('flex');
+                };
+
+                document.onclick = (e) => {
+                    if (container && !container.contains(e.target)) {
+                        popover.classList.add('hidden');
+                        popover.classList.remove('flex');
+                    }
+                };
+            }
+
+            if (btnMarkAll) {
+                btnMarkAll.onclick = markAllNotificationsAsRead;
+            }
+
+            // XỬ LÝ BẤM XÁC NHẬN -> CHUYỂN BƯỚC XÁC NHẬN THANH TOÁN
+            document.getElementById('btnProceedBookingConfirm').addEventListener('click', () => {
+                const currentUser = getLoggedInUser();
+                const userName = currentUser ? (currentUser.fullName || currentUser.full_name || currentUser.name || currentUser.phone) : 'Khách vãng lai';
+
+                // TRƯỜNG HỢP A: XÁC NHẬN XIN GHÉP
+                if (isMatchmakingMode && activeMatchmakingSlot) {
+                    pushNotificationToAccount({
+                        title: 'Đã gửi yêu cầu ghép kèo!',
+                        desc: `Bạn vừa gửi yêu cầu tham gia ghép trận tại ${currentFacility.name} (${activeMatchmakingSlot.courtName}, ${activeMatchmakingSlot.time}). Tiền góp tại sân: 40.000đ.`,
+                        icon: 'handshake',
+                        color: 'text-secondary bg-orange-100'
+                    });
+
+                    localStorage.setItem('sb_match_joined', JSON.stringify({
+                        facilityName: currentFacility.name,
+                        courtName: activeMatchmakingSlot.courtName,
+                        time: activeMatchmakingSlot.time,
+                        date: activeMatchmakingSlot.dateDisplay,
+                        contributionFee: activeMatchmakingSlot.contributionFee,
+                        joinedBy: userName
+                    }));
+
+                    window.location.href = 'ghep-doi-thanh-cong.html';
+                    return;
+                }
+
+                // TRƯỜNG HỢP B: ĐẶT CA BÌNH THƯỜNG
+                if (selectedSlotsList.length === 0) return;
+
+                const bookingPayload = {
+                    facilityId: currentFacility.id,
+                    facilityName: currentFacility.name,
+                    facilityAddress: currentFacility.address,
+                    sport: currentFacility.sport,
+                    date: selectedDateKey,
+                    dateDisplay: selectedDateDisplay,
+                    slots: selectedSlotsList,
+                    bookedBy: userName,
+                    totalPrice: document.getElementById('calcTotalPrice').textContent
+                };
+                localStorage.setItem('sb_current_booking', JSON.stringify(bookingPayload));
+
+                window.location.href = `xac-nhan-dat-san.html?facilityId=${encodeURIComponent(bookingPayload.facilityId)}&date=${encodeURIComponent(bookingPayload.date)}&slot=${encodeURIComponent(selectedSlotsList.map(s => s.time).join(','))}&court=${encodeURIComponent(selectedSlotsList[0].courtName)}`;
+            });
+        });
+    </script>
+</body>
+</html>

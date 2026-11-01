@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>SportBooking - Tin tức Thể thao Chính thống</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006b2c",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#00873a",
+                        "on-primary-container": "#f7fff2",
+                        "secondary": "#9d4300",
+                        "secondary-container": "#fd761a",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed-variant": "#783200",
+                        "tertiary": "#0051d5",
+                        "tertiary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#003ea8",
+                        "surface": "#f9f9ff",
+                        "on-surface": "#141b2b",
+                        "on-surface-variant": "#3e4a3d",
+                        "surface-container": "#e9edff",
+                        "surface-container-low": "#f1f3ff",
+                        "surface-container-high": "#e1e8fd",
+                        "surface-container-highest": "#dce2f7",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#6e7b6c",
+                        "outline-variant": "#bdcaba",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a"
+                    },
+                    spacing: { "space-xs": "0.25rem", "space-sm": "0.5rem", "space-md": "1rem", "space-lg": "1.5rem", "space-xl": "2rem", "margin": "1.25rem" },
+                    fontFamily: {
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-sm": ["Be Vietnam Pro"],
+                        "headline-md": ["Be Vietnam Pro"],
+                        "headline-lg": ["Be Vietnam Pro"],
+                        "display-lg": ["Be Vietnam Pro"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
+
+    <!-- HEADER ĐỒNG BỘ -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm">
+        <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
+            <div class="flex items-center gap-space-xl">
+                <a class="flex items-center gap-space-sm" href="trangchu-user.html">
+                    <span class="text-xl text-primary font-bold tracking-tight">SportBooking</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-2 text-sm font-semibold">
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
+                </nav>
+            </div>
+
+            <div class="flex items-center gap-space-lg">
+                <!-- Nút Thông Báo (Tự động mở Popup Xem Nhanh qua auth.js) -->
+                <button aria-label="Thông báo" class="relative p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors flex items-center justify-center cursor-pointer" type="button">
+                    <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 1;">notifications</span>
+                    <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-error text-white font-bold text-[10px] rounded-full flex items-center justify-center shadow-sm">3</span>
+                </button>
+
+                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ QUA AUTH.JS -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
+                    <div class="flex flex-col text-right">
+                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Khách vãng lai</span>
+                        <span id="headerUserRole" class="text-[11px] font-bold text-secondary">User</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full pt-20 bg-surface min-h-screen">
+        <div class="flex flex-col w-full">
+            <div class="max-w-[1280px] w-full mx-auto px-margin py-space-lg flex flex-col gap-space-lg">
+                
+                <!-- Breadcrumb -->
+                <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors flex items-center gap-1" href="trangchu-user.html">
+                
+                      
+                    </a>
+                  
+               
+                </nav>
+
+                <!-- Tiêu đề & Giới thiệu Nguồn -->
+                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-2">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            <span>Tổng hợp từ các cơ quan báo chí chính thống</span>
+                        </div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+                            Tin tức &amp; Sự kiện Thể thao Việt Nam
+                        </h1>
+                        <p class="text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
+                            Cập nhật liên tục từ <strong>VnExpress Thể thao</strong>, <strong>Tuổi Trẻ</strong>, <strong>Thanh Niên</strong>, <strong>Thể Thao &amp; Văn Hóa</strong> về các giải phong trào, cẩm nang sức khỏe và xu hướng thể thao thủ đô.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-surface-container-lowest p-2 rounded-2xl shadow-sm border border-gray-100 self-start lg:self-auto text-xs">
+                        <span class="px-3 py-1.5 rounded-xl bg-surface-container font-bold text-on-surface flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                            <span>Báo chính thống</span>
+                        </span>
+                        <span class="px-3 py-1.5 rounded-xl bg-surface-container font-bold text-on-surface flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-secondary text-[18px]">update</span>
+                            <span>Cập nhật 24/7</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Thanh Tìm Kiếm & Nút Lọc Danh Mục -->
+                <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-4 border border-gray-100 flex flex-col gap-3">
+                    <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+                        <div class="relative flex-1">
+                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
+                            <input class="w-full pl-11 pr-4 py-2.5 bg-surface-container-low rounded-xl text-xs text-on-surface placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 border" id="newsSearchInput" placeholder="Tìm kiếm bài báo, kỹ thuật thi đấu, giải bóng..." type="text"/>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <select class="bg-surface-container-low text-xs font-semibold text-on-surface px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer border" id="newsSourceFilter">
+                                <option value="all">Tất cả nguồn báo</option>
+                                <option value="vnexpress">VnExpress Thể Thao</option>
+                                <option value="tuoitre">Báo Tuổi Trẻ</option>
+                                <option value="thanhnien">Báo Thanh Niên</option>
+                                <option value="thethaovanhoa">Thể Thao &amp; Văn Hóa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Pills -->
+                    <div class="flex items-center gap-2 overflow-x-auto pb-1" id="categoryPillGroup">
+                        <button class="cat-pill active px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold transition-all shadow-sm cursor-pointer" data-category="all">
+                            Tất cả tin tức
+                        </button>
+                        <button class="cat-pill px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer" data-category="badminton">
+                            <span class="material-symbols-outlined text-[15px] text-primary">sports_tennis</span>
+                            <span>Cầu lông</span>
+                        </button>
+                        <button class="cat-pill px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer" data-category="soccer">
+                            <span class="material-symbols-outlined text-[15px] text-primary">sports_soccer</span>
+                            <span>Bóng đá sân 7</span>
+                        </button>
+                        <button class="cat-pill px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer" data-category="pickleball">
+                            <span class="material-symbols-outlined text-[15px] text-secondary">sports_baseball</span>
+                            <span>Pickleball</span>
+                        </button>
+                        <button class="cat-pill px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer" data-category="health">
+                            <span class="material-symbols-outlined text-[15px] text-red-500">fitness_center</span>
+                            <span>Sức khỏe &amp; Phục hồi</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TIÊU ĐIỂM BÁO CHÍ (Bento Grid 60/40) -->
+                <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    <!-- Bài viết chính (Hero 7 cols) -->
+                    <article class="news-card lg:col-span-7 bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group border border-gray-100 hover:shadow-md transition-all" data-category="badminton" data-source="vnexpress">
+                        <div class="relative w-full h-64 sm:h-80 overflow-hidden">
+                            <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Giải cầu lông phong trào Hà Nội" src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=1200&q=80"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+                            
+                            <div class="absolute top-4 left-4 flex gap-2">
+                                <span class="px-2.5 py-1 rounded-full bg-red-600 text-white text-[11px] font-bold uppercase shadow-sm">
+                                    VnExpress Thể Thao
+                                </span>
+                                <span class="px-2.5 py-1 rounded-full bg-white/90 text-on-surface text-[11px] font-bold backdrop-blur-md">
+                                    Cầu lông
+                                </span>
+                            </div>
+
+                            <div class="absolute bottom-4 left-4 right-4 text-white">
+                                <div class="flex items-center gap-2 text-white/80 text-xs mb-1.5">
+                                    <span class="font-bold text-white">Báo điện tử VnExpress</span>
+                                    <span>•</span>
+                                    <span>2 giờ trước</span>
+                                </div>
+                                <h2 class="text-lg md:text-xl font-bold leading-snug group-hover:text-green-300 transition-colors">
+                                    Giải cầu lông các câu lạc bộ Hà Nội mở rộng: Sôi động sân chơi phong trào thủ đô
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="p-5 flex flex-col justify-between flex-1 text-xs">
+                            <p class="text-on-surface-variant leading-relaxed line-clamp-2">
+                                Hơn 400 vận động viên phong trào tại các quận Cầu Giấy, Đống Đa và Nam Từ Liêm hào hứng bước vào tranh tài ở các nội dung đôi nam, đôi nữ và đôi nam nữ kết hợp, tạo không khí thể thao sôi nổi trong cộng đồng.
+                            </p>
+                            <div class="flex items-center justify-between pt-3 border-t mt-3">
+                                <span class="text-gray-400 font-medium">Tác giả: Nam Anh (Theo VnExpress)</span>
+                                <a class="text-primary font-bold hover:underline inline-flex items-center gap-1" href="https://vnexpress.net/the-thao" target="_blank" rel="noopener noreferrer">
+                                    <span>Đọc bài gốc trên báo</span>
+                                    <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 2 Bài viết tiêu điểm phụ (5 cols) -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Bài 1: Pickleball (Báo Tuổi Trẻ) -->
+                        <article class="news-card bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col sm:flex-row group border border-gray-100 hover:shadow-md transition-all" data-category="pickleball" data-source="tuoitre">
+                            <div class="sm:w-5/12 h-44 sm:h-auto relative overflow-hidden shrink-0">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Pickleball Hà Nội" src="https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?w=800&q=80"/>
+                                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-blue-600 text-white text-[10px] font-bold uppercase">
+                                    Báo Tuổi Trẻ
+                                </span>
+                            </div>
+                            <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-medium">Báo Tuổi Trẻ Online • 4 giờ trước</span>
+                                    <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2 mt-1">
+                                        Trào lưu chơi Pickleball lan tỏa mạnh mẽ ở các đô thị Việt Nam
+                                    </h3>
+                                    <p class="text-on-surface-variant line-clamp-2 mt-1 leading-relaxed">
+                                        Môn thể thao kết hợp giữa bóng vợt, tennis và bóng bàn đang thu hút đông đảo bạn trẻ và dân công sở nhờ tính linh hoạt và dễ tập luyện.
+                                    </p>
+                                </div>
+                                <div class="pt-2.5 mt-2 border-t flex items-center justify-between">
+                                    <span class="text-secondary font-bold text-[11px]">Pickleball phong trào</span>
+                                    <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://tuoitre.vn/the-thao.htm" target="_blank" rel="noopener noreferrer">
+                                        <span>Đọc báo</span>
+                                        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Bài 2: Bóng đá sân 7 (Báo Thanh Niên) -->
+                        <article class="news-card bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col sm:flex-row group border border-gray-100 hover:shadow-md transition-all" data-category="soccer" data-source="thanhnien">
+                            <div class="sm:w-5/12 h-44 sm:h-auto relative overflow-hidden shrink-0">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Bóng đá phủi sân 7" src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=800&q=80"/>
+                                <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-amber-600 text-white text-[10px] font-bold uppercase">
+                                    Báo Thanh Niên
+                                </span>
+                            </div>
+                            <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                <div>
+                                    <span class="text-[10px] text-gray-400 font-medium">Báo Thanh Niên • Hôm qua</span>
+                                    <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors leading-snug line-clamp-2 mt-1">
+                                        Giải bóng đá 7 người vô địch quốc gia (HPL): Bản sắc phủi thủ đô
+                                    </h3>
+                                    <p class="text-on-surface-variant line-clamp-2 mt-1 leading-relaxed">
+                                        Các trận đấu sôi động trên sân cỏ nhân tạo thu hút hàng nghìn khán giả theo dõi trực tiếp, khẳng định sức hút của bóng đá sân 7 tại miền Bắc.
+                                    </p>
+                                </div>
+                                <div class="pt-2.5 mt-2 border-t flex items-center justify-between">
+                                    <span class="text-primary font-bold text-[11px]">Bóng đá sân 7</span>
+                                    <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://thanhnien.vn/the-thao.html" target="_blank" rel="noopener noreferrer">
+                                        <span>Đọc báo</span>
+                                        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+
+                    </div>
+                </section>
+
+                <!-- DANH SÁCH BÀI BÁO CHUYÊN MỤC & CẨM NANG THỂ THAO -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start my-4">
+                    
+                    <!-- Cột danh sách bài viết (8 cols) -->
+                    <div class="lg:col-span-8 flex flex-col gap-6">
+                        <div class="flex items-center justify-between pb-2 border-b">
+                            <h2 class="text-base font-bold text-on-surface">Cẩm nang &amp; Tin tức mới cập nhật</h2>
+                            <span class="text-xs text-gray-400" id="displayFilterResultCount">Hiển thị 6 bài viết</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="newsGridContainer">
+                            
+                            <!-- Card 1: Kỹ thuật Cầu lông (Báo VnExpress) -->
+                            <article class="news-item bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group border border-gray-100 hover:shadow-md transition-all" data-category="badminton" data-source="vnexpress">
+                                <div class="h-44 relative overflow-hidden">
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Kỹ thuật đập cầu lông" src="https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?w=800&q=80"/>
+                                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-bold">VnExpress</span>
+                                </div>
+                                <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-1">
+                                            <span>Chuyên mục Cầu lông</span>
+                                            <span>•</span>
+                                            <span>3 ngày trước</span>
+                                        </div>
+                                        <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                            3 lỗi sai phổ biến khi thực hiện cú đập cầu Smash trong thi đấu phong trào
+                                        </h3>
+                                        <p class="text-on-surface-variant line-clamp-2 mt-1.5 leading-relaxed">
+                                            Sai lầm trong điểm tiếp xúc và cách phát lực cổ tay khiến người chơi dễ mỏi cơ và giảm độ cắm của cầu.
+                                        </p>
+                                    </div>
+                                    <div class="pt-3 mt-2 border-t flex items-center justify-between">
+                                        <span class="text-gray-400">Nguồn: VnExpress Thể thao</span>
+                                        <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://vnexpress.net/the-thao" target="_blank" rel="noopener noreferrer">
+                                            <span>Xem bài</span>
+                                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Card 2: Chiến thuật Sân 7 (Báo Thể Thao & Văn Hóa) -->
+                            <article class="news-item bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group border border-gray-100 hover:shadow-md transition-all" data-category="soccer" data-source="thethaovanhoa">
+                                <div class="h-44 relative overflow-hidden">
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Chiến thuật sân 7" src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80"/>
+                                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-bold">Thể Thao &amp; VH</span>
+                                </div>
+                                <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-1">
+                                            <span>Bóng đá sân cỏ nhân tạo</span>
+                                            <span>•</span>
+                                            <span>4 ngày trước</span>
+                                        </div>
+                                        <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                            Cách vận hành sơ đồ 2-3-1 hiệu quả trên sân bóng đá cỏ nhân tạo 7 người
+                                        </h3>
+                                        <p class="text-on-surface-variant line-clamp-2 mt-1.5 leading-relaxed">
+                                            Sự linh hoạt của hai tiền vệ cánh và vai trò cầm nhịp của tiền vệ trung tâm trong việc thoát pressing.
+                                        </p>
+                                    </div>
+                                    <div class="pt-3 mt-2 border-t flex items-center justify-between">
+                                        <span class="text-gray-400">Nguồn: thethaovanhoa.vn</span>
+                                        <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://thethaovanhoa.vn/" target="_blank" rel="noopener noreferrer">
+                                            <span>Xem bài</span>
+                                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Card 3: Chọn Vợt Pickleball (Báo Tuổi Trẻ) -->
+                            <article class="news-item bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group border border-gray-100 hover:shadow-md transition-all" data-category="pickleball" data-source="tuoitre">
+                                <div class="h-44 relative overflow-hidden">
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Vợt Pickleball" src="https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&q=80"/>
+                                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold">Tuổi Trẻ</span>
+                                </div>
+                                <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-1">
+                                            <span>Tư vấn dụng cụ</span>
+                                            <span>•</span>
+                                            <span>5 ngày trước</span>
+                                        </div>
+                                        <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                            Người mới chơi nên chọn vợt Pickleball chất liệu Graphite hay Carbon?
+                                        </h3>
+                                        <p class="text-on-surface-variant line-clamp-2 mt-1.5 leading-relaxed">
+                                            Phân tích trọng lượng vợt và độ dày lõi giúp người mới kiểm soát đường bóng tốt mà không bị đau khớp cổ tay.
+                                        </p>
+                                    </div>
+                                    <div class="pt-3 mt-2 border-t flex items-center justify-between">
+                                        <span class="text-gray-400">Nguồn: Tuổi Trẻ Thể Thao</span>
+                                        <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://tuoitre.vn/the-thao.htm" target="_blank" rel="noopener noreferrer">
+                                            <span>Xem bài</span>
+                                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Card 4: Giãn cơ phục hồi (Báo Sức Khỏe & Đời Sống / Thanh Niên) -->
+                            <article class="news-item bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group border border-gray-100 hover:shadow-md transition-all" data-category="health" data-source="thanhnien">
+                                <div class="h-44 relative overflow-hidden">
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Phục hồi cơ bắp" src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&q=80"/>
+                                    <span class="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-amber-600 text-white text-[10px] font-bold">Báo Thanh Niên</span>
+                                </div>
+                                <div class="p-4 flex flex-col justify-between flex-1 text-xs">
+                                    <div>
+                                        <div class="flex items-center gap-2 text-gray-400 text-[11px] mb-1">
+                                            <span>Y học thể thao</span>
+                                            <span>•</span>
+                                            <span>1 tuần trước</span>
+                                        </div>
+                                        <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                            Các bài tập giãn cơ sau ca thi đấu muộn giúp dân văn phòng tránh chấn thương
+                                        </h3>
+                                        <p class="text-on-surface-variant line-clamp-2 mt-1.5 leading-relaxed">
+                                            Hướng dẫn phục hồi cơ bắp sau khi chơi thể thao khung giờ 20h - 22h, phòng tránh căng cơ gân kheo và chuột rút ban đêm.
+                                        </p>
+                                    </div>
+                                    <div class="pt-3 mt-2 border-t flex items-center justify-between">
+                                        <span class="text-gray-400">Nguồn: Báo Thanh Niên Sức Khỏe</span>
+                                        <a class="text-primary font-bold hover:underline inline-flex items-center gap-0.5" href="https://thanhnien.vn/suc-khoe.html" target="_blank" rel="noopener noreferrer">
+                                            <span>Xem bài</span>
+                                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+
+                        </div>
+                    </div>
+
+                    <!-- Cột Phải: Bảng xếp hạng đọc nhiều & Đặt sân nhanh (4 cols) -->
+                    <aside class="lg:col-span-4 flex flex-col gap-6 sticky top-24">
+                        
+                        <!-- Widget: Đọc nhiều nhất trên báo chính thống -->
+                        <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-md border border-gray-100 flex flex-col gap-3">
+                            <div class="flex items-center justify-between pb-2 border-b">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-secondary text-[20px]">local_fire_department</span>
+                                    <h3 class="text-sm font-bold text-on-surface">Đọc nhiều nhất tuần</h3>
+                                </div>
+                                <span class="text-[10px] text-gray-400 uppercase font-semibold">Chính thống</span>
+                            </div>
+
+                            <div class="flex flex-col divide-y divide-gray-100 text-xs">
+                                <a class="py-2.5 flex items-start gap-3 group" href="https://vnexpress.net/the-thao" target="_blank" rel="noopener noreferrer">
+                                    <span class="text-2xl font-bold text-primary font-mono shrink-0 w-5">1</span>
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2">
+                                            Lịch thi đấu các giải thể thao phong trào lớn tại Hà Nội trong quý 4
+                                        </h4>
+                                        <span class="text-[10px] text-gray-400 mt-0.5 block">VnExpress • 8.4k lượt xem</span>
+                                    </div>
+                                </a>
+
+                                <a class="py-2.5 flex items-start gap-3 group" href="https://tuoitre.vn/the-thao.htm" target="_blank" rel="noopener noreferrer">
+                                    <span class="text-2xl font-bold text-primary font-mono shrink-0 w-5">2</span>
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2">
+                                            Quy chuẩn sân thi đấu Pickleball chuẩn quốc tế và chi phí xây dựng
+                                        </h4>
+                                        <span class="text-[10px] text-gray-400 mt-0.5 block">Tuổi Trẻ Online • 6.2k lượt xem</span>
+                                    </div>
+                                </a>
+
+                                <a class="py-2.5 flex items-start gap-3 group" href="https://thanhnien.vn/the-thao.html" target="_blank" rel="noopener noreferrer">
+                                    <span class="text-2xl font-bold text-gray-400 font-mono shrink-0 w-5">3</span>
+                                    <div class="flex-1">
+                                        <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors line-clamp-2">
+                                            Kinh nghiệm chọn giày đá bóng sân cỏ nhân tạo chống lật sơ mi
+                                        </h4>
+                                        <span class="text-[10px] text-gray-400 mt-0.5 block">Báo Thanh Niên • 5.1k lượt xem</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Banner Đặt sân nhanh qua SportBooking -->
+                        <div class="rounded-2xl p-5 bg-gradient-to-br from-primary via-primary-container to-primary text-white shadow-md flex flex-col gap-3">
+                            <span class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-white">
+                                <span class="material-symbols-outlined text-[22px]">sports_soccer</span>
+                            </span>
+                            <div>
+                                <h3 class="text-base font-bold text-white">Tìm sân tập luyện ngay hôm nay</h3>
+                                <p class="text-xs text-white/90 mt-1 leading-relaxed">
+                                    Hơn 180+ cụm sân cầu lông, bóng đá và pickleball mở đặt chỗ trực tuyến tại Hà Nội.
+                                </p>
+                            </div>
+                            <a class="w-full py-2.5 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-xs text-center transition-all shadow-md mt-1" href="tim-san.html">
+                                Đặt sân ngay
+                            </a>
+                        </div>
+
+                    </aside>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER ĐỒNG BỘ NĂM 2026 -->
+    <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
+        <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex flex-col gap-1 text-left">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-base text-primary">SportBooking Hà Nội</span>
+                    <span class="text-on-surface-variant text-xs">| Nền tảng đặt sân thể thao thông minh</span>
+                </div>
+                <p class="text-on-surface-variant text-xs">Hệ thống đặt sân thể thao SportBooking Hà Nội - Đặt sân trực tuyến nhanh chóng, tiện lợi &amp; chuẩn xác</p>
+                <p class="text-on-surface text-sm">Hotline hỗ trợ 24/7: <span class="font-bold text-secondary">1900 8899</span></p>
+            </div>
+            <div class="flex flex-col md:items-end gap-1.5">
+                <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
+                    <a class="hover:text-primary transition-colors" href="ho-tro-khach-hang.html">Hỗ trợ khách hàng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
+                    <span>•</span>
+                    <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+                </div>
+                <p class="text-xs text-on-surface-variant">© 2026 SportBooking Hà Nội. Tất cả các quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT TÌM KIẾM & BỘ LỌC BÀI VIẾT THỜI GIAN THỰC -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('newsSearchInput');
+            const sourceSelect = document.getElementById('newsSourceFilter');
+            const pills = document.querySelectorAll('.cat-pill');
+            const articles = document.querySelectorAll('.news-item, .news-card');
+            const resultCounter = document.getElementById('displayFilterResultCount');
+
+            let currentCategory = 'all';
+            let currentSource = 'all';
+            let currentKeyword = '';
+
+            function filterNews() {
+                let visibleCount = 0;
+
+                articles.forEach(article => {
+                    const cat = article.getAttribute('data-category') || '';
+                    const src = article.getAttribute('data-source') || '';
+                    const text = article.innerText.toLowerCase();
+
+                    const matchCat = (currentCategory === 'all' || cat === currentCategory);
+                    const matchSrc = (currentSource === 'all' || src === currentSource);
+                    const matchText = (!currentKeyword || text.includes(currentKeyword));
+
+                    if (matchCat && matchSrc && matchText) {
+                        article.style.display = article.classList.contains('news-card') ? (article.classList.contains('lg:col-span-7') ? 'flex' : 'flex') : 'flex';
+                        visibleCount++;
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+
+                if (resultCounter) {
+                    resultCounter.innerText = `Hiển thị ${visibleCount} bài viết phù hợp`;
+                }
+            }
+
+            // Lọc theo từ khóa tìm kiếm
+            if (searchInput) {
+                searchInput.addEventListener('input', function (e) {
+                    currentKeyword = e.target.value.trim().toLowerCase();
+                    filterNews();
+                });
+            }
+
+            // Lọc theo cơ quan báo chí
+            if (sourceSelect) {
+                sourceSelect.addEventListener('change', function (e) {
+                    currentSource = e.target.value;
+                    filterNews();
+                });
+            }
+
+            // Lọc theo tag bộ môn
+            pills.forEach(pill => {
+                pill.addEventListener('click', function () {
+                    pills.forEach(p => {
+                        p.className = 'cat-pill px-4 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer';
+                    });
+                    this.className = 'cat-pill active px-4 py-1.5 rounded-full bg-primary text-white text-xs font-bold transition-all shadow-sm cursor-pointer flex items-center gap-1';
+
+                    currentCategory = this.getAttribute('data-category');
+                    filterNews();
+                });
+            });
+        });
+    </script>
+
+    <!-- NHÚNG FILE AUTH ĐỂ ĐỒNG BỘ THÔNG TIN USER TỪ LOCALSTORAGE -->
+    <script src="auth.js"></script>
+</body>
+</html>
