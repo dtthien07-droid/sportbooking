@@ -527,6 +527,25 @@
 
     <!-- SCRIPT TÌM KIẾM & BỘ LỌC BÀI VIẾT THỜI GIAN THỰC -->
     <script>
+        fetch('/api/facilities')
+    .then(res => res.json())
+    .then(data => {
+        if (data && data.length > 0) {
+            allLoadedFacilities = data;
+            
+            // Vẽ toàn bộ 29 sân (tự động nhận diện hàm vẽ của tim-san.html)
+            if (typeof renderFacilities === 'function') {
+                renderFacilities(allLoadedFacilities);
+            } else if (typeof renderCourts === 'function') {
+                renderCourts(allLoadedFacilities);
+            } else if (typeof applyFilterAndRender === 'function') {
+                applyFilterAndRender();
+            }
+        }
+    })
+    .catch(() => {
+        console.warn('Không kết nối được API, sử dụng danh sách nội bộ');
+    });
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('newsSearchInput');
             const sourceSelect = document.getElementById('newsSourceFilter');

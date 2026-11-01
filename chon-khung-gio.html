@@ -733,9 +733,15 @@
         }
 
         function getBookedSlots() {
-            try { return JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY)) || []; } catch (e) { return []; }
-        }
-
+    try {
+        const raw = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY));
+        if (Array.isArray(raw)) return raw;
+        if (raw && typeof raw === 'object') return Object.keys(raw).map(k => ({ key: k }));
+        return [];
+    } catch (e) {
+        return [];
+    }
+}
         function saveBookedSlots(slots) {
             localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(slots));
         }
