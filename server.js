@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -59,7 +60,7 @@ const db = mysql.createPool({
     host: 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
     port: 4000,
     user: '2E2iD6hpijCUELF.root',
-    password: 'KzMc4wxhv9CC9UE6',
+    password: 'ThOX2MSY0A5LNZo2',
     database: 'test',
     waitForConnections: true,
     connectionLimit: 10,
