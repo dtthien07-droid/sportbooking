@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -6,29 +6,19 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(cors());
-
-const cookieParser = require('cookie-parser');
-
 app.use(express.json());
-app.use(cookieParser());
+
+// Phục vụ các file HTML giao diện
 app.use(express.static(__dirname, { index: false }));
 
-// Trang mặc định
+// Trang mặc định: Dẫn vào đăng nhập (trang đăng nhập sẽ tự chuyển vào trang chủ nếu user đã đăng nhập)
 app.get('/', (req, res) => {
-  if (req.cookies.token) {
-    res.redirect('/trangchu-user.html');   // đã đăng nhập
-  } else {
-    res.redirect('/dang-nhap.html');       // chưa đăng nhập
-  }
+    res.redirect('/dang-nhap.html');
 });
+
 // =========================================================================
 // 1. CẤU HÌNH GỬI EMAIL TỰ ĐỘNG QUA GMAIL (NODEMAILER)
 // =========================================================================
-// 💡 HƯỚNG DẪN LẤY MẬT KHẨU ỨNG DỤNG GMAIL (16 ký tự):
-// 1. Vào Tài khoản Google của bạn -> Bảo mật (Security) -> Bật Xác minh 2 bước.
-// 2. Tìm mục "Mật khẩu ứng dụng" (App Passwords).
-// 3. Đặt tên là "SportBooking" rồi bấm Tạo -> Google sẽ cấp 1 mã 16 chữ cái (VD: abcd efgh ijkl mnop).
-// 4. Dán email của bạn vào EMAIL_USER và mã 16 chữ vào EMAIL_PASS bên dưới:
 const EMAIL_CONFIG = {
     user: 'your-email@gmail.com',         // 👈 Thay bằng Gmail của bạn (dùng để gửi thư)
     pass: 'your-16-char-app-password'    // 👈 Thay bằng Mật khẩu ứng dụng 16 ký tự của Google
@@ -46,12 +36,10 @@ const transporter = nodemailer.createTransport({
 transporter.verify((error, success) => {
     if (error) {
         console.warn('⚠️ Cảnh báo dịch vụ gửi Email: Chưa cấu hình đúng Gmail hoặc Mật khẩu ứng dụng.');
-        console.warn('👉 Chi tiết: Điền EMAIL_CONFIG.user và EMAIL_CONFIG.pass trong file server.js để gửi mail thật.');
     } else {
         console.log('✅ Hệ thống Email (Nodemailer) đã sẵn sàng gửi thư!');
     }
 });
-
 
 // =========================================================================
 // 2. CẤU HÌNH KẾT NỐI DATABASE MYSQL (TỰ ĐỘNG RECONNECT TRÁNH RỚT MẠNG)
@@ -78,9 +66,8 @@ db.getConnection((err, connection) => {
         return;
     }
     console.log('✅ Đã kết nối thành công tới Database TiDB Cloud (MySQL)!');
-    connection.release(); // Trả kết nối về bể chờ
+    connection.release();
 });
-
 
 // =========================================================================
 // 3. API KIỂM TRA TRẠNG THÁI MÁY CHỦ & DATABASE
@@ -100,7 +87,6 @@ app.get('/api/test-db', (req, res) => {
 
 // =========================================================================
 // 4. API TEST GỬI THỬ EMAIL VỀ HÒM THƯ CÁ NHÂN
-// Truy cập: http://localhost:3000/api/test-email?to=dtthien07@gmail.com
 // =========================================================================
 app.get('/api/test-email', async (req, res) => {
     const toEmail = req.query.to || 'dtthien07@gmail.com';
@@ -124,24 +110,13 @@ app.get('/api/test-email', async (req, res) => {
 });
 
 // =========================================================================
-// 5. API GỬI EMAIL XÁC NHẬN ĐẶT SÂN THÀNH CÔNG (CHI TIẾT VÉ & QR CODE)
-// Front-end gọi API này ngay sau khi đặt cọc / thanh toán thành công
+// 5. API GỬI EMAIL XÁC NHẬN ĐẶT SÂN THÀNH CÔNG
 // =========================================================================
 app.post('/api/send-booking-email', async (req, res) => {
     const {
-        customerEmail,
-        customerName,
-        customerPhone,
-        orderId,
-        venueName,
-        courtNumber,
-        address,
-        timeSlot,
-        date,
-        totalPrice,
-        depositPaid,
-        remainingAmount,
-        isMatchMaker
+        customerEmail, customerName, customerPhone, orderId,
+        venueName, courtNumber, address, timeSlot, date,
+        totalPrice, depositPaid, remainingAmount, isMatchMaker
     } = req.body;
 
     const recipient = customerEmail || 'dtthien07@gmail.com';
@@ -176,74 +151,31 @@ app.post('/api/send-booking-email', async (req, res) => {
     </head>
     <body>
         <div class="container">
-            <!-- Header -->
             <div class="header">
                 <span class="badge">ĐÃ XÁC NHẬN GIỮ SÂN</span>
                 <h1 style="margin: 0; font-size: 24px; font-weight: 800;">ĐẶT SÂN THÀNH CÔNG!</h1>
                 <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px;">Mã đặt sân: <strong>${bookingCode}</strong></p>
             </div>
-
-            <!-- Content -->
             <div class="content">
                 <p style="font-size: 15px; color: #334155; margin-top: 0;">
                     Xin chào <strong>${customerName || 'Quý khách'}</strong>,<br>
                     Lịch đặt sân của bạn đã được xác nhận chính thức trên hệ thống SportBooking. Dưới đây là thông tin chi tiết:
                 </p>
-
-                <!-- Ticket Card -->
                 <div class="ticket-card">
                     <div style="font-size: 16px; font-weight: 800; color: #006b2c; margin-bottom: 12px;">
                         🏟️ ${finalVenue}
                     </div>
-                    <div class="row">
-                        <span class="label">Vị trí sân:</span>
-                        <span class="value">${finalCourt}</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Ngày chơi:</span>
-                        <span class="value">${finalDate}</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Khung giờ:</span>
-                        <span class="value" style="color: #006b2c;">${finalTime}</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Địa chỉ sân:</span>
-                        <span class="value" style="max-width: 60%;">${address || 'Hà Nội'}</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Người đặt:</span>
-                        <span class="value">${customerName || 'Trúc Lam'} (${customerPhone || '0838491234'})</span>
-                    </div>
-                    <div class="row">
-                        <span class="label">Số tiền đã cọc/trả:</span>
-                        <span class="value" style="color: #166534; font-size: 16px;">${finalDeposit}</span>
-                    </div>
-                    ${isMatchMaker ? `
-                    <div class="row" style="background-color: #fff7ed; padding: 8px; border-radius: 6px;">
-                        <span class="label" style="color: #c2410c;">Chế độ ghép đối:</span>
-                        <span class="value" style="color: #c2410c;">ĐANG BẬT TÌM ĐỐI THỦ</span>
-                    </div>` : ''}
+                    <div class="row"><span class="label">Vị trí sân:</span><span class="value">${finalCourt}</span></div>
+                    <div class="row"><span class="label">Ngày chơi:</span><span class="value">${finalDate}</span></div>
+                    <div class="row"><span class="label">Khung giờ:</span><span class="value" style="color: #006b2c;">${finalTime}</span></div>
+                    <div class="row"><span class="label">Địa chỉ sân:</span><span class="value" style="max-width: 60%;">${address || 'Hà Nội'}</span></div>
+                    <div class="row"><span class="label">Người đặt:</span><span class="value">${customerName || 'Trúc Lam'} (${customerPhone || '0838491234'})</span></div>
+                    <div class="row"><span class="label">Số tiền đã cọc/trả:</span><span class="value" style="color: #166534; font-size: 16px;">${finalDeposit}</span></div>
                 </div>
-
-                <!-- QR Check-in Box -->
                 <div class="qr-box">
                     <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #334155;">MÃ QR CHECK-IN TỰ ĐỘNG TẠI QUẦY SÂN</p>
                     <img src="${qrCodeUrl}" alt="Mã QR check-in" class="qr-img">
-                    <p style="margin: 8px 0 0 0; font-size: 11px; color: #64748b;">Xuất trình mã này cho lễ tân khi đến sân để nhận slot nhanh chóng.</p>
                 </div>
-
-                <div style="text-align: center;">
-                    <a href="http://localhost:3000/chi-tiet-don-dat-san.html?id=${bookingCode.replace('#', '')}" class="btn">
-                        Xem chi tiết đơn & Quản lý lịch
-                    </a>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                <p style="margin: 0 0 6px 0;">Cần hỗ trợ gấp? Hotline hỗ trợ: <strong>1900 6868</strong> (8:00 - 22:00 hàng ngày)</p>
-                <p style="margin: 0;">© 2026 SportBooking Vietnam. Nền tảng đặt sân thể thao thông minh hàng đầu.</p>
             </div>
         </div>
     </body>
@@ -257,22 +189,10 @@ app.post('/api/send-booking-email', async (req, res) => {
             subject: `✅ Xác nhận đặt sân thành công [${bookingCode}] - ${finalVenue}`,
             html: emailHtml
         };
-
-        const info = await transporter.sendMail(mailOptions);
-        console.log(`✉️ Đã gửi email xác nhận đặt sân tới: ${recipient} (Message ID: ${info.messageId})`);
-
-        res.json({
-            success: true,
-            message: `Email xác nhận đã gửi thành công về hòm thư ${recipient}!`,
-            messageId: info.messageId
-        });
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: `Email xác nhận đã gửi thành công về hòm thư ${recipient}!` });
     } catch (err) {
-        console.error('❌ Lỗi khi gửi email:', err);
-        res.status(500).json({
-            success: false,
-            error: 'Không thể gửi email. Vui lòng kiểm tra lại cấu hình EMAIL_CONFIG trong server.js.',
-            details: err.message
-        });
+        res.status(500).json({ success: false, error: err.message });
     }
 });
 
@@ -281,7 +201,7 @@ app.post('/api/send-booking-email', async (req, res) => {
 // =========================================================================
 app.get('/api/facilities', (req, res) => {
     const { q, district, area, sport } = req.query;
-    
+   
     let sql = `
         SELECT DISTINCT
             f.id, f.name, f.address, f.area, f.phone,
@@ -305,8 +225,8 @@ app.get('/api/facilities', (req, res) => {
 
     const targetArea = district || area;
     if (targetArea) {
-        sql += ` AND f.area LIKE ?`;
-        params.push(`%${targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa')}%`);
+        sql += ` AND (f.area LIKE ? OR f.district_name LIKE ?)`;
+        params.push(`%${targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa')}%`, `%${targetArea}%`);
     }
 
     if (sport && sport !== 'all') {
@@ -357,7 +277,6 @@ app.get('/api/facilities/:id', (req, res) => {
         }
 
         const facility = facilityResults[0];
-
         const sqlCourts = `
             SELECT id, name, description
             FROM courts
@@ -365,11 +284,7 @@ app.get('/api/facilities/:id', (req, res) => {
             ORDER BY name ASC
         `;
         db.query(sqlCourts, [facility.id], (courtErr, courtsResults) => {
-            if (courtErr) {
-                facility.sub_courts = [];
-            } else {
-                facility.sub_courts = courtsResults;
-            }
+            facility.sub_courts = courtErr ? [] : courtsResults;
             res.json(facility);
         });
     });
@@ -390,10 +305,7 @@ app.get('/api/facilities/:id/slots', (req, res) => {
         ORDER BY start_time ASC
     `;
     db.query(sql, [facilityId], (err, results) => {
-        if (err) {
-            console.error('Lỗi truy vấn time_slots:', err);
-            return res.status(500).json({ error: err.message });
-        }
+        if (err) return res.status(500).json({ error: err.message });
         res.json(results);
     });
 });
@@ -463,12 +375,10 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // =========================================================================
-// 11. KHỞI CHẠY SERVER BACKEND
+// 11. KHỞI CHẠY SERVER BACKEND (TƯƠNG THÍCH HOÀN TOÀN VỚI RENDER)
 // =========================================================================
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
-    console.log(`📧 Test gửi mail tại: http://localhost:${PORT}/api/test-email?to=dtthien07@gmail.com`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server đang chạy tại port ${PORT}`);
+    console.log(`📧 Test gửi mail tại: /api/test-email?to=dtthien07@gmail.com`);
 });
-
-
