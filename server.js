@@ -207,7 +207,43 @@ app.post('/api/auth/register', (req, res) => {
         });
     });
 });
+// Đảm bảo ở đầu file đã require bcrypt:
+const bcrypt = require('bcrypt'); // hoặc require('bcryptjs')
 
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // 1. Luôn dùng .trim() để tránh lỗi khoảng trắng vô hình
+        const cleanEmail = email ? email.trim().toLowerCase() : '';
+        const cleanPassword = password ? password.trim() : '';
+
+        // 2. Tìm tài khoản trong Database theo Email
+        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [cleanEmail]);
+        if (users.length === 0) {
+            return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng!' });
+        }
+
+        const user = users[0];
+
+        // 3. ĐIỂM SỬA CHÍNH: Dùng bcrypt.compare thay vì so sánh dấu ===
+        const isMatch = await bcrypt.compare(cleanPassword, user.password_hash);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng!' });
+        }
+
+        // 4. Đăng nhập thành công -> Trả về thông tin user
+        delete user.password_hash;
+        return res.status(200).json({
+            message: 'Đăng nhập thành công!',
+            user: user
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Lỗi máy chủ!' });
+    }
+});
 // API AUTH LOGIN
 app.post('/api/auth/login', (req, res) => {
     const { emailOrPhone, password } = req.body;
