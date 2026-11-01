@@ -6,8 +6,6 @@ const nodemailer = require('nodemailer');
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Phục vụ các file HTML giao diện
 app.use(express.static(__dirname, { index: false }));
 
 // Trang mặc định: Dẫn vào đăng nhập
@@ -15,12 +13,10 @@ app.get('/', (req, res) => {
     res.redirect('/dang-nhap.html');
 });
 
-// =========================================================================
-// 1. CẤU HÌNH GỬI EMAIL TỰ ĐỘNG QUA GMAIL (NODEMAILER)
-// =========================================================================
+// CẤU HÌNH GỬI EMAIL TỰ ĐỘNG
 const EMAIL_CONFIG = {
-    user: 'your-email@gmail.com',         // 👈 Thay bằng Gmail của bạn (dùng để gửi thư)
-    pass: 'your-16-char-app-password'    // 👈 Thay bằng Mật khẩu ứng dụng 16 ký tự của Google
+    user: 'your-email@gmail.com',
+    pass: 'your-16-char-app-password'
 };
 
 const transporter = nodemailer.createTransport({
@@ -31,18 +27,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Kiểm tra kết nối dịch vụ Email khi khởi động server
-transporter.verify((error, success) => {
-    if (error) {
-        console.warn('⚠️ Cảnh báo dịch vụ gửi Email: Chưa cấu hình đúng Gmail hoặc Mật khẩu ứng dụng.');
-    } else {
-        console.log('✅ Hệ thống Email (Nodemailer) đã sẵn sàng gửi thư!');
-    }
-});
-
-// =========================================================================
-// 2. CẤU HÌNH KẾT NỐI DATABASE MYSQL (TỰ ĐỘNG RECONNECT TRÁNH RỚT MẠNG)
-// =========================================================================
+// CẤU HÌNH KẾT NỐI TIDB CLOUD
 const db = mysql.createPool({
     host: 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
     port: 4000,
@@ -58,7 +43,6 @@ const db = mysql.createPool({
     }
 });
 
-// Kiểm tra kết nối ban đầu
 db.getConnection((err, connection) => {
     if (err) {
         console.error('❌ Lỗi kết nối TiDB Cloud:', err.message);
@@ -68,14 +52,10 @@ db.getConnection((err, connection) => {
     connection.release();
 });
 
-// =========================================================================
-// 3. API KIỂM TRA TRẠNG THÁI MÁY CHỦ & DATABASE
-// =========================================================================
+// API TEST DATABASE
 app.get('/api/test-db', (req, res) => {
     db.query('SELECT COUNT(*) AS total_facilities FROM facilities', (err, results) => {
-        if (err) {
-            return res.status(500).json({ success: false, error: err.message });
-        }
+        if (err) return res.status(500).json({ success: false, error: err.message });
         res.json({
             success: true,
             message: 'Kết nối Database MySQL hoạt động bình thường!',
@@ -84,144 +64,30 @@ app.get('/api/test-db', (req, res) => {
     });
 });
 
-// =========================================================================
-// 4. API TEST GỬI THỬ EMAIL VỀ HÒM THƯ CÁ NHÂN
-// =========================================================================
-app.get('/api/test-email', async (req, res) => {
-    const toEmail = req.query.to || 'dtthien07@gmail.com';
-    try {
-        await transporter.sendMail({
-            from: `"SportBooking Vietnam" <${EMAIL_CONFIG.user}>`,
-            to: toEmail,
-            subject: '✅ [SportBooking] Thử nghiệm gửi email xác nhận đặt sân thành công',
-            html: `
-                <div style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
-                    <h2 style="color: #006b2c;">Chào mừng bạn đến với SportBooking!</h2>
-                    <p>Hệ thống gửi email tự động từ máy chủ của bạn đã hoạt động chuẩn xác.</p>
-                    <p>Thư thử nghiệm gửi tới hòm thư cá nhân: <strong>${toEmail}</strong></p>
-                </div>
-            `
-        });
-        res.json({ success: true, message: `Đã gửi email thử nghiệm thành công tới ${toEmail}!` });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// =========================================================================
-// 5. API GỬI EMAIL XÁC NHẬN ĐẶT SÂN THÀNH CÔNG
-// =========================================================================
-app.post('/api/send-booking-email', async (req, res) => {
-    const {
-        customerEmail, customerName, customerPhone, orderId,
-        venueName, courtNumber, address, timeSlot, date,
-        totalPrice, depositPaid, remainingAmount, isMatchMaker
-    } = req.body;
-
-    const recipient = customerEmail || 'dtthien07@gmail.com';
-    const bookingCode = orderId || ('#SB-' + Math.floor(10000 + Math.random() * 90000));
-    const finalVenue = venueName || 'Sân Pickleball X20';
-    const finalCourt = courtNumber || 'Sân Acrylic 01';
-    const finalDate = date || '01/11/2026';
-    const finalTime = timeSlot || '13:00 - 14:00';
-    const finalDeposit = depositPaid || '152.000đ';
-    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=SPORTBOOKING-${bookingCode.replace('#', '')}`;
-
-    const emailHtml = `
-    <!DOCTYPE html>
-    <html lang="vi">
-    <head>
-        <meta charset="utf-8">
-        <style>
-            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
-            .container { max-width: 600px; margin: 24px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; }
-            .header { background: linear-gradient(135deg, #006b2c 0%, #00873a 100%); padding: 32px 24px; text-align: center; color: #ffffff; }
-            .badge { display: inline-block; background-color: #dcfce7; color: #166534; font-weight: bold; font-size: 12px; padding: 4px 12px; border-radius: 9999px; margin-bottom: 12px; }
-            .content { padding: 28px 24px; }
-            .ticket-card { background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; padding: 20px; margin: 20px 0; }
-            .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
-            .label { color: #64748b; font-weight: 500; }
-            .value { color: #0f172a; font-weight: 700; text-align: right; }
-            .qr-box { text-align: center; margin: 24px 0; padding: 16px; background-color: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; }
-            .qr-img { width: 140px; height: 140px; border-radius: 8px; }
-            .footer { background-color: #f1f5f9; padding: 20px 24px; text-align: center; font-size: 12px; color: #64748b; }
-            .btn { display: inline-block; background-color: #006b2c; color: #ffffff !important; text-decoration: none; font-weight: bold; padding: 12px 28px; border-radius: 10px; margin-top: 16px; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <span class="badge">ĐÃ XÁC NHẬN GIỮ SÂN</span>
-                <h1 style="margin: 0; font-size: 24px; font-weight: 800;">ĐẶT SÂN THÀNH CÔNG!</h1>
-                <p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 14px;">Mã đặt sân: <strong>${bookingCode}</strong></p>
-            </div>
-            <div class="content">
-                <p style="font-size: 15px; color: #334155; margin-top: 0;">
-                    Xin chào <strong>${customerName || 'Quý khách'}</strong>,<br>
-                    Lịch đặt sân của bạn đã được xác nhận chính thức trên hệ thống SportBooking. Dưới đây là thông tin chi tiết:
-                </p>
-                <div class="ticket-card">
-                    <div style="font-size: 16px; font-weight: 800; color: #006b2c; margin-bottom: 12px;">
-                        🏟️ ${finalVenue}
-                    </div>
-                    <div class="row"><span class="label">Vị trí sân:</span><span class="value">${finalCourt}</span></div>
-                    <div class="row"><span class="label">Ngày chơi:</span><span class="value">${finalDate}</span></div>
-                    <div class="row"><span class="label">Khung giờ:</span><span class="value" style="color: #006b2c;">${finalTime}</span></div>
-                    <div class="row"><span class="label">Địa chỉ sân:</span><span class="value" style="max-width: 60%;">${address || 'Hà Nội'}</span></div>
-                    <div class="row"><span class="label">Người đặt:</span><span class="value">${customerName || 'Trúc Lam'} (${customerPhone || '0838491234'})</span></div>
-                    <div class="row"><span class="label">Số tiền đã cọc/trả:</span><span class="value" style="color: #166534; font-size: 16px;">${finalDeposit}</span></div>
-                </div>
-                <div class="qr-box">
-                    <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #334155;">MÃ QR CHECK-IN TỰ ĐỘNG TẠI QUẦY SÂN</p>
-                    <img src="${qrCodeUrl}" alt="Mã QR check-in" class="qr-img">
-                </div>
-            </div>
-        </div>
-    </body>
-    </html>
-    `;
-
-    try {
-        const mailOptions = {
-            from: `"SportBooking Vietnam" <${EMAIL_CONFIG.user}>`,
-            to: recipient,
-            subject: `✅ Xác nhận đặt sân thành công [${bookingCode}] - ${finalVenue}`,
-            html: emailHtml
-        };
-        await transporter.sendMail(mailOptions);
-        res.json({ success: true, message: `Email xác nhận đã gửi thành công về hòm thư ${recipient}!` });
-    } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
-    }
-});
-
-// // =========================================================================
-// 6. API LẤY DANH SÁCH CỤM SÂN (LẤY TRỰC TIẾP 29 SÂN TỪ TIDB CLOUD)
-// =========================================================================
+// API LẤY DANH SÁCH 29 CỤM SÂN (LẤY TRỰC TIẾP TỪ BẢNG FACILITIES)
 app.get('/api/facilities', (req, res) => {
     const { q, district, area, sport } = req.query;
-   
-    let sql = `SELECT * FROM facilities WHERE 1=1`;
+    let sql = 'SELECT * FROM facilities WHERE 1=1';
     const params = [];
 
     if (q) {
-        sql += ` AND (name LIKE ? OR address LIKE ?)`;
+        sql += ' AND (name LIKE ? OR address LIKE ?)';
         params.push(`%${q}%`, `%${q}%`);
     }
 
     const targetArea = district || area;
     if (targetArea) {
-        sql += ` AND (district_name LIKE ? OR district LIKE ?)`;
+        sql += ' AND (district_name LIKE ? OR district LIKE ?)';
         params.push(`%${targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa')}%`, `%${targetArea}%`);
     }
 
     if (sport && sport !== 'all') {
-        sql += ` AND (sport = ? OR sport_name LIKE ?)`;
+        sql += ' AND (sport = ? OR sport_name LIKE ?)';
         const sportKeyword = sport === 'soccer' ? 'soccer' : (sport === 'badminton' ? 'badminton' : 'pickleball');
         params.push(sportKeyword, `%${sport}%`);
     }
 
-    sql += ` ORDER BY id ASC`;
+    sql += ' ORDER BY id ASC';
 
     db.query(sql, params, (err, results) => {
         if (err) {
@@ -236,19 +102,17 @@ app.get('/api/facilities', (req, res) => {
             closing_time: f.close_time || '23:00',
             base_price: f.price_min || 100000,
             price: f.price_min || 100000,
+            rating: f.rating || 4.5,
             google_maps_url: f.map_link || 'https://maps.google.com'
         }));
         res.json(mapped);
     });
 });
 
-// =========================================================================
-// 7. API LẤY CHI TIẾT 1 CƠ SỞ THỂ THAO
-// =========================================================================
+// API LẤY CHI TIẾT 1 CƠ SỞ
 app.get('/api/facilities/:id', (req, res) => {
     const facilityId = req.params.id;
-
-    const sqlFacility = `SELECT * FROM facilities WHERE (id = ? OR name LIKE ?) LIMIT 1`;
+    const sqlFacility = 'SELECT * FROM facilities WHERE (id = ? OR name LIKE ?) LIMIT 1';
     const searchKeyword = `%${facilityId.replace(/-/g, ' ').replace('san bong ', '').replace('clb ', '')}%`;
 
     db.query(sqlFacility, [facilityId, searchKeyword], (err, facilityResults) => {
@@ -266,58 +130,77 @@ app.get('/api/facilities/:id', (req, res) => {
             closing_time: raw.close_time || '23:00',
             base_price: raw.price_min || 100000,
             price: raw.price_min || 100000,
+            rating: raw.rating || 4.5,
             google_maps_url: raw.map_link || 'https://maps.google.com'
         };
 
-        const sqlCourts = `SELECT id, name, description FROM courts WHERE facility_id = ? ORDER BY name ASC`;
-        db.query(sqlCourts, [facility.id], (courtErr, courtsResults) => {
-            facility.sub_courts = courtErr ? [] : (courtsResults || []);
-            res.json(facility);
-        });
+        const sport = facility.sport || 'soccer';
+        if (sport === 'soccer') {
+            facility.sub_courts = [
+                { id: 'c1', name: 'Sân cỏ 7 - Số 1', description: 'Mặt cỏ 50mm êm chân • Đèn cao áp 400W' },
+                { id: 'c2', name: 'Sân cỏ 7 - Số 2', description: 'Kích thước chuẩn 30m x 50m • Lưới an toàn' },
+                { id: 'c3', name: 'Sân cỏ 7 - Số 3', description: 'Sân đối kháng tiêu chuẩn' }
+            ];
+        } else if (sport === 'badminton') {
+            facility.sub_courts = [
+                { id: 'c1', name: 'Sân Thảm 01', description: 'Thảm PVC chống trượt 4.5mm • Đèn chống chói' },
+                { id: 'c2', name: 'Sân Thảm 02', description: 'Trần cao 9m thoáng đãng • Ghế chờ riêng' },
+                { id: 'c3', name: 'Sân Thảm 03', description: 'VIP Thi Đấu chuẩn BWF' }
+            ];
+        } else {
+            facility.sub_courts = [
+                { id: 'c1', name: 'Sân Acrylic 01', description: 'Sơn phủ 5 lớp giảm chấn • Kẻ line chuẩn' },
+                { id: 'c2', name: 'Sân Acrylic 02', description: 'Có mái che • Đèn LED chuyên dụng' },
+                { id: 'c3', name: 'Sân Acrylic 03', description: 'Sân Đôi VIP thi đấu' }
+            ];
+        }
+        res.json(facility);
     });
 });
 
-// =========================================================================
-// 8. API LẤY DANH SÁCH KHUNG GIỜ VÀ GIÁ CỦA 1 CƠ SỞ
-// =========================================================================
+// API LẤY KHUNG GIỜ VÀ GIÁ
 app.get('/api/facilities/:id/slots', (req, res) => {
     const facilityId = req.params.id;
-    const sql = `
-        SELECT id, facility_id,
-               TIME_FORMAT(start_time, '%H:%i') AS start_time,
-               TIME_FORMAT(end_time, '%H:%i') AS end_time,
-               price, is_peak
-        FROM time_slots
-        WHERE facility_id = ? AND is_active = TRUE
-        ORDER BY start_time ASC
-    `;
-    db.query(sql, [facilityId], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+    db.query('SELECT * FROM facilities WHERE id = ? LIMIT 1', [facilityId], (err, results) => {
+        const fac = (results && results[0]) ? results[0] : {};
+        const openStr = fac.open_time || '06:00';
+        const closeStr = fac.close_time || '23:00';
+        const basePrice = fac.price_min || 100000;
+        const peakPrice = Math.round((basePrice * 1.35) / 10000) * 10000;
+
+        let startH = parseInt(openStr.split(':')[0], 10) || 6;
+        let endH = parseInt(closeStr.split(':')[0], 10) || 23;
+        if (endH <= startH) endH = 23;
+
+        const slots = [];
+        for (let h = startH; h < endH; h++) {
+            const isPeak = (h >= 17 && h < 21);
+            slots.push({
+                id: `slot_${facilityId}_${h}`,
+                facility_id: facilityId,
+                start_time: String(h).padStart(2, '0') + ':00',
+                end_time: String(h + 1).padStart(2, '0') + ':00',
+                price: isPeak ? peakPrice : basePrice,
+                is_peak: isPeak
+            });
+        }
+        res.json(slots);
     });
 });
 
-// =========================================================================
-// 9. API ĐĂNG KÝ TÀI KHOẢN MỚI
-// =========================================================================
+// API AUTH REGISTER
 app.post('/api/auth/register', (req, res) => {
     const { full_name, email, phone, password } = req.body;
-
     if (!full_name || !email || !phone || !password) {
         return res.status(400).json({ error: 'Vui lòng điền đầy đủ họ tên, email, SĐT và mật khẩu!' });
     }
-
-    const checkUserSql = 'SELECT id FROM users WHERE email = ? OR phone = ?';
-    db.query(checkUserSql, [email, phone], (err, users) => {
+    const checkSql = 'SELECT id FROM users WHERE email = ? OR phone = ?';
+    db.query(checkSql, [email, phone], (err, users) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (users.length > 0) {
+        if (users && users.length > 0) {
             return res.status(400).json({ error: 'Email hoặc số điện thoại này đã được đăng ký tài khoản!' });
         }
-
-        const insertSql = `
-            INSERT INTO users (id, full_name, email, phone, password_hash, role)
-            VALUES (UUID(), ?, ?, ?, ?, 'USER')
-        `;
+        const insertSql = 'INSERT INTO users (id, full_name, email, phone, password_hash, role) VALUES (UUID(), ?, ?, ?, ?, "USER")';
         db.query(insertSql, [full_name, email, phone, password], (insertErr) => {
             if (insertErr) return res.status(500).json({ error: insertErr.message });
             res.status(201).json({ success: true, message: 'Đăng ký tài khoản thành công!' });
@@ -325,27 +208,18 @@ app.post('/api/auth/register', (req, res) => {
     });
 });
 
-// =========================================================================
-// 10. API ĐĂNG NHẬP TÀI KHOẢN
-// =========================================================================
+// API AUTH LOGIN
 app.post('/api/auth/login', (req, res) => {
     const { emailOrPhone, password } = req.body;
-
     if (!emailOrPhone || !password) {
         return res.status(400).json({ error: 'Vui lòng nhập tài khoản (Email/SĐT) và mật khẩu!' });
     }
-
-    const loginSql = `
-        SELECT id, full_name, email, phone, role
-        FROM users
-        WHERE (email = ? OR phone = ?) AND password_hash = ?
-    `;
+    const loginSql = 'SELECT id, full_name, email, phone, role FROM users WHERE (email = ? OR phone = ?) AND password_hash = ?';
     db.query(loginSql, [emailOrPhone, emailOrPhone, password], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0) {
+        if (!results || results.length === 0) {
             return res.status(401).json({ error: 'Tài khoản hoặc mật khẩu không chính xác!' });
         }
-
         const user = results[0];
         res.json({
             success: true,
@@ -361,11 +235,8 @@ app.post('/api/auth/login', (req, res) => {
     });
 });
 
-// =========================================================================
-// 11. KHỞI CHẠY SERVER BACKEND (TƯƠNG THÍCH HOÀN TOÀN VỚI RENDER)
-// =========================================================================
+// KHỞI CHẠY SERVER BACKEND
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server đang chạy tại port ${PORT}`);
-    console.log(`📧 Test gửi mail tại: /api/test-email?to=dtthien07@gmail.com`);
 });
