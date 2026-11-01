@@ -52,13 +52,21 @@
     } catch (e) {}
   };
 
+  // Thuật toán băm đồng bộ & an toàn: luôn cho cùng 1 kết quả ở cả Đăng ký và Đăng nhập
   async function hash(text) {
+    const cleanText = (text || '').trim();
     try {
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    } catch (e) {
-      return btoa(unescape(encodeURIComponent(text)));
+      if (window.crypto && window.crypto.subtle) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(cleanText));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+    } catch (e) {}
+    // Cơ chế băm dự phòng nhất quán
+    let h = 0;
+    for (let i = 0; i < cleanText.length; i++) {
+      h = (Math.imul(31, h) + cleanText.charCodeAt(i)) | 0;
     }
+    return 'h_' + Math.abs(h).toString(16);
   }
 
   const normPhone = p => (p || '').replace(/[\s.\-]/g, '').replace(/^\+84/, '0');
@@ -104,7 +112,7 @@
     btn.innerHTML = `<span class="material-symbols-outlined align-middle animate-spin text-[18px]">refresh</span> ${text}`;
   }
 
-  // --- LẤY TÀI KHOẢN ĐANG ĐĂNG NHẬP (ƯU TIÊN SESSION HIỆN TẠI) ---
+  // Lấy dữ liệu tài khoản phiên hiện tại (không dùng tài khoản mẫu)
   function getActiveUser() {
     return read(sessionStorage, SESSION_KEY, null) ||
            read(localStorage, SESSION_KEY, null) ||
@@ -311,7 +319,7 @@
     }
   }
 
-  /* ---------- 3. Đồng bộ Header User (Khắc phục hoàn toàn lỗi đổi tên và giật giao diện) ---------- */
+  /* ---------- 3. Đồng bộ Header User ---------- */
   function syncHeaderUserUI() {
     const userContainer = document.getElementById('userHeaderArea');
     if (!userContainer) return;
@@ -319,9 +327,8 @@
     const user = getActiveUser();
 
     if (user && (user.fullName || user.full_name || user.name || user.phone)) {
-      // Lấy đúng tên thật của tài khoản đang đăng nhập, không fallback sang bất kỳ tên mẫu nào
-      const displayName = user.fullName || user.full_name || user.name || user.phone;
-      const firstLetter = displayName.trim().charAt(0).toUpperCase();
+      const displayName = (user.fullName || user.full_name || user.name || user.phone).trim();
+      const firstLetter = displayName.charAt(0).toUpperCase();
       const roleText = (user.role === 'admin' || user.is_admin) ? 'Admin' : 'Thành viên';
 
       userContainer.innerHTML = `
@@ -374,8 +381,8 @@
     const fullName = v('fullName'),
       phone = normPhone(v('phoneNumber')),
       email = v('email').toLowerCase();
-    const pass = form.elements.password?.value || '',
-      confirm = form.elements.confirmPassword?.value || '';
+    const pass = (form.elements.password?.value || '').trim();
+    const confirm = (form.elements.confirmPassword?.value || '').trim();
 
     const termsConfirmed = window.isTermsAccepted === true ||
                            document.getElementById('termsConfirmedInput')?.value === 'true' ||
@@ -402,12 +409,14 @@
     const btn = document.getElementById('submitBtn');
     setBusy(btn, 'Đang tạo tài khoản...');
 
+    const pwdHash = await hash(pass);
+
     const newUser = {
       id: Date.now(),
       fullName,
       phone,
       email,
-      passwordHash: await hash(pass),
+      passwordHash: pwdHash,
       role: 'user',
       createdAt: new Date().toISOString()
     };
@@ -435,7 +444,11 @@
     const user = users().find(u => u.phone === key || (u.email && u.email === key));
 
     if (!user) return toast('Tài khoản chưa tồn tại. Vui lòng đăng ký trước!');
-    if (user.passwordHash !== (await hash(pass))) return toast('Mật khẩu không chính xác.');
+
+    const inputHash = await hash(pass);
+    if (user.passwordHash !== inputHash) {
+      return toast('Mật khẩu không chính xác.');
+    }
 
     setBusy(btn, 'ĐANG ĐĂNG NHẬP...');
 
@@ -447,7 +460,6 @@
       role: user.role || 'user'
     };
 
-    // Lưu đồng bộ để tránh bị rỗng giữa các trang
     write(remember ? localStorage : sessionStorage, SESSION_KEY, session);
     localStorage.setItem('currentUser', JSON.stringify(session));
 
@@ -455,7 +467,7 @@
     setTimeout(() => (location.href = homeOf(session)), 800);
   }
 
-  // Chạy ngay lập tức để Header hiển thị đúng tên không bị độ trễ
+  // Khởi chạy đồng bộ trạng thái tài khoản
   syncHeaderUserUI();
 
   /* ---------- 6. Khởi tạo sự kiện khi DOM tải xong ---------- */

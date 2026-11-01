@@ -7,7 +7,7 @@
 
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
 
     <style>
@@ -85,59 +85,64 @@
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
-                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
                     <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
                 </nav>
             </div>
 
             <div class="flex items-center gap-space-lg">
                 <!-- Nút Thông Báo (Tự động mở Popup Xem Nhanh qua auth.js) -->
-                <button aria-label="Thông báo" class="relative p-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors flex items-center justify-center cursor-pointer" type="button">
-                    <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 1;">notifications</span>
-                    <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-error text-white font-bold text-[10px] rounded-full flex items-center justify-center shadow-sm">3</span>
-                </button>
+                <div class="relative" id="notifDropdownContainer">
+                    <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button" title="Thông báo">
+                        <span class="material-symbols-outlined text-[24px] align-middle">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full hidden" id="badgeQuickCount"></span>
+                    </button>
 
-                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ QUA AUTH.JS -->
-                <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
-                    <div class="flex flex-col text-right">
-                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Khách vãng lai</span>
-                        <span id="headerUserRole" class="text-[11px] font-bold text-secondary">User</span>
+                    <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
+                        <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-bold text-on-surface">Thông báo</h3>
+                                <span class="px-2 py-0.5 rounded-full bg-red-100 text-error text-[10px] font-bold" id="badgePopoverUnread">0 chưa đọc</span>
+                            </div>
+                            <button type="button" onclick="window.markAllNotificationsRead && window.markAllNotificationsRead()" class="text-xs text-primary font-bold hover:underline cursor-pointer">
+                                Đã đọc tất cả
+                            </button>
+                        </div>
+                        <div class="max-h-[340px] overflow-y-auto divide-y divide-gray-100" id="quickNotifList"></div>
+                        <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
+                            <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
+                                <span>Xem tất cả thông báo</span>
+                                <span class="material-symbols-outlined text-[15px]">chevron_right</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
+
+                <!-- KHU VỰC THÔNG TIN USER: ĐỂ RỖNG ĐỂ auth.js ĐIỀN ĐÚNG TÀI KHOẢN, KHÔNG HIỆN KHÁCH VÃNG LAI TĨNH -->
+                <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
             </div>
         </div>
     </header>
 
     <main class="w-full pt-20 bg-surface min-h-screen">
         <div class="flex flex-col w-full">
-            <div class="max-w-[1280px] w-full mx-auto px-margin py-space-lg flex flex-col gap-space-lg">
+            <div class="max-w-[1440px] w-full mx-auto px-margin py-space-xl flex flex-col gap-space-xl">
                 
-                <!-- Breadcrumb -->
-                <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-medium text-on-surface-variant">
-                    <a class="hover:text-primary transition-colors flex items-center gap-1" href="trangchu-user.html">
-                
-                      
-                    </a>
-                  
-               
-                </nav>
-
-                <!-- Tiêu đề & Giới thiệu Nguồn -->
-                <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-2">
-                    <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-2">
+                <!-- Tiêu đề & Giới thiệu Nguồn (Cỡ chữ to chuẩn xác như trang Lịch sử đặt sân) -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+                    <div class="flex flex-col gap-space-xs">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                             <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                             <span>Tổng hợp từ các cơ quan báo chí chính thống</span>
                         </div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+                        <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-on-surface tracking-tight font-['Be_Vietnam_Pro']">
                             Tin tức &amp; Sự kiện Thể thao Việt Nam
                         </h1>
-                        <p class="text-sm text-on-surface-variant mt-1.5 max-w-2xl leading-relaxed">
+                        <p class="text-sm text-on-surface-variant max-w-3xl leading-relaxed">
                             Cập nhật liên tục từ <strong>VnExpress Thể thao</strong>, <strong>Tuổi Trẻ</strong>, <strong>Thanh Niên</strong>, <strong>Thể Thao &amp; Văn Hóa</strong> về các giải phong trào, cẩm nang sức khỏe và xu hướng thể thao thủ đô.
                         </p>
                     </div>
 
-                    <div class="flex items-center gap-2 bg-surface-container-lowest p-2 rounded-2xl shadow-sm border border-gray-100 self-start lg:self-auto text-xs">
+                    <div class="flex items-center gap-2 bg-surface-container-lowest p-2 rounded-2xl shadow-sm border border-gray-100 self-start md:self-auto text-xs">
                         <span class="px-3 py-1.5 rounded-xl bg-surface-container font-bold text-on-surface flex items-center gap-1.5">
                             <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
                             <span>Báo chính thống</span>
@@ -154,10 +159,10 @@
                     <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3">
                         <div class="relative flex-1">
                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-[20px]">search</span>
-                            <input class="w-full pl-11 pr-4 py-2.5 bg-surface-container-low rounded-xl text-xs text-on-surface placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 border" id="newsSearchInput" placeholder="Tìm kiếm bài báo, kỹ thuật thi đấu, giải bóng..." type="text"/>
+                            <input class="w-full pl-11 pr-4 py-2.5 bg-surface-container-low rounded-xl text-xs text-on-surface placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 border border-transparent" id="newsSearchInput" placeholder="Tìm kiếm bài báo, kỹ thuật thi đấu, giải bóng..." type="text"/>
                         </div>
                         <div class="flex items-center gap-2">
-                            <select class="bg-surface-container-low text-xs font-semibold text-on-surface px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer border" id="newsSourceFilter">
+                            <select class="bg-surface-container-low text-xs font-semibold text-on-surface px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer border border-transparent" id="newsSourceFilter">
                                 <option value="all">Tất cả nguồn báo</option>
                                 <option value="vnexpress">VnExpress Thể Thao</option>
                                 <option value="tuoitre">Báo Tuổi Trẻ</option>
@@ -304,7 +309,7 @@
                     <div class="lg:col-span-8 flex flex-col gap-6">
                         <div class="flex items-center justify-between pb-2 border-b">
                             <h2 class="text-base font-bold text-on-surface">Cẩm nang &amp; Tin tức mới cập nhật</h2>
-                            <span class="text-xs text-gray-400" id="displayFilterResultCount">Hiển thị 6 bài viết</span>
+                            <span class="text-xs text-gray-400" id="displayFilterResultCount">Hiển thị 4 bài viết</span>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="newsGridContainer">
@@ -527,7 +532,6 @@
 
     <!-- SCRIPT TÌM KIẾM & BỘ LỌC BÀI VIẾT THỜI GIAN THỰC -->
     <script>
-        
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('newsSearchInput');
             const sourceSelect = document.getElementById('newsSourceFilter');
@@ -552,7 +556,7 @@
                     const matchText = (!currentKeyword || text.includes(currentKeyword));
 
                     if (matchCat && matchSrc && matchText) {
-                        article.style.display = article.classList.contains('news-card') ? (article.classList.contains('lg:col-span-7') ? 'flex' : 'flex') : 'flex';
+                        article.style.display = 'flex';
                         visibleCount++;
                     } else {
                         article.style.display = 'none';
@@ -564,7 +568,6 @@
                 }
             }
 
-            // Lọc theo từ khóa tìm kiếm
             if (searchInput) {
                 searchInput.addEventListener('input', function (e) {
                     currentKeyword = e.target.value.trim().toLowerCase();
@@ -572,7 +575,6 @@
                 });
             }
 
-            // Lọc theo cơ quan báo chí
             if (sourceSelect) {
                 sourceSelect.addEventListener('change', function (e) {
                     currentSource = e.target.value;
@@ -580,7 +582,6 @@
                 });
             }
 
-            // Lọc theo tag bộ môn
             pills.forEach(pill => {
                 pill.addEventListener('click', function () {
                     pills.forEach(p => {
