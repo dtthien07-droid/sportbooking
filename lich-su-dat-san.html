@@ -50,7 +50,8 @@
                         "outline-variant": "#bdcaba",
                         "error": "#ba1a1a",
                         "error-container": "#ffdad6",
-                        "on-error-container": "#93000a"
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#293040"
                     },
                     spacing: {
                         "space-xs": "0.25rem",
@@ -78,7 +79,6 @@
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm">
         <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
             <div class="flex items-center gap-space-xl">
-                <!-- LOGO CHỮ SPORTBOOKING NGUYÊN BẢN -->
                 <a class="flex items-center gap-space-sm" href="trangchu-user.html">
                     <span class="text-xl text-primary font-bold tracking-tight">SportBooking</span>
                 </a>
@@ -93,14 +93,13 @@
             </div>
 
             <div class="flex items-center gap-space-lg">
-                <!-- KHỐI CHUÔNG THÔNG BÁO & POPOVER XEM NHANH ĐỒNG BỘ -->
+                <!-- KHỐI CHUÔNG THÔNG BÁO -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button" title="Thông báo">
-                        <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
+                        <span class="material-symbols-outlined text-[24px] align-middle">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full hidden" id="badgeQuickCount"></span>
                     </button>
 
-                    <!-- KHUNG POPOVER XEM NHANH -->
                     <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
                         <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -140,7 +139,6 @@
 
     <main class="w-full pt-20 min-h-screen bg-surface">
         <div class="flex flex-col w-full">
-            <!-- Container max-w-[1440px] px-margin dóng thẳng chuẩn xác với chữ Sport ở Header -->
             <div class="max-w-[1440px] w-full mx-auto px-margin py-space-xl flex flex-col gap-space-xl">
                 <!-- Tiêu đề & tác vụ nhanh -->
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
@@ -160,13 +158,13 @@
                     </div>
                 </div>
 
-                <!-- Thống kê nhanh (Tự động cộng tiền chuẩn 100% khi có đặt sân mới) -->
+                <!-- Thống kê nhanh -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
                     <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm flex items-center justify-between border border-gray-100">
                         <div class="flex flex-col gap-1">
                             <span class="text-xs uppercase tracking-wide text-on-surface-variant font-bold">Lịch sắp tới</span>
                             <div class="flex items-baseline gap-1">
-                                <span id="stat-upcoming-count" class="text-3xl font-bold text-on-surface">2</span>
+                                <span id="stat-upcoming-count" class="text-3xl font-bold text-on-surface">0</span>
                                 <span class="text-sm text-on-surface-variant">sân thi đấu</span>
                             </div>
                             <span id="stat-upcoming-subtext" class="text-xs text-primary font-medium flex items-center gap-1">
@@ -183,10 +181,10 @@
                         <div class="flex flex-col gap-1">
                             <span class="text-xs uppercase tracking-wide text-on-surface-variant font-bold">Tích lũy thi đấu</span>
                             <div class="flex items-baseline gap-1">
-                                <span id="stat-completed-count" class="text-3xl font-bold text-on-surface">1</span>
+                                <span id="stat-completed-count" class="text-3xl font-bold text-on-surface">0</span>
                                 <span class="text-sm text-on-surface-variant">lượt hoàn thành</span>
                             </div>
-                            <span id="stat-reputation-subtext" class="text-xs text-tertiary font-medium">Điểm uy tín SportPass: 98/100</span>
+                            <span id="stat-reputation-subtext" class="text-xs text-tertiary font-medium">Điểm uy tín SportPass: 100/100</span>
                         </div>
                         <div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center justify-center">
                             <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">verified</span>
@@ -197,7 +195,7 @@
                         <div class="flex flex-col gap-1">
                             <span class="text-xs uppercase tracking-wide text-on-surface-variant font-bold">Tổng ngân sách sân</span>
                             <div class="flex items-baseline gap-1">
-                                <span id="stat-total-spent" class="text-3xl font-bold text-secondary">1.620.000</span>
+                                <span id="stat-total-spent" class="text-3xl font-bold text-secondary">0</span>
                                 <span class="text-base text-secondary font-bold">₫</span>
                             </div>
                             <span id="stat-total-subtext" class="text-xs text-on-surface-variant">Tiết kiệm 140.000₫ với mã hội viên</span>
@@ -212,19 +210,19 @@
                 <div class="flex flex-col gap-space-md p-space-md rounded-2xl bg-surface-container-lowest shadow-sm border border-gray-100">
                     <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="status-tab-group">
                         <button class="status-tab px-4 py-2 rounded-xl text-sm transition-all whitespace-nowrap bg-primary-container text-on-primary-container font-bold shadow-sm cursor-pointer" data-filter="all" type="button">
-                            Tất cả <span id="count-all" class="ml-1 opacity-90 text-xs">(4)</span>
+                            Tất cả <span id="count-all" class="ml-1 opacity-90 text-xs">(0)</span>
                         </button>
                         <button class="status-tab px-4 py-2 rounded-xl text-sm transition-all whitespace-nowrap bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-medium cursor-pointer" data-filter="upcoming" type="button">
-                            Sắp tới <span id="count-upcoming" class="ml-1 opacity-80 text-xs">(1)</span>
+                            Sắp tới <span id="count-upcoming" class="ml-1 opacity-80 text-xs">(0)</span>
                         </button>
                         <button class="status-tab px-4 py-2 rounded-xl text-sm transition-all whitespace-nowrap bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-medium cursor-pointer" data-filter="payment-pending" type="button">
-                            Chờ thanh toán <span id="count-payment-pending" class="ml-1 opacity-80 text-xs">(1)</span>
+                            Chờ thanh toán <span id="count-payment-pending" class="ml-1 opacity-80 text-xs">(0)</span>
                         </button>
                         <button class="status-tab px-4 py-2 rounded-xl text-sm transition-all whitespace-nowrap bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-medium cursor-pointer" data-filter="completed" type="button">
-                            Hoàn thành <span id="count-completed" class="ml-1 opacity-80 text-xs">(1)</span>
+                            Hoàn thành <span id="count-completed" class="ml-1 opacity-80 text-xs">(0)</span>
                         </button>
                         <button class="status-tab px-4 py-2 rounded-xl text-sm transition-all whitespace-nowrap bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-medium cursor-pointer" data-filter="cancelled" type="button">
-                            Đã hủy <span id="count-cancelled" class="ml-1 opacity-80 text-xs">(1)</span>
+                            Đã hủy <span id="count-cancelled" class="ml-1 opacity-80 text-xs">(0)</span>
                         </button>
                     </div>
 
@@ -246,18 +244,146 @@
                     </div>
                 </div>
 
-                <!-- Danh sách thẻ đặt sân (Render động chuẩn xác 100%) -->
-                <div class="flex flex-col gap-space-lg" id="bookings-list">
-                    <!-- Sẽ được JavaScript tự động tạo theo dữ liệu thật của tài khoản -->
-                </div>
+                <!-- Danh sách thẻ đặt sân (Render động) -->
+                <div class="flex flex-col gap-space-lg" id="bookings-list"></div>
 
                 <!-- Phân trang -->
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-space-md pt-space-md pb-space-lg">
                     <div class="text-xs text-on-surface-variant">
-                        Hiển thị <span id="pagination-info" class="font-bold text-on-surface">4 / 4</span> lượt đặt chỗ thể thao
+                        Hiển thị <span id="pagination-info" class="font-bold text-on-surface">0 / 0</span> lượt đặt chỗ thể thao
                     </div>
                     <div class="flex items-center gap-1">
                         <button class="w-9 h-9 rounded-xl bg-primary text-white font-bold text-sm shadow-sm flex items-center justify-center cursor-pointer" type="button">1</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY VĨNH VIỄN LỒNG TRỰC TIẾP TẠI TRANG LỊCH SỬ -->
+        <!-- ========================================================================= -->
+        <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" id="cancel-modal">
+            <div aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[620px] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all transform scale-100 border border-gray-100" role="dialog">
+               
+                <!-- Dải màu cảnh báo trên cùng -->
+                <div class="w-full h-1.5 bg-gradient-to-r from-error via-secondary-container to-error"></div>
+
+                <!-- Nút đóng góc phải -->
+                <button onclick="closeCancelModal()" aria-label="Đóng cửa sổ" class="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors cursor-pointer" id="btn-close-modal">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+
+                <!-- Nội dung Modal -->
+                <div class="p-5 md:p-6 flex flex-col gap-4">
+                   
+                    <!-- Tiêu đề & Icon Cảnh Báo -->
+                    <div class="flex items-start gap-3.5">
+                        <div class="relative shrink-0 w-12 h-12 rounded-2xl bg-error-container text-error flex items-center justify-center shadow-xs">
+                            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+                        </div>
+                        <div class="flex flex-col gap-1 pr-6">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] bg-red-100 text-error px-2 py-0.5 rounded font-bold uppercase tracking-wider">Xác nhận lần cuối</span>
+                                <span class="text-xs text-on-surface-variant font-medium">• Không thể đảo ngược</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-on-surface tracking-tight" id="modal-title">
+                                Xác nhận hủy đặt sân vĩnh viễn?
+                            </h2>
+                            <p class="text-xs text-on-surface-variant leading-relaxed">
+                                Thao tác này <strong class="text-error font-semibold">không thể hoàn tác</strong>. Khung giờ đặt sân của bạn sẽ được giải phóng ngay lập tức trên hệ thống và nhường cho người chơi khác.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Thẻ Tóm tắt thông tin đơn hàng -->
+                    <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-3 border border-gray-100">
+                        <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+                            <div class="flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-primary text-base">receipt_long</span>
+                                <span class="text-xs text-on-surface font-bold">Mã đơn đặt sân:</span>
+                            </div>
+                            <span class="font-mono text-xs font-bold text-primary tracking-wide" id="displayModalOrderId">#SB-76681</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-2.5 gap-x-4 text-xs">
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Sân thi đấu</span>
+                                <span class="font-bold text-on-surface truncate" id="displayModalVenueName">Pickleball G.S77</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalCourtNumber">Sân Acrylic 01</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-gray-500 font-medium">Thời gian thi đấu</span>
+                                <span class="font-bold text-on-surface" id="displayModalMatchTime">19:00 - 20:00</span>
+                                <span class="text-gray-500 text-[11px]" id="displayModalMatchDate">01/11/2026</span>
+                            </div>
+                            <div class="flex flex-col pt-1">
+                                <span class="text-gray-500 font-medium">Lý do hủy đơn</span>
+                                <select id="selectCancelReason" class="mt-0.5 p-1.5 bg-white border border-gray-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:border-primary">
+                                    <option value="Bận việc đột xuất / Lịch công tác">Bận việc đột xuất / Lịch công tác</option>
+                                    <option value="Thay đổi địa điểm hoặc thời gian chơi">Thay đổi địa điểm hoặc thời gian chơi</option>
+                                    <option value="Thời tiết không thuận lợi">Thời tiết không thuận lợi</option>
+                                    <option value="Không đủ thành viên thi đấu">Không đủ thành viên thi đấu</option>
+                                    <option value="Lý do cá nhân khác">Lý do cá nhân khác</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col pt-1">
+                                <span class="text-gray-500 font-medium">Kênh hoàn tiền</span>
+                                <div class="flex items-center gap-1 text-on-surface font-bold mt-1">
+                                    <span class="material-symbols-outlined text-primary text-sm">account_balance</span>
+                                    <span>Tài khoản gốc (1 - 3 ngày)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tổng tiền thực nhận hoàn tính theo Điều 5 -->
+                        <div class="bg-white rounded-lg p-3 flex items-center justify-between shadow-2xs border border-gray-200 mt-0.5">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-xs font-bold text-on-surface">Tổng tiền hoàn lại:</span>
+                                    <span class="text-[10px] bg-green-100 text-primary px-1.5 py-0.5 rounded-full font-bold" id="displayModalRefundPercentBadge">100% Hoàn tiền</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 mt-0.5" id="displayModalRefundPolicyDesc">Áp dụng theo quy chế bảo vệ người chơi</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="text-xl font-bold text-primary tracking-tight" id="displayModalRefundAmount">104.500₫</span>
+                                <span class="text-[11px] text-gray-400">Chuyển về tài khoản thanh toán</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Banner quy trình hoàn tiền tự động -->
+                    <div class="bg-secondary-fixed/50 text-on-secondary-fixed-variant rounded-xl p-3 flex items-start gap-2.5 border border-secondary-fixed">
+                        <span class="material-symbols-outlined text-secondary shrink-0 text-lg mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+                        <div class="flex flex-col gap-0.5 text-xs">
+                            <span class="font-bold text-secondary">Quy trình hoàn tất tự động</span>
+                            <p class="leading-relaxed text-slate-700">
+                                Số tiền <strong class="font-bold text-on-secondary-fixed" id="bannerRefundText">104.500₫</strong> sẽ được ngân hàng xử lý và hoàn trả trực tiếp về tài khoản nguồn của quý khách trong vòng 1 - 3 ngày làm việc.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Nút thao tác -->
+                    <div class="flex flex-col-reverse sm:flex-row items-center gap-2 pt-1" id="modalActionsGroup">
+                        <button onclick="closeCancelModal()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer" id="btn-keep-court" type="button">
+                            <span class="material-symbols-outlined text-primary text-[18px]">sports_tennis</span>
+                            <span>Không, giữ lại sân</span>
+                        </button>
+                        <button onclick="confirmAndExecuteCancelOrderInHistory()" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-error hover:bg-red-700 text-white text-sm font-bold shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95" id="btn-confirm-cancel" type="button">
+                            <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                            <span>Hủy sân &amp; Nhận tiền</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chân Modal -->
+                <div class="bg-surface-container px-6 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-1 text-on-surface-variant text-xs border-t border-gray-100">
+                    <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-xs text-primary">verified_user</span>
+                        <span>Bảo mật giao dịch mã hóa SSL 256-bit</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span>Hỗ trợ 24/7:</span>
+                        <a class="font-bold text-secondary hover:underline" href="tel:19008899">1900 8899</a>
                     </div>
                 </div>
             </div>
@@ -290,9 +416,6 @@
 
     <!-- SCRIPT TỰ ĐỘNG CẬP NHẬT & TÍNH TỔNG TIỀN THEO DỮ LIỆU THẬT -->
     <script>
-        // =========================================================================
-        // ĐỒNG BỘ DỮ LIỆU HÌNH ẢNH 29 CỤM SÂN HÀ NỘI (ẢNH RIÊNG BIỆT, ĐÚNG MÔN)
-        // =========================================================================
         window.FACILITIES_29_DB = window.FACILITIES_29_DB || {
             "san-bong-dong-do": { id:"san-bong-dong-do", name:"Sân bóng Đông Đô", sport:"soccer", image_url:"https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=1200&q=80" },
             "san-bong-thanh-phat": { id:"san-bong-thanh-phat", name:"Sân Bóng Thành Phát", sport:"soccer", image_url:"https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80" },
@@ -344,23 +467,6 @@
             return 'https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80';
         }
 
-        // Kho ảnh sân chuẩn xác theo môn thể thao tại Hà Nội
-        const VENUE_IMAGES = {
-            badminton: [
-                "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
-                "https://images.unsplash.com/photo-1613918108466-292b78a8ef95?w=800&q=80"
-            ],
-            soccer: [
-                "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80",
-                "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800&q=80"
-            ],
-            pickleball: [
-                "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80",
-                "https://images.unsplash.com/photo-1599586120429-48281b6f0ece?w=800&q=80"
-            ]
-        };
-
-        // Hàm bóc tách giá tiền chính xác 100% từ mọi kiểu dữ liệu
         function extractCleanPrice(item) {
             if (!item) return 0;
             const priceKeys = ['total_price', 'totalPrice', 'price', 'total_amount', 'totalAmount', 'amount', 'deposit_paid', 'depositPaid', 'deposit'];
@@ -376,85 +482,160 @@
             return 0;
         }
 
-        // Dữ liệu mẫu chuẩn của Trúc Lam: Tổng 3 sân hợp lệ = 160.000 + 1.080.000 + 380.000 = đúng 1.620.000 ₫
-        const TRUCLAM_DEFAULT_BOOKINGS = [
-            {
-                id: "SB-89201",
-                venue_name: "CLB Cầu Lông Ngôi Sao Cầu Giấy (Star Badminton)",
-                sport: "badminton",
-                sport_label: "Cầu lông",
-                court_number: "Sân 1 (Thảm Yonex Pro)",
-                address: "35 Phố Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
-                time_slot: "20:00 - 21:00",
-                time_badge: "Hôm nay",
-                date: "31/10/2026",
-                price: 160000,
-                total_price: 160000,
-                status: "upcoming",
-                status_label: "Đã xác nhận",
-                image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80"
-            },
-            {
-                id: "SB-89205",
-                venue_name: "Sân Bóng Đá Mini Thành Phát",
-                sport: "soccer",
-                sport_label: "Bóng đá mini",
-                court_number: "Sân 7 người (Sân A cỏ nhân tạo mới)",
-                address: "Số 2 Hoàng Minh Giám, Cầu Giấy, Hà Nội",
-                time_slot: "18:30 - 20:00 (Ngày mai)",
-                time_badge: "Ngày mai",
-                date: "01/11/2026",
-                price: 1080000,
-                total_price: 1080000,
-                deposit_paid: 200000,
-                status: "payment-pending",
-                status_label: "Chờ thanh toán (07:45)",
-                image: "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80"
-            },
-            {
-                id: "SB-88102",
-                venue_name: "Cụm Sân Pickleball Dịch Vọng Hậu",
-                sport: "pickleball",
-                sport_label: "Pickleball",
-                court_number: "Sân 2 tiêu chuẩn thi đấu",
-                address: "Dịch Vọng Hậu, Cầu Giấy, Hà Nội",
-                time_slot: "07:00 - 09:00 (Tuần trước)",
-                time_badge: "Tuần trước",
-                date: "24/10/2026",
-                price: 380000,
-                total_price: 380000,
-                status: "completed",
-                status_label: "Hoàn thành",
-                image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80"
-            },
-            {
-                id: "SB-87399",
-                venue_name: "Nhà Thi Đấu Cầu Lông Tây Hồ",
-                sport: "badminton",
-                sport_label: "Cầu lông",
-                court_number: "Sân 3 tiêu chuẩn",
-                address: "Xuân La, Tây Hồ, Hà Nội",
-                time_slot: "16:00 - 17:00",
-                time_badge: "Đã hủy",
-                date: "20/10/2026",
-                price: 160000,
-                total_price: 160000,
-                status: "cancelled",
-                status_label: "Đã hủy theo yêu cầu",
-                image: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=800&q=80"
+        // =========================================================================
+        // TÍNH TOÁN TRẠNG THÁI & CHÍNH SÁCH HOÀN TIỀN THEO THỜI GIAN THỰC (ĐIỀU 5)
+        // =========================================================================
+        function getRealtimeBookingStatus(item) {
+            const rawStatus = String(item.status || '').toLowerCase();
+            if (rawStatus === 'cancelled' || rawStatus === 'đã hủy' || rawStatus === 'da huy') {
+                return {
+                    effectiveStatus: 'cancelled',
+                    label: 'Đã hủy theo yêu cầu',
+                    badgeHtml: `
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">
+                            <span class="material-symbols-outlined text-sm">cancel</span>
+                            <span>Đã hủy theo yêu cầu</span>
+                        </span>
+                    `,
+                    canCancel: false,
+                    refundPercent: item.refund_percent || 0,
+                    refundAmount: item.refund_amount || 0,
+                    refundLabel: 'Đã hủy đơn'
+                };
             }
-        ];
+
+            const now = new Date();
+
+            let dateStr = item.date || item.booking_date || '';
+            let formattedDate = '';
+            if (dateStr.includes('/')) {
+                const parts = dateStr.split('/');
+                if (parts.length === 3) formattedDate = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            } else if (dateStr.includes('-')) {
+                formattedDate = dateStr;
+            } else {
+                formattedDate = now.toISOString().split('T')[0];
+            }
+
+            const timeSlot = item.time_slot || item.slot || '19:00 - 20:00';
+            let startHourStr = '19:00';
+            let endHourStr = '20:00';
+            if (timeSlot.includes('-')) {
+                const parts = timeSlot.split('-').map(s => s.trim().replace(/\(.*?\)/g, '').trim());
+                startHourStr = parts[0];
+                endHourStr = parts[1];
+            }
+
+            const startDateTime = new Date(`${formattedDate}T${startHourStr.length === 5 ? startHourStr + ':00' : startHourStr}`);
+            const endDateTime = new Date(`${formattedDate}T${endHourStr.length === 5 ? endHourStr + ':00' : endHourStr}`);
+
+            const totalPrice = extractCleanPrice(item) || 104500;
+            let depositPaid = extractCleanPrice({ deposit: item.deposit_paid || item.deposit }) || (totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
+            if (depositPaid > totalPrice) depositPaid = totalPrice;
+
+            // 1. Sau giờ kết thúc -> Hoàn thành
+            if (now >= endDateTime) {
+                return {
+                    effectiveStatus: 'completed',
+                    label: 'Hoàn thành',
+                    badgeHtml: `
+                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-50 text-tertiary text-xs font-bold">
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            <span>Hoàn thành</span>
+                        </span>
+                    `,
+                    canCancel: false,
+                    refundPercent: 0,
+                    refundAmount: 0,
+                    refundLabel: 'Trận đấu đã kết thúc'
+                };
+            }
+
+            // 2. Trong khung giờ thi đấu -> Đang trong trận (CẤM HỦY)
+            if (now >= startDateTime && now < endDateTime) {
+                return {
+                    effectiveStatus: 'in_progress',
+                    label: 'Đang trong trận',
+                    badgeHtml: `
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold animate-pulse border border-emerald-200">
+                            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+                            <span>Đang trong trận</span>
+                        </span>
+                    `,
+                    canCancel: false,
+                    refundPercent: 0,
+                    refundAmount: 0,
+                    refundLabel: 'Trận đấu đang diễn ra'
+                };
+            }
+
+            // 3. Đơn chờ thanh toán
+            if (rawStatus === 'payment-pending') {
+                return {
+                    effectiveStatus: 'payment-pending',
+                    label: item.status_label || 'Chờ thanh toán',
+                    badgeHtml: `
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-secondary text-xs font-bold animate-pulse">
+                            <span class="material-symbols-outlined text-sm">timer</span>
+                            <span>${item.status_label || 'Chờ thanh toán (07:45)'}</span>
+                        </span>
+                    `,
+                    canCancel: true,
+                    refundPercent: 100,
+                    refundAmount: depositPaid,
+                    refundLabel: '100% Hoàn tiền'
+                };
+            }
+
+            // 4. Sắp tới -> Tính tiền hoàn theo Điều 5
+            const diffHours = (startDateTime - now) / (1000 * 60 * 60);
+            let refundPercent = 0;
+            let refundLabel = 'Không hoàn cọc (0%)';
+            let policyDesc = 'Hủy sát giờ dưới 6 giờ không áp dụng hoàn cọc';
+
+            if (diffHours >= 24) {
+                refundPercent = 100;
+                refundLabel = '100% Hoàn tiền';
+                policyDesc = 'Hủy trước 24 giờ thi đấu được hoàn 100% cọc';
+            } else if (diffHours >= 6 && diffHours < 24) {
+                refundPercent = 50;
+                refundLabel = '50% Hoàn tiền';
+                policyDesc = 'Hủy từ 6 đến 24 giờ trước trận được hoàn 50% cọc';
+            } else {
+                refundPercent = 0;
+                refundLabel = 'Không hoàn cọc (0%)';
+                policyDesc = 'Hủy sát giờ dưới 6 giờ không áp dụng hoàn cọc';
+            }
+
+            const refundAmount = Math.round((depositPaid * refundPercent) / 100);
+
+            return {
+                effectiveStatus: 'upcoming',
+                label: 'Đã xác nhận',
+                badgeHtml: `
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                        <span>Đã xác nhận</span>
+                    </span>
+                `,
+                canCancel: true,
+                refundPercent: refundPercent,
+                refundAmount: refundAmount,
+                refundLabel: refundLabel,
+                policyDesc: policyDesc
+            };
+        }
 
         let currentUser = null;
         let userBookings = [];
         let currentFilter = 'all';
+        let currentCancelTargetOrder = null;
 
         function getCorrectImage(sport, providedImage, venueName) {
             if (providedImage && typeof providedImage === 'string' && providedImage.startsWith("http") && !providedImage.includes("photo-1599474924187")) return providedImage;
             return getFacilityAccurateImage(venueName, sport);
         }
 
-        // TẢI THÔNG TIN VÀ QUÉT ĐƠN ĐẶT SÂN THỰC TẾ TỪ LOCALSTORAGE
         function initUserData() {
             try {
                 currentUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || 'null');
@@ -462,7 +643,6 @@
                 currentUser = null;
             }
 
-            // Đồng bộ Header User
             const nameEl = document.getElementById('headerUsername');
             const roleEl = document.getElementById('headerUserRole');
             const avatarEl = document.getElementById('headerUserAvatar');
@@ -493,46 +673,57 @@
                 if (saved && Array.isArray(saved) && saved.length > 0) {
                     userBookings = saved;
                 } else {
-                    userBookings = JSON.parse(JSON.stringify(TRUCLAM_DEFAULT_BOOKINGS));
+                    userBookings = [
+                        {
+                            id: "SB-76681",
+                            venue_name: "Pickleball G.S77",
+                            sport: "pickleball",
+                            sport_label: "Pickleball tiêu chuẩn",
+                            court_number: "Sân Acrylic 01",
+                            address: "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội",
+                            time_slot: "19:00 - 20:00",
+                            time_badge: "Sắp tới",
+                            date: "01/11/2026",
+                            price: 104500,
+                            total_price: 104500,
+                            deposit_paid: 104500,
+                            status: "upcoming",
+                            status_label: "Đã xác nhận",
+                            image: "https://images.unsplash.com/photo-1589487391730-58f20eb2c308?w=800&q=80"
+                        }
+                    ];
                 }
 
-                // QUÉT ĐƠN MỚI TỪ BƯỚC ĐẶT SÂN VÀ THANH TOÁN
+                // Quét đơn mới nhất nếu có
                 let recentOrder = null;
-                try {
-                    recentOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null');
-                } catch (e) {}
+                try { recentOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch (e) {}
 
                 if (recentOrder) {
                     const orderId = recentOrder.order_id || recentOrder.orderId || recentOrder.id;
                     if (orderId) {
                         const existingIdx = userBookings.findIndex(b => b.id === orderId);
-                        const orderPrice = extractCleanPrice(recentOrder) || 360000;
-                        const sportType = recentOrder.sport || "soccer";
+                        const orderPrice = extractCleanPrice(recentOrder) || 104500;
+                        const sportType = recentOrder.sport || "pickleball";
                         const newBooking = {
                             id: orderId,
-                            venue_name: recentOrder.venue_name || recentOrder.facility_name || "Sân bóng đá mini Đông Đô",
+                            venue_name: recentOrder.venue_name || recentOrder.facility_name || "Pickleball G.S77",
                             sport: sportType,
                             sport_label: sportType === "soccer" ? "Bóng đá mini" : (sportType === "badminton" ? "Cầu lông" : "Pickleball"),
-                            court_number: recentOrder.court_number || recentOrder.sub_court || "Sân 5A",
-                            address: recentOrder.address || "Hà Nội",
-                            time_slot: recentOrder.time_slot || recentOrder.slot || "17:00 - 18:00",
+                            court_number: recentOrder.court_number || recentOrder.sub_court || "Sân Acrylic 01",
+                            address: recentOrder.address || "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội",
+                            time_slot: recentOrder.time_slot || recentOrder.slot || "19:00 - 20:00",
                             time_badge: "Sắp tới",
-                            date: recentOrder.date || "31/10/2026",
+                            date: recentOrder.date || "01/11/2026",
                             price: orderPrice,
                             total_price: orderPrice,
-                            deposit_paid: extractCleanPrice({ deposit: recentOrder.deposit_paid || recentOrder.deposit }) || (orderPrice / 2),
+                            deposit_paid: extractCleanPrice({ deposit: recentOrder.deposit_paid || recentOrder.deposit }) || orderPrice,
                             status: recentOrder.status || "upcoming",
-                            status_label: "Đã xác nhận",
-                            image: getCorrectImage(sportType, recentOrder.image || recentOrder.venue_image),
-                            is_matching_enabled: !!(recentOrder.is_matching_enabled || recentOrder.isMatchMaker),
-                            isMatchMaker: !!(recentOrder.is_matching_enabled || recentOrder.isMatchMaker),
-                            match_status: recentOrder.match_status || (recentOrder.is_matching_enabled ? 'finding' : 'none'),
-                            matching_criteria: recentOrder.matching_criteria || null
+                            status_label: recentOrder.status_label || "Đã xác nhận",
+                            image: getCorrectImage(sportType, recentOrder.image || recentOrder.venue_image, recentOrder.venue_name)
                         };
 
                         if (existingIdx !== -1) {
-                            userBookings[existingIdx].price = orderPrice;
-                            userBookings[existingIdx].total_price = orderPrice;
+                            userBookings[existingIdx] = { ...userBookings[existingIdx], ...newBooking };
                         } else {
                             userBookings.unshift(newBooking);
                         }
@@ -540,43 +731,9 @@
                         localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
                     }
                 }
-
-                // QUÉT ĐƠN THAM GIA GHÉP ĐỐI
-                let matchJoined = null;
-                try {
-                    matchJoined = JSON.parse(localStorage.getItem('sb_match_joined') || 'null');
-                } catch (e) {}
-
-                if (matchJoined && (matchJoined.match_id || matchJoined.id)) {
-                    const matchId = matchJoined.match_id || matchJoined.id;
-                    const existsMatch = userBookings.some(b => b.id === matchId);
-                    if (!existsMatch) {
-                        const matchPrice = extractCleanPrice(matchJoined) || 40000;
-                        const matchSport = matchJoined.sport || "soccer";
-                        userBookings.unshift({
-                            id: matchId,
-                            venue_name: matchJoined.venue_name || "Sân bóng mini Đông Đô",
-                            sport: matchSport,
-                            sport_label: matchSport === "soccer" ? "Bóng đá mini" : (matchSport === "badminton" ? "Cầu lông" : "Pickleball"),
-                            court_number: matchJoined.court_number || "Sân ghép",
-                            address: matchJoined.address || "Hà Nội",
-                            time_slot: matchJoined.time_slot || "18:00 - 19:00",
-                            time_badge: "Kèo ghép",
-                            date: matchJoined.date || "31/10/2026",
-                            price: matchPrice,
-                            total_price: matchPrice,
-                            status: "upcoming",
-                            status_label: "Đã xác nhận",
-                            image: getCorrectImage(matchSport, matchJoined.image)
-                        });
-                        localStorage.setItem(userStorageKey, JSON.stringify(userBookings));
-                        localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
-                    }
-                }
             }
         }
 
-        // TỰ ĐỘNG CẬP NHẬT TỔNG TIỀN VÀ THỐNG KÊ (CHÍNH XÁC 100%)
         function updateStats() {
             const upcomingCountEl = document.getElementById('stat-upcoming-count');
             const upcomingSubtextEl = document.getElementById('stat-upcoming-subtext');
@@ -604,14 +761,15 @@
 
             userBookings.forEach(item => {
                 const cost = extractCleanPrice(item);
-                const st = (item.status || '').toLowerCase();
-                if (st === 'upcoming' || st === 'confirmed' || st === 'payment-pending' || st === 'pending' || st === 'paid') {
+                const rt = getRealtimeBookingStatus(item);
+
+                if (rt.effectiveStatus === 'upcoming' || rt.effectiveStatus === 'in_progress' || rt.effectiveStatus === 'payment-pending') {
                     upcoming++;
                 }
-                if (st === 'completed' || st === 'done' || st === 'finished') {
+                if (rt.effectiveStatus === 'completed') {
                     completed++;
                 }
-                if (st !== 'cancelled' && st !== 'canceled') {
+                if (rt.effectiveStatus !== 'cancelled') {
                     totalSpent += cost;
                 }
             });
@@ -619,7 +777,7 @@
             if (upcomingCountEl) upcomingCountEl.textContent = upcoming;
             if (upcomingSubtextEl) {
                 if (upcoming > 0) {
-                    upcomingSubtextEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span><span>Có ${upcoming} sân thi đấu sắp diễn ra</span>`;
+                    upcomingSubtextEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span><span>Có ${upcoming} sân thi đấu sắp diễn ra / đang diễn ra</span>`;
                     upcomingSubtextEl.className = "text-xs text-primary font-medium flex items-center gap-1";
                 } else {
                     upcomingSubtextEl.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span><span>Chưa có lịch sắp tới</span>`;
@@ -633,7 +791,6 @@
             if (totalSubtextEl) totalSubtextEl.textContent = totalSpent > 0 ? "Tiết kiệm 140.000₫ với mã hội viên" : "Chưa phát sinh chi phí";
         }
 
-        // RENDER GIAO DIỆN DANH SÁCH SÂN VÀ CẬP NHẬT TAB
         function renderAll() {
             updateStats();
             const container = document.getElementById('bookings-list');
@@ -643,20 +800,38 @@
             const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
             const sport = sportFilter ? sportFilter.value : 'all';
 
-            const totalAll = userBookings.length;
-            const totalUpcoming = userBookings.filter(b => b.status === 'upcoming').length;
-            const totalPending = userBookings.filter(b => b.status === 'payment-pending').length;
-            const totalCompleted = userBookings.filter(b => b.status === 'completed').length;
-            const totalCancelled = userBookings.filter(b => b.status === 'cancelled').length;
+            let countAll = userBookings.length;
+            let countUpcoming = 0;
+            let countPending = 0;
+            let countCompleted = 0;
+            let countCancelled = 0;
 
-            document.getElementById('count-all').textContent = `(${totalAll})`;
-            document.getElementById('count-upcoming').textContent = `(${totalUpcoming})`;
-            document.getElementById('count-payment-pending').textContent = `(${totalPending})`;
-            document.getElementById('count-completed').textContent = `(${totalCompleted})`;
-            document.getElementById('count-cancelled').textContent = `(${totalCancelled})`;
+            userBookings.forEach(b => {
+                const rt = getRealtimeBookingStatus(b);
+                if (rt.effectiveStatus === 'upcoming' || rt.effectiveStatus === 'in_progress') countUpcoming++;
+                else if (rt.effectiveStatus === 'payment-pending') countPending++;
+                else if (rt.effectiveStatus === 'completed') countCompleted++;
+                else if (rt.effectiveStatus === 'cancelled') countCancelled++;
+            });
+
+            document.getElementById('count-all').textContent = `(${countAll})`;
+            document.getElementById('count-upcoming').textContent = `(${countUpcoming})`;
+            document.getElementById('count-payment-pending').textContent = `(${countPending})`;
+            document.getElementById('count-completed').textContent = `(${countCompleted})`;
+            document.getElementById('count-cancelled').textContent = `(${countCancelled})`;
 
             const filtered = userBookings.filter(item => {
-                const matchesStatus = (currentFilter === 'all') || (item.status === currentFilter);
+                const rt = getRealtimeBookingStatus(item);
+                
+                let matchesStatus = false;
+                if (currentFilter === 'all') {
+                    matchesStatus = true;
+                } else if (currentFilter === 'upcoming') {
+                    matchesStatus = (rt.effectiveStatus === 'upcoming' || rt.effectiveStatus === 'in_progress');
+                } else {
+                    matchesStatus = (rt.effectiveStatus === currentFilter);
+                }
+
                 const matchesSport = (sport === 'all') || (item.sport === sport);
                 const textSearch = (item.venue_name + ' ' + item.id + ' ' + (item.court_number || '') + ' ' + (item.address || '')).toLowerCase();
                 const matchesQuery = !query || textSearch.includes(query);
@@ -664,7 +839,7 @@
             });
 
             if (paginationInfo) {
-                paginationInfo.textContent = `${filtered.length} / ${totalAll}`;
+                paginationInfo.textContent = `${filtered.length} / ${countAll}`;
             }
 
             if (filtered.length === 0) {
@@ -685,10 +860,12 @@
             }
 
             container.innerHTML = filtered.map(item => {
-                const isUpcoming = item.status === 'upcoming';
-                const isPending = item.status === 'payment-pending';
-                const isCompleted = item.status === 'completed';
-                const isCancelled = item.status === 'cancelled';
+                const rt = getRealtimeBookingStatus(item);
+                const isUpcoming = rt.effectiveStatus === 'upcoming';
+                const isInProgress = rt.effectiveStatus === 'in_progress';
+                const isPending = rt.effectiveStatus === 'payment-pending';
+                const isCompleted = rt.effectiveStatus === 'completed';
+                const isCancelled = rt.effectiveStatus === 'cancelled';
                 const sportImg = getCorrectImage(item.sport, item.image, item.venue_name);
                 const itemPrice = extractCleanPrice(item);
 
@@ -703,57 +880,21 @@
                     sportColor = "text-tertiary";
                 }
 
-                const isFindingMatch = (item.is_matchmaker === true || item.isMatchMaker === true || item.status === 'finding_match');
-
-                let statusBadgeHtml = '';
-                if (isFindingMatch) {
-                    statusBadgeHtml = `
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-secondary text-xs font-bold animate-pulse border border-orange-200">
-                            <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                            <span>LIVE - Đang tìm đối (${item.matched_count || '3/4'})</span>
-                        </span>
-                    `;
-                } else if (isUpcoming) {
-                    statusBadgeHtml = `
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">
-                            <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-                            <span>Đã xác nhận</span>
-                        </span>
-                    `;
-                } else if (isPending) {
-                    statusBadgeHtml = `
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-secondary text-xs font-bold animate-pulse">
-                            <span class="material-symbols-outlined text-sm">timer</span>
-                            <span>${item.status_label || 'Chờ thanh toán (07:45)'}</span>
-                        </span>
-                    `;
-                } else if (isCompleted) {
-                    statusBadgeHtml = `
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-50 text-tertiary text-xs font-bold">
-                            <span class="material-symbols-outlined text-sm">check_circle</span>
-                            <span>Hoàn thành</span>
-                        </span>
-                    `;
-                } else if (isCancelled) {
-                    statusBadgeHtml = `
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">
-                            <span class="material-symbols-outlined text-sm">cancel</span>
-                            <span>Đã hủy theo yêu cầu</span>
-                        </span>
-                    `;
-                }
-
+                // KHÔNG CÒN NÚT "MỞ RADAR", NÚT HỦY MỞ TRỰC TIẾP MODAL XÁC NHẬN
                 let actionButtonsHtml = '';
-                if (isUpcoming || isFindingMatch) {
+                if (isUpcoming || isInProgress) {
                     actionButtonsHtml = `
                         <div class="flex items-center gap-2">
-                            ${isFindingMatch ? `
-                                <button onclick="window.location.href='tim-doi-choi-status.html'" class="px-3.5 py-2 rounded-xl bg-secondary text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1 hover:bg-orange-700" type="button">
-                                    <span class="material-symbols-outlined text-sm">radar</span>
-                                    <span>Mở radar</span>
+                            ${rt.canCancel ? `
+                                <button onclick="openCancelModalInHistory('${item.id}')" class="px-4 py-2 rounded-xl text-error bg-red-50 hover:bg-red-100 text-xs font-bold transition-all cursor-pointer" type="button">
+                                    Hủy đặt sân
                                 </button>
-                            ` : ''}
-                            <button onclick="handleCancelBooking('${item.id}')" class="px-4 py-2 rounded-xl text-error bg-red-50 hover:bg-red-100 text-xs font-bold transition-all cursor-pointer" type="button">Hủy đặt sân</button>
+                            ` : `
+                                <span class="px-3 py-1.5 rounded-xl bg-gray-100 text-gray-400 text-xs font-bold cursor-not-allowed border border-gray-200" title="Trận đấu đang diễn ra hoặc đã kết thúc">
+                                    Không thể hủy
+                                </span>
+                            `}
+
                             <button onclick="viewBookingDetail('${item.id}')" class="px-5 py-2 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-sm cursor-pointer flex items-center gap-1.5" type="button">
                                 <span>Xem chi tiết</span>
                                 <span class="material-symbols-outlined text-sm">arrow_forward</span>
@@ -763,7 +904,7 @@
                 } else if (isPending) {
                     actionButtonsHtml = `
                         <div class="flex items-center gap-2">
-                            <button onclick="viewBookingDetail('${item.id}')" class="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface transition-all cursor-pointer" type="button">Chi tiết đơn</button>
+                            <button onclick="openCancelModalInHistory('${item.id}')" class="px-4 py-2.5 rounded-xl text-error bg-red-50 hover:bg-red-100 text-xs font-bold transition-all cursor-pointer" type="button">Hủy đơn</button>
                             <button onclick="window.location.href='xac-nhan-dat-san.html?step=2&amp;id=${item.id}'" class="px-5 py-2.5 rounded-xl bg-secondary-container hover:bg-secondary text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center gap-1" type="button">
                                 <span class="material-symbols-outlined text-sm">payments</span>
                                 <span>Thanh toán ngay</span>
@@ -793,7 +934,7 @@
                 }
 
                 let priceHtml = '';
-                if (isUpcoming) {
+                if (isUpcoming || isInProgress) {
                     priceHtml = `
                         <div class="flex flex-col">
                             <span class="text-xs text-gray-500">Tổng chi phí sân:</span>
@@ -822,7 +963,7 @@
                 }
 
                 return `
-                    <article class="booking-card bg-surface-container-lowest rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col lg:flex-row border border-gray-100 ${isCancelled ? 'opacity-80' : ''}" data-category="${item.sport}" data-status="${item.status}">
+                    <article class="booking-card bg-surface-container-lowest rounded-2xl shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col lg:flex-row border border-gray-100 ${isCancelled ? 'opacity-80' : ''}" data-category="${item.sport}" data-status="${rt.effectiveStatus}">
                         <div onclick="viewBookingDetail('${item.id}')" class="lg:w-72 xl:w-80 relative min-h-[190px] shrink-0 cursor-pointer ${isCancelled ? 'grayscale' : ''}" title="Bấm để xem chi tiết đơn đặt sân này">
                             <img class="w-full h-full object-cover min-h-[190px]" alt="${item.venue_name}" src="${sportImg}">
                             <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface text-xs font-bold shadow-sm">
@@ -836,18 +977,20 @@
                                     <div class="flex items-center gap-2">
                                         <span class="font-mono bg-surface-container px-2 py-0.5 rounded text-xs text-on-surface-variant font-bold">#${item.id}</span>
                                         <span class="text-outline-variant">•</span>
-                                        <span class="text-sm ${isUpcoming ? 'text-primary' : (isPending ? 'text-secondary' : 'text-gray-600')} font-bold">${item.court_number || 'Sân tiêu chuẩn'}</span>
+                                        <span class="text-sm ${isUpcoming || isInProgress ? 'text-primary' : (isPending ? 'text-secondary' : 'text-gray-600')} font-bold">${item.court_number || 'Sân tiêu chuẩn'}</span>
                                     </div>
-                                    ${statusBadgeHtml}
+                                    ${rt.badgeHtml}
                                 </div>
                                 <h2 onclick="viewBookingDetail('${item.id}')" class="text-lg font-bold ${isCancelled ? 'text-gray-500 line-through' : 'text-on-surface hover:text-primary'} transition-colors cursor-pointer" title="Bấm để xem chi tiết đơn đặt sân này">
                                     ${item.venue_name}
                                 </h2>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-on-surface-variant">
                                     <div class="flex items-center gap-2">
-                                        <span class="material-symbols-outlined text-base ${isUpcoming ? 'text-primary' : (isPending ? 'text-secondary' : 'text-gray-400')}">schedule</span>
+                                        <span class="material-symbols-outlined text-base ${isUpcoming || isInProgress ? 'text-primary' : (isPending ? 'text-secondary' : 'text-gray-400')}">schedule</span>
                                         <span class="text-on-surface font-semibold">${item.time_slot}</span>
-                                        ${item.time_badge ? `<span class="px-2 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold">${item.time_badge}</span>` : ''}
+                                        <span class="px-2 py-0.5 rounded ${isInProgress ? 'bg-emerald-100 text-emerald-800' : 'bg-secondary-fixed text-on-secondary-fixed-variant'} text-xs font-bold">
+                                            ${isInProgress ? 'Đang đấu' : (item.time_badge || 'Sắp tới')}
+                                        </span>
                                     </div>
                                     <div class="flex items-center gap-2">
                                         <span class="material-symbols-outlined text-base text-gray-400">location_on</span>
@@ -857,7 +1000,7 @@
                                 ${isCancelled ? `
                                     <p class="text-xs text-primary font-medium flex items-center gap-1">
                                         <span class="material-symbols-outlined text-sm">check</span>
-                                        <span>Đã hoàn 100% tiền cọc về tài khoản nguồn.</span>
+                                        <span>Đã hoàn tiền cọc theo chính sách Điều 5 về tài khoản nguồn.</span>
                                     </p>
                                 ` : ''}
                             </div>
@@ -871,7 +1014,6 @@
             }).join('');
         }
 
-        // BỘ LỌC TÌM KIẾM VÀ CHUYỂN TAB
         function initTabsAndSearch() {
             const tabs = document.querySelectorAll('.status-tab');
             const searchInput = document.getElementById('search-input');
@@ -892,48 +1034,150 @@
             if (sportFilter) sportFilter.addEventListener('change', renderAll);
         }
 
-        // HÀM CHUYỂN TIẾP XEM CHI TIẾT ĐÚNG ĐƠN ĐÃ ĐẶT
         function viewBookingDetail(bookingId) {
             if (!bookingId) return;
             const booking = userBookings.find(b => b.id === bookingId || b.id === `SB-${bookingId}` || String(b.id).replace('SB-', '') === String(bookingId).replace('SB-', ''));
             if (booking) {
                 localStorage.setItem('sb_selected_booking_detail', JSON.stringify(booking));
                 localStorage.setItem('sb_final_order', JSON.stringify(booking));
-                let history = [];
-                try {
-                    history = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
-                } catch(e) {}
-                const idx = history.findIndex(h => h.id === booking.id);
+            }
+            window.location.href = `chi-tiet-don-dat-san.html?id=${encodeURIComponent(bookingId)}`;
+        }
+
+        // =========================================================================
+        // MỞ VÀ XỬ LÝ MODAL HỦY SÂN NGAY TRÊN TRANG LỊCH SỬ ĐẶT SÂN
+        // =========================================================================
+        function openCancelModalInHistory(bookingId) {
+            const booking = userBookings.find(b => b.id === bookingId || b.id === `SB-${bookingId}` || String(b.id).replace('SB-', '') === String(bookingId).replace('SB-', ''));
+            if (!booking) return;
+
+            const rt = getRealtimeBookingStatus(booking);
+            if (!rt.canCancel) {
+                alert(`⚠️ ${rt.refundLabel || 'Bạn không thể hủy đơn này!'}`);
+                return;
+            }
+
+            currentCancelTargetOrder = booking;
+
+            const orderId = booking.id;
+            const venueName = booking.venue_name || "Sân thể thao";
+            const courtName = booking.court_number || "Sân Acrylic 01";
+            const matchTime = booking.time_slot || "19:00 - 20:00";
+            const matchDate = booking.date || "01/11/2026";
+            const refundFormatted = `${rt.refundAmount.toLocaleString('vi-VN')}₫`;
+
+            document.getElementById('displayModalOrderId').innerText = `#${orderId}`;
+            document.getElementById('displayModalVenueName').innerText = venueName;
+            document.getElementById('displayModalCourtNumber').innerText = courtName;
+            document.getElementById('displayModalMatchTime').innerText = matchTime;
+            document.getElementById('displayModalMatchDate').innerText = matchDate;
+
+            document.getElementById('displayModalRefundPercentBadge').innerText = rt.refundLabel;
+            if (rt.refundPercent === 100) {
+                document.getElementById('displayModalRefundPercentBadge').className = "text-[10px] bg-green-100 text-primary px-1.5 py-0.5 rounded-full font-bold";
+            } else if (rt.refundPercent === 50) {
+                document.getElementById('displayModalRefundPercentBadge').className = "text-[10px] bg-orange-100 text-secondary px-1.5 py-0.5 rounded-full font-bold";
+            } else {
+                document.getElementById('displayModalRefundPercentBadge').className = "text-[10px] bg-red-100 text-error px-1.5 py-0.5 rounded-full font-bold";
+            }
+
+            document.getElementById('displayModalRefundPolicyDesc').innerText = rt.policyDesc;
+            document.getElementById('displayModalRefundAmount').innerText = refundFormatted;
+            document.getElementById('bannerRefundText').innerText = refundFormatted;
+
+            const modal = document.getElementById('cancel-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeCancelModal() {
+            const modal = document.getElementById('cancel-modal');
+            if (modal) modal.classList.add('hidden');
+            currentCancelTargetOrder = null;
+        }
+
+        async function confirmAndExecuteCancelOrderInHistory() {
+            if (!currentCancelTargetOrder) return;
+
+            const booking = currentCancelTargetOrder;
+            const rt = getRealtimeBookingStatus(booking);
+            if (!rt.canCancel) {
+                alert(`⚠️ ${rt.refundLabel}`);
+                closeCancelModal();
+                return;
+            }
+
+            const orderId = booking.id;
+            const selectedReason = document.getElementById('selectCancelReason').value || 'Bận việc đột xuất / Lịch công tác';
+            const btnConfirm = document.getElementById('btn-confirm-cancel');
+
+            if (btnConfirm) {
+                btnConfirm.disabled = true;
+                btnConfirm.innerHTML = `
+                    <span class="material-symbols-outlined animate-spin text-base">progress_activity</span>
+                    <span>Đang xử lý hủy sân...</span>
+                `;
+            }
+
+            // Gửi API backend nếu server đang hoạt động
+            try {
+                await fetch(`/api/bookings/${orderId}/cancel`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reason: selectedReason })
+                });
+            } catch (err) {}
+
+            setTimeout(() => {
+                const idx = userBookings.findIndex(b => b.id === orderId);
                 if (idx !== -1) {
-                    history[idx] = booking;
-                } else {
-                    history.unshift(booking);
+                    userBookings[idx].status = 'cancelled';
+                    userBookings[idx].status_label = 'Đã hủy theo yêu cầu';
+                    userBookings[idx].cancelled_at = Date.now();
+                    userBookings[idx].cancel_reason = selectedReason;
+                    userBookings[idx].refund_amount = rt.refundAmount;
+                    userBookings[idx].refund_percent = rt.refundPercent;
+
+                    const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
+                    localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
+                    localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
                 }
-                localStorage.setItem('sb_my_booking_history', JSON.stringify(history));
-                const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
-                localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
-            }
-            const isMatch = !!(booking && (booking.is_matching_enabled || booking.isMatchMaker));
-            window.location.href = `chi-tiet-don-dat-san.html?id=${encodeURIComponent(bookingId)}${isMatch ? '&match=finding' : ''}`;
-        }
 
-        // HÀNH ĐỘNG HỦY ĐẶT SÂN
-        function handleCancelBooking(bookingId) {
-            const confirmCancel = confirm(`Bạn có chắc chắn muốn hủy lượt đặt sân #${bookingId}?\n\nChính sách hủy sân: Bạn sẽ được hoàn lại 100% tiền cọc về tài khoản.`);
-            if (!confirmCancel) return;
-            const idx = userBookings.findIndex(b => b.id === bookingId);
-            if (idx !== -1) {
-                userBookings[idx].status = 'cancelled';
-                userBookings[idx].status_label = 'Đã hủy theo yêu cầu';
-                const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
-                localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
-                localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
+                // Ghi nhận thông báo đã hủy
+                try {
+                    let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
+                    const newCancelNotif = {
+                        id: 'notif-cancel-' + Date.now(),
+                        category: 'booking',
+                        court_name: booking.court_number || "Sân thi đấu",
+                        venue_name: booking.venue_name || "Sân thể thao",
+                        summary_info: `${booking.venue_name} • ${booking.court_number} • ${booking.time_slot} (${booking.date})`,
+                        title: `❌ Đã hủy đặt sân #${orderId} - Hoàn tiền ${rt.refundLabel}`,
+                        desc: `Đã hủy ca ${booking.time_slot} ngày ${booking.date} tại ${booking.venue_name}. Số tiền hoàn: ${rt.refundAmount.toLocaleString('vi-VN')}₫.`,
+                        timestamp: Date.now(),
+                        time: 'Vừa xong',
+                        unread: true,
+                        read: false,
+                        link: `chi-tiet-don-dat-san.html?id=${orderId}`
+                    };
+                    notifs.unshift(newCancelNotif);
+                    localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
+                } catch(e) {}
+
+                closeCancelModal();
+
+                if (btnConfirm) {
+                    btnConfirm.disabled = false;
+                    btnConfirm.innerHTML = `
+                        <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                        <span>Hủy sân &amp; Nhận tiền</span>
+                    `;
+                }
+
                 renderAll();
-                alert(`Đã hủy đặt sân #${bookingId} thành công!\nTiền cọc đã được tạo lệnh hoàn lại về tài khoản nguồn của bạn.`);
-            }
+                alert(`Đã hủy đặt sân #${orderId} thành công! Tiền hoàn ${rt.refundAmount.toLocaleString('vi-VN')}₫ đang được xử lý.`);
+            }, 600);
         }
 
-        // ĐĂNG XUẤT TÀI KHOẢN
         function handleLogout() {
             if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
                 localStorage.removeItem("currentUser");
@@ -942,7 +1186,6 @@
             }
         }
 
-        // KHỞI CHẠY VÀ LẮNG NGHE ĐỒNG BỘ REALTIME
         document.addEventListener('DOMContentLoaded', function () {
             initUserData();
             initTabsAndSearch();
@@ -971,6 +1214,10 @@
 
             renderAll();
 
+            setInterval(() => {
+                renderAll();
+            }, 30000);
+
             setTimeout(() => {
                 let cardToHighlight = null;
                 if (targetId) {
@@ -991,6 +1238,10 @@
             }, 300);
         });
 
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCancelModal();
+        });
+
         window.addEventListener('focus', function () {
             initUserData();
             renderAll();
@@ -1002,7 +1253,6 @@
         });
     </script>
 
-    <!-- NHÚNG FILE AUTH DÙNG CHUNG ĐỂ ĐỒNG BỘ THÔNG TIN USER TỪ LOCALSTORAGE -->
     <script src="auth.js"></script>
     <script src="notification-header.js"></script>
 </body>

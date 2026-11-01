@@ -235,7 +235,200 @@ app.post('/api/auth/login', (req, res) => {
     });
 });
 
-// KHỞI CHẠY SERVER BACKEND
+// ============================================================================
+// LOGIC TỰ ĐỘNG ĐỒNG BỘ: TÍNH TRẠNG THÁI THEO GIỜ THỰC & CHÍNH SÁCH HOÀN TIỀN (ĐIỀU 5)
+// ============================================================================
+
+// Hàm chuẩn hóa thông tin đơn hàng, tính trạng thái động và tiền hoàn
+function processBookingItem(booking) {
+    const statusRaw = (booking.status || '').toLowerCase();
+    const price = Number(booking.total_price || booking.totalPrice || booking.paid_amount || booking.paidDeposit || 0);
+
+    // 1. Trường hợp đơn đã hủy
+    if (statusRaw === 'cancelled' || statusRaw === 'đã hủy' || statusRaw === 'da huy') {
+        return {
+            ...booking,
+            display_status: 'Đã hủy',
+            status_code: 'CANCELLED',
+            can_cancel: false,
+            refund_percent: booking.refund_percent || 0,
+            refund_amount: booking.refund_amount || 0,
+            refund_label: 'Đã hủy đơn'
+        };
+    }
+
+    const now = new Date();
+
+    // Chuẩn hóa ngày thi đấu YYYY-MM-DD
+    let rawDate = booking.booking_date || booking.bookingDate || booking.date || '';
+    let dateStr = '';
+    if (rawDate instanceof Date) {
+        dateStr = rawDate.toISOString().split('T')[0];
+    } else if (typeof rawDate === 'string') {
+        if (rawDate.includes('/')) {
+            const parts = rawDate.split('/');
+            if (parts.length === 3) dateStr = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        } else if (rawDate.includes('T')) {
+            dateStr = rawDate.split('T')[0];
+        } else {
+            dateStr = rawDate;
+        }
+    }
+
+    const startStr = booking.start_time || booking.startTime || '00:00';
+    const endStr = booking.end_time || booking.endTime || '23:59';
+
+    const startDateTime = new Date(`${dateStr}T${startStr.length === 5 ? startStr + ':00' : startStr}`);
+    const endDateTime = new Date(`${dateStr}T${endStr.length === 5 ? endStr + ':00' : endStr}`);
+
+    // 2. Kiểm tra nếu đã qua giờ kết thúc (ví dụ sau 15:00 là 15:01) -> Hoàn thành
+    if (now >= endDateTime) {
+        return {
+            ...booking,
+            display_status: 'Hoàn thành',
+            status_code: 'COMPLETED',
+            can_cancel: false,
+            refund_percent: 0,
+            refund_amount: 0,
+            refund_label: 'Trận đấu đã kết thúc'
+        };
+    }
+
+    // 3. Trong khung giờ thi đấu (ví dụ 14:00 - 15:00) -> Đang trong trận (Cấm hủy)
+    if (now >= startDateTime && now < endDateTime) {
+        return {
+            ...booking,
+            display_status: 'Đang trong trận',
+            status_code: 'IN_PROGRESS',
+            can_cancel: false,
+            refund_percent: 0,
+            refund_amount: 0,
+            refund_label: 'Đang trong trận đấu'
+        };
+    }
+
+    // 4. Trước khung giờ thi đấu -> Sắp tới (Tính tiền hoàn theo Điều 5)
+    const diffHours = (startDateTime - now) / (1000 * 60 * 60);
+    let refundPercent = 0;
+    let refundLabel = 'Không hoàn cọc (0%)';
+
+    if (diffHours >= 24) {
+        // Trước 24 giờ: Hoàn 100%
+        refundPercent = 100;
+        refundLabel = '100% Hoàn tiền';
+    } else if (diffHours >= 6 && diffHours < 24) {
+        // Từ 6 đến 24 giờ: Hoàn 50%
+        refundPercent = 50;
+        refundLabel = '50% Hoàn tiền';
+    } else {
+        // Dưới 6 giờ / Sát giờ: Không hoàn cọc (0%)
+        refundPercent = 0;
+        refundLabel = 'Không hoàn cọc (0%)';
+    }
+
+    const refundAmount = Math.round((price * refundPercent) / 100);
+
+    return {
+        ...booking,
+        display_status: 'Sắp tới',
+        status_code: 'UPCOMING',
+        can_cancel: true,
+        refund_percent: refundPercent,
+        refund_amount: refundAmount,
+        refund_label: refundLabel
+    };
+}
+
+// API LẤY DANH SÁCH LỊCH SỬ ĐẶT SÂN
+app.get('/api/bookings', (req, res) => {
+    const { user_id } = req.query;
+    let sql = 'SELECT * FROM bookings';
+    const params = [];
+
+    if (user_id) {
+        sql += ' WHERE user_id = ?';
+        params.push(user_id);
+    }
+    sql += ' ORDER BY id DESC';
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.error('Lỗi lấy danh sách bookings:', err);
+            return res.status(500).json({ error: err.message });
+        }
+        const processedList = (results || []).map(b => processBookingItem(b));
+        res.json(processedList);
+    });
+});
+
+// API LẤY CHI TIẾT 1 ĐƠN ĐẶT SÂN
+app.get('/api/bookings/:id', (req, res) => {
+    const bookingId = req.params.id;
+    const sql = 'SELECT * FROM bookings WHERE id = ? OR booking_code = ? LIMIT 1';
+
+    db.query(sql, [bookingId, bookingId], (err, results) => {
+        if (err) {
+            console.error('Lỗi lấy chi tiết booking:', err);
+            return res.status(500).json({ error: err.message });
+        }
+        if (!results || results.length === 0) {
+            return res.status(404).json({ error: 'Không tìm thấy đơn đặt sân!' });
+        }
+        const bookingDetail = processBookingItem(results[0]);
+        res.json(bookingDetail);
+    });
+});
+
+// API THỰC HIỆN HỦY ĐẶT SÂN VÀ ĐỒNG BỘ TRỰC TIẾP VÀO DATABASE
+app.post('/api/bookings/:id/cancel', (req, res) => {
+    const bookingId = req.params.id;
+    const sqlSelect = 'SELECT * FROM bookings WHERE id = ? OR booking_code = ? LIMIT 1';
+
+    db.query(sqlSelect, [bookingId, bookingId], (err, results) => {
+        if (err) return res.status(500).json({ success: false, message: err.message });
+        if (!results || results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Không tìm thấy đơn đặt sân!' });
+        }
+
+        const booking = results[0];
+        const processed = processBookingItem(booking);
+
+        // Chặn nếu đang trong trận hoặc đã kết thúc
+        if (!processed.can_cancel) {
+            return res.status(400).json({
+                success: false,
+                message: 'Không thể hủy do trận đấu đang diễn ra hoặc đã kết thúc!'
+            });
+        }
+
+        // Cập nhật trạng thái hủy vĩnh viễn vào Database
+        const sqlUpdate = `
+            UPDATE bookings 
+            SET status = 'Đã hủy', 
+                refund_amount = ?, 
+                refund_percent = ?, 
+                cancelled_at = NOW() 
+            WHERE id = ? OR booking_code = ?
+        `;
+
+        db.query(sqlUpdate, [processed.refund_amount, processed.refund_percent, bookingId, bookingId], (updateErr) => {
+            if (updateErr) {
+                console.error('Lỗi cập nhật hủy đơn vào DB:', updateErr);
+                return res.status(500).json({ success: false, message: updateErr.message });
+            }
+
+            res.json({
+                success: true,
+                message: 'Hủy đơn đặt sân thành công!',
+                refund_amount: processed.refund_amount,
+                refund_percent: processed.refund_percent,
+                refund_label: processed.refund_label
+            });
+        });
+    });
+});
+
+// KHỞI CHẠY SERVER BACKEND (LUÔN ĐẶT Ở CUỐI FILE)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server đang chạy tại port ${PORT}`);
