@@ -15,8 +15,8 @@ app.get('/', (req, res) => {
 
 // CẤU HÌNH GỬI EMAIL TỰ ĐỘNG
 const EMAIL_CONFIG = {
-    user: 'your-email@gmail.com',
-    pass: 'your-16-char-app-password'
+    user: process.env.EMAIL_USER || 'your-email@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your-16-char-app-password'
 };
 
 const transporter = nodemailer.createTransport({
@@ -29,11 +29,11 @@ const transporter = nodemailer.createTransport({
 
 // CẤU HÌNH KẾT NỐI TIDB CLOUD
 const db = mysql.createPool({
-    host: 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
-    port: 4000,
-    user: '2E2iD6hpijCUELF.root',
-    password: 'NBWKpLMOIGU0NlEt',
-    database: 'test',
+    host: process.env.DB_HOST || 'gateway01.ap-northeast-1.prod.aws.tidbcloud.com',
+    port: process.env.DB_PORT || 4000,
+    user: process.env.DB_USER || '2E2iD6hpijCUELF.root',
+    password: process.env.DB_PASSWORD || 'NBWKpLMOIGU0NlEt',
+    database: process.env.DB_NAME || 'test',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
@@ -59,12 +59,12 @@ app.get('/api/test-db', (req, res) => {
         res.json({
             success: true,
             message: 'Kết nối Database MySQL hoạt động bình thường!',
-            total_facilities: results[0].total_facilities
+            total_facilities: results[0]?.total_facilities || 0
         });
     });
 });
 
-// API LẤY DANH SÁCH 29 CỤM SÂN (LẤY TRỰC TIẾP TỪ BẢNG FACILITIES)
+// API LẤY DANH SÁCH CỤM SÂN
 app.get('/api/facilities', (req, res) => {
     const { q, district, area, sport } = req.query;
     let sql = 'SELECT * FROM facilities WHERE 1=1';
@@ -72,13 +72,14 @@ app.get('/api/facilities', (req, res) => {
 
     if (q) {
         sql += ' AND (name LIKE ? OR address LIKE ?)';
-        params.push(`%${q}%`, `%${q}%`);
+        params.push(`%${q.trim()}%`, `%${q.trim()}%`);
     }
 
     const targetArea = district || area;
     if (targetArea) {
         sql += ' AND (district_name LIKE ? OR district LIKE ?)';
-        params.push(`%${targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa')}%`, `%${targetArea}%`);
+        const cleanArea = targetArea.replace('cau-giay', 'Cầu Giấy').replace('tay-ho', 'Tây Hồ').replace('dong-da', 'Đống Đa');
+        params.push(`%${cleanArea}%`, `%${targetArea}%`);
     }
 
     if (sport && sport !== 'all') {
@@ -188,75 +189,61 @@ app.get('/api/facilities/:id/slots', (req, res) => {
     });
 });
 
-// API AUTH REGISTER
+// API AUTH REGISTER (CHUẨN HÓA INPUT)
 app.post('/api/auth/register', (req, res) => {
-    const { full_name, email, phone, password } = req.body;
-    if (!full_name || !email || !phone || !password) {
-        return res.status(400).json({ error: 'Vui lòng điền đầy đủ họ tên, email, SĐT và mật khẩu!' });
+    const { full_name, email, phone, password, password_hash } = req.body;
+    const cleanName = (full_name || '').trim();
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPhone = (phone || '').replace(/[\s.\-]/g, '').replace(/^\+84/, '0');
+    const pwdToSave = (password_hash || password || '').trim();
+
+    if (!cleanName || !cleanPhone || !pwdToSave) {
+        return res.status(400).json({ error: 'Vui lòng điền đầy đủ họ tên, SĐT và mật khẩu!' });
     }
-    const checkSql = 'SELECT id FROM users WHERE email = ? OR phone = ?';
-    db.query(checkSql, [email, phone], (err, users) => {
+
+    const checkSql = 'SELECT id FROM users WHERE phone = ?' + (cleanEmail ? ' OR email = ?' : '');
+    const checkParams = cleanEmail ? [cleanPhone, cleanEmail] : [cleanPhone];
+
+    db.query(checkSql, checkParams, (err, users) => {
         if (err) return res.status(500).json({ error: err.message });
         if (users && users.length > 0) {
-            return res.status(400).json({ error: 'Email hoặc số điện thoại này đã được đăng ký tài khoản!' });
+            return res.status(400).json({ error: 'Số điện thoại hoặc email này đã được đăng ký tài khoản!' });
         }
+
         const insertSql = 'INSERT INTO users (id, full_name, email, phone, password_hash, role) VALUES (UUID(), ?, ?, ?, ?, "USER")';
-        db.query(insertSql, [full_name, email, phone, password], (insertErr) => {
+        db.query(insertSql, [cleanName, cleanEmail || null, cleanPhone, pwdToSave], (insertErr) => {
             if (insertErr) return res.status(500).json({ error: insertErr.message });
             res.status(201).json({ success: true, message: 'Đăng ký tài khoản thành công!' });
         });
     });
 });
-// Đảm bảo ở đầu file đã require bcrypt:
-const bcrypt = require('bcrypt'); // hoặc require('bcryptjs')
 
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        // 1. Luôn dùng .trim() để tránh lỗi khoảng trắng vô hình
-        const cleanEmail = email ? email.trim().toLowerCase() : '';
-        const cleanPassword = password ? password.trim() : '';
-
-        // 2. Tìm tài khoản trong Database theo Email
-        const [users] = await db.query('SELECT * FROM users WHERE email = ?', [cleanEmail]);
-        if (users.length === 0) {
-            return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng!' });
-        }
-
-        const user = users[0];
-
-        // 3. ĐIỂM SỬA CHÍNH: Dùng bcrypt.compare thay vì so sánh dấu ===
-        const isMatch = await bcrypt.compare(cleanPassword, user.password_hash);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Email hoặc mật khẩu không đúng!' });
-        }
-
-        // 4. Đăng nhập thành công -> Trả về thông tin user
-        delete user.password_hash;
-        return res.status(200).json({
-            message: 'Đăng nhập thành công!',
-            user: user
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: 'Lỗi máy chủ!' });
-    }
-});
-// API AUTH LOGIN
+// API AUTH LOGIN (TỰ ĐỘNG CHUẨN HÓA SỐ ĐT VÀ KIỂM TRA MẬT KHẨU)
 app.post('/api/auth/login', (req, res) => {
-    const { emailOrPhone, password } = req.body;
-    if (!emailOrPhone || !password) {
+    const { emailOrPhone, password, password_hash } = req.body;
+    const cleanAcc = (emailOrPhone || '').trim();
+    const cleanPwd = (password_hash || password || '').trim();
+
+    if (!cleanAcc || !cleanPwd) {
         return res.status(400).json({ error: 'Vui lòng nhập tài khoản (Email/SĐT) và mật khẩu!' });
     }
-    const loginSql = 'SELECT id, full_name, email, phone, role FROM users WHERE (email = ? OR phone = ?) AND password_hash = ?';
-    db.query(loginSql, [emailOrPhone, emailOrPhone, password], (err, results) => {
+
+    const normAcc = cleanAcc.includes('@') ? cleanAcc.toLowerCase() : cleanAcc.replace(/[\s.\-]/g, '').replace(/^\+84/, '0');
+
+    const loginSql = 'SELECT id, full_name, email, phone, role, password_hash FROM users WHERE email = ? OR phone = ? LIMIT 1';
+    db.query(loginSql, [normAcc, normAcc], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (!results || results.length === 0) {
-            return res.status(401).json({ error: 'Tài khoản hoặc mật khẩu không chính xác!' });
+            return res.status(401).json({ error: 'Tài khoản chưa tồn tại hoặc mật khẩu không chính xác!' });
         }
+
         const user = results[0];
+
+        // So khớp trực tiếp chuỗi mật khẩu/hash
+        if (user.password_hash !== cleanPwd) {
+            return res.status(401).json({ error: 'Mật khẩu không chính xác!' });
+        }
+
         res.json({
             success: true,
             message: 'Đăng nhập thành công!',
@@ -275,12 +262,10 @@ app.post('/api/auth/login', (req, res) => {
 // LOGIC TỰ ĐỘNG ĐỒNG BỘ: TÍNH TRẠNG THÁI THEO GIỜ THỰC & CHÍNH SÁCH HOÀN TIỀN (ĐIỀU 5)
 // ============================================================================
 
-// Hàm chuẩn hóa thông tin đơn hàng, tính trạng thái động và tiền hoàn
 function processBookingItem(booking) {
     const statusRaw = (booking.status || '').toLowerCase();
     const price = Number(booking.total_price || booking.totalPrice || booking.paid_amount || booking.paidDeposit || 0);
 
-    // 1. Trường hợp đơn đã hủy
     if (statusRaw === 'cancelled' || statusRaw === 'đã hủy' || statusRaw === 'da huy') {
         return {
             ...booking,
@@ -295,7 +280,6 @@ function processBookingItem(booking) {
 
     const now = new Date();
 
-    // Chuẩn hóa ngày thi đấu YYYY-MM-DD
     let rawDate = booking.booking_date || booking.bookingDate || booking.date || '';
     let dateStr = '';
     if (rawDate instanceof Date) {
@@ -317,7 +301,6 @@ function processBookingItem(booking) {
     const startDateTime = new Date(`${dateStr}T${startStr.length === 5 ? startStr + ':00' : startStr}`);
     const endDateTime = new Date(`${dateStr}T${endStr.length === 5 ? endStr + ':00' : endStr}`);
 
-    // 2. Kiểm tra nếu đã qua giờ kết thúc (ví dụ sau 15:00 là 15:01) -> Hoàn thành
     if (now >= endDateTime) {
         return {
             ...booking,
@@ -330,7 +313,6 @@ function processBookingItem(booking) {
         };
     }
 
-    // 3. Trong khung giờ thi đấu (ví dụ 14:00 - 15:00) -> Đang trong trận (Cấm hủy)
     if (now >= startDateTime && now < endDateTime) {
         return {
             ...booking,
@@ -343,21 +325,17 @@ function processBookingItem(booking) {
         };
     }
 
-    // 4. Trước khung giờ thi đấu -> Sắp tới (Tính tiền hoàn theo Điều 5)
     const diffHours = (startDateTime - now) / (1000 * 60 * 60);
     let refundPercent = 0;
     let refundLabel = 'Không hoàn cọc (0%)';
 
     if (diffHours >= 24) {
-        // Trước 24 giờ: Hoàn 100%
         refundPercent = 100;
         refundLabel = '100% Hoàn tiền';
     } else if (diffHours >= 6 && diffHours < 24) {
-        // Từ 6 đến 24 giờ: Hoàn 50%
         refundPercent = 50;
         refundLabel = '50% Hoàn tiền';
     } else {
-        // Dưới 6 giờ / Sát giờ: Không hoàn cọc (0%)
         refundPercent = 0;
         refundLabel = 'Không hoàn cọc (0%)';
     }
@@ -429,7 +407,6 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
         const booking = results[0];
         const processed = processBookingItem(booking);
 
-        // Chặn nếu đang trong trận hoặc đã kết thúc
         if (!processed.can_cancel) {
             return res.status(400).json({
                 success: false,
@@ -437,7 +414,6 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
             });
         }
 
-        // Cập nhật trạng thái hủy vĩnh viễn vào Database
         const sqlUpdate = `
             UPDATE bookings 
             SET status = 'Đã hủy', 
@@ -464,7 +440,7 @@ app.post('/api/bookings/:id/cancel', (req, res) => {
     });
 });
 
-// KHỞI CHẠY SERVER BACKEND (LUÔN ĐẶT Ở CUỐI FILE)
+// KHỞI CHẠY SERVER BACKEND
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server đang chạy tại port ${PORT}`);
