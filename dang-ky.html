@@ -8,7 +8,7 @@
     <!-- Font chữ & Icon -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
@@ -42,13 +42,13 @@
                         "outline-variant": "#bdcaba",
                         "error": "#ba1a1a"
                     },
-                    spacing: { 
-                        "space-xs": "0.25rem", 
-                        "space-sm": "0.5rem", 
-                        "space-md": "1rem", 
-                        "space-lg": "1.5rem", 
-                        "space-xl": "2rem", 
-                        "margin": "1.25rem" 
+                    spacing: {
+                        "space-xs": "0.25rem",
+                        "space-sm": "0.5rem",
+                        "space-md": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2rem",
+                        "margin": "1.25rem"
                     }
                 }
             }
@@ -70,7 +70,7 @@
     <!-- HEADER TRANG ĐĂNG KÝ: ĐÃ BỎ THANH ĐIỀU HƯỚNG & CHUÔNG -->
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div class="h-20 max-w-[1440px] mx-auto px-4 lg:px-8 flex items-center justify-between">
-       
+            <a class="flex items-center gap-2" href="trangchu-user.html">
                 <span class="text-2xl text-primary font-bold tracking-tight">SportBooking</span>
             </a>
 
@@ -95,7 +95,8 @@
                     <!-- Huy hiệu trạng thái hệ thống -->
                     <div class="flex items-center justify-between mb-space-md">
                         <a class="inline-flex items-center gap-space-xs text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="trangchu-user.html">
-                        
+                            <span class="material-symbols-outlined text-lg"></span>
+                            <span></span>
                         </a>
                         <div class="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-high text-primary text-xs font-semibold">
                             <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
@@ -125,7 +126,7 @@
                                     <span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary-container text-on-primary-container text-sm font-bold">1</span>
                                     <h2 class="text-lg font-bold text-on-surface">Thông tin định danh</h2>
                                 </div>
-                                
+                               
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
                                     <!-- Họ và tên -->
                                     <div class="flex flex-col gap-space-xs">
@@ -241,7 +242,7 @@
                                     <div class="flex items-center gap-space-xs">
                                         <span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary-container text-on-primary-container text-sm font-bold">2</span>
                                         <div>
-                                            <h3 class="text-lg font-bold text-on-surface">Môn thể thao & Trình độ kỹ năng</h3>
+                                            <h3 class="text-lg font-bold text-on-surface">Môn thể thao &amp; Trình độ kỹ năng</h3>
                                             <p class="text-xs text-on-surface-variant">Dữ liệu hỗ trợ thuật toán MatchMaker tự động ghép kèo đối chơi cân sức</p>
                                         </div>
                                     </div>
@@ -291,7 +292,7 @@
                                                 <div class="mt-space-xs">
                                                     <h4 class="text-base font-bold text-on-surface">Mới chơi</h4>
                                                     <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">
-                                                        Mới làm quen, nắm sơ luật, rèn luyện thể lực & sức khỏe nhẹ nhàng, giao lưu vui vẻ.
+                                                        Mới làm quen, nắm sơ luật, rèn luyện thể lực &amp; sức khỏe nhẹ nhàng, giao lưu vui vẻ.
                                                     </p>
                                                 </div>
                                             </div>
@@ -362,20 +363,20 @@
                                 </div>
                             </div>
 
-                            <!-- ĐIỀU KHOẢN & BẢO MẬT: BẤM MỞ POPUP ĐỌC ĐỂ XÁC NHẬN[cite: 2] -->
+                            <!-- ĐIỀU KHOẢN & BẢO MẬT: BẤM MỞ POPUP ĐỌC ĐỂ XÁC NHẬN -->
                             <div class="flex flex-col gap-2 p-4 rounded-2xl bg-surface-container-low/70 border border-gray-100" id="termsAgreementBox">
                                 <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold uppercase text-gray-500">Quy định & Thỏa thuận nền tảng</span>
+                                    <span class="text-xs font-bold uppercase text-gray-500">Quy định &amp; Thỏa thuận nền tảng</span>
                                     <span id="termsStatusBadge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-error text-[11px] font-bold">
                                         <span class="material-symbols-outlined text-[14px]">cancel</span>
-                                        <span>Chưa xác nhận</span>
+                                        <span id="termsStatusText">Chưa xác nhận</span>
                                     </span>
                                 </div>
-                                
+                               
                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                                     <p class="text-xs sm:text-sm text-gray-700 leading-snug">
-                                        Bắt buộc đọc và xác nhận 
-                                        <span class="font-bold text-on-surface">Điều khoản sử dụng</span> &amp; 
+                                        Bắt buộc đọc và xác nhận
+                                        <span class="font-bold text-on-surface">Điều khoản sử dụng</span> &amp;
                                         <span class="font-bold text-on-surface">Chính sách bảo mật</span> trước khi tạo tài khoản.
                                     </p>
                                     <button type="button" id="btnOpenTermsPopup" class="px-4 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
@@ -384,7 +385,7 @@
                                     </button>
                                 </div>
 
-                                <!-- Input ẩn để kiểm soát tính hợp lệ của form[cite: 2] -->
+                                <!-- Input ẩn để kiểm soát tính hợp lệ của form -->
                                 <input type="hidden" id="termsConfirmedInput" name="termsConfirmed" value="false">
                             </div>
 
@@ -439,8 +440,6 @@
             </div>
             <div class="flex flex-col md:items-end gap-1.5">
                 <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
-                
-                    <span>•</span>
                     <a class="hover:text-primary transition-colors" href="dieu-khoan-su-dung.html">Điều khoản sử dụng</a>
                     <span>•</span>
                     <a class="hover:text-primary transition-colors" href="chinh-sach-bao-mat.html">Chính sách bảo mật</a>
@@ -449,6 +448,97 @@
             </div>
         </div>
     </footer>
+
+    <!-- ========================================================================= -->
+    <!-- 1. MODAL ĐỌC & XÁC NHẬN ĐIỀU KHOẢN & BẢO MẬT (POPUP HIỆN ĐẠI) -->
+    <!-- ========================================================================= -->
+    <div id="termsModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[85vh] animate-in fade-in zoom-in-95 duration-200">
+            <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-surface-container-low">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-2xl">verified_user</span>
+                    <h3 class="text-base font-bold text-on-surface">Điều khoản sử dụng &amp; Bảo mật</h3>
+                </div>
+                <button type="button" onclick="closeTermsModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-500 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto text-xs text-gray-600 leading-relaxed flex flex-col gap-3 max-h-[50vh]">
+                <p class="font-semibold text-gray-800">Chào mừng bạn đến với Nền tảng đặt sân &amp; ghép đối thể thao SportBooking Hà Nội!</p>
+                <div class="p-3 bg-green-50 rounded-xl border border-green-200 text-green-900">
+                    <strong>1. Quy định đặt sân &amp; giữ chỗ:</strong> Người chơi cam kết có mặt đúng giờ thi đấu đã đặt. Hệ thống hỗ trợ hoàn cọc linh hoạt 100% trước 24h và 50% trước 6h.
+                </div>
+                <div class="p-3 bg-blue-50 rounded-xl border border-blue-200 text-blue-900">
+                    <strong>2. Quy tắc ghép kèo MatchMaker:</strong> Tôn trọng bạn chơi, tuân thủ đúng trình độ đã khai báo (Beginner, Intermediate, Advanced) để đảm bảo chất lượng trận đấu.
+                </div>
+                <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900">
+                    <strong>3. Bảo mật thông tin cá nhân:</strong> Thông tin số điện thoại và email được mã hóa và bảo mật nghiêm ngặt theo Nghị định 13/2023/NĐ-CP.
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-gray-100 bg-surface-container-lowest flex items-center justify-end gap-3">
+                <button type="button" onclick="closeTermsModal()" class="px-4 py-2.5 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
+                    Để sau
+                </button>
+                <button type="button" onclick="confirmTermsAgreement()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold shadow-md transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span class="material-symbols-outlined text-sm">check_circle</span>
+                    <span>Tôi đồng ý &amp; Xác nhận</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- 2. POPUP MODAL ĐĂNG KÝ THÀNH CÔNG (TỰ ĐỘNG CHUYỂN VỀ TRANG ĐĂNG NHẬP) -->
+    <!-- ========================================================================= -->
+    <div id="signupSuccessModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-gray-100 p-6 md:p-8 flex flex-col items-center text-center gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <!-- Icon vòng tròn tích xanh hiệu ứng đẹp -->
+            <div class="w-20 h-20 rounded-full bg-emerald-50 border-4 border-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
+                <span class="material-symbols-outlined text-5xl">check_circle</span>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <h3 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Đăng ký thành công!</h3>
+                <p class="text-sm text-gray-600 leading-relaxed" id="successMessageText">
+                    Tài khoản SportBooking của bạn đã được khởi tạo thành công.
+                </p>
+            </div>
+
+            <!-- Khung thông tin tóm tắt tài khoản -->
+            <div class="w-full p-3.5 bg-surface-container-low rounded-2xl border border-gray-100 text-left text-xs flex flex-col gap-1.5">
+                <div class="flex justify-between items-center text-gray-500">
+                    <span>Họ và tên:</span>
+                    <strong class="text-slate-800 text-sm font-bold" id="displayRegisteredName">Nguyễn Tuấn Anh</strong>
+                </div>
+                <div class="flex justify-between items-center text-gray-500">
+                    <span>Số điện thoại:</span>
+                    <strong class="text-primary font-bold" id="displayRegisteredPhone">0988 123 456</strong>
+                </div>
+                <div class="flex justify-between items-center text-gray-500">
+                    <span>Vai trò:</span>
+                    <span class="px-2 py-0.5 rounded-full bg-orange-100 text-secondary text-[11px] font-bold">Thành viên mới</span>
+                </div>
+            </div>
+
+            <!-- Thanh tiến trình tự động chuyển hướng -->
+            <div class="w-full flex flex-col gap-2 pt-1">
+                <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
+                    <div id="countdownProgressBar" class="bg-primary h-full w-full transition-all duration-[1500ms] ease-linear"></div>
+                </div>
+                <p class="text-xs text-gray-400">
+                    Tự động chuyển về trang đăng nhập sau <span id="countdownSecondsText" class="font-bold text-primary">2</span> giây...
+                </p>
+            </div>
+
+            <!-- Nút bấm thủ công nếu không muốn chờ -->
+            <button type="button" onclick="redirectToLoginPage()" class="w-full py-3 rounded-xl bg-primary hover:bg-primary-container text-white text-sm font-bold shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+                <span>Đăng nhập ngay</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+            </button>
+        </div>
+    </div>
 
     <!-- SCRIPT NGHIỆP VỤ FORM ĐĂNG KÝ -->
     <script>
@@ -515,7 +605,7 @@
                 levelCards.forEach(c => {
                     c.classList.remove('active-level', 'bg-surface-container-lowest', 'shadow-md', 'border-primary/20');
                     c.classList.add('bg-surface', 'shadow-sm', 'border-transparent');
-                    
+                   
                     const title = c.querySelector('h4');
                     if (title) {
                         title.classList.remove('text-primary');
@@ -536,7 +626,7 @@
 
                 card.classList.remove('bg-surface', 'shadow-sm', 'border-transparent');
                 card.classList.add('active-level', 'bg-surface-container-lowest', 'shadow-md', 'border-primary/20');
-                
+               
                 const activeTitle = card.querySelector('h4');
                 if (activeTitle) {
                     activeTitle.classList.remove('text-on-surface');
@@ -555,9 +645,147 @@
                 }
             });
         });
+
+        // =========================================================================
+        // XỬ LÝ MODAL ĐIỀU KHOẢN VÀ XÁC NHẬN
+        // =========================================================================
+        const termsModal = document.getElementById('termsModal');
+        const btnOpenTerms = document.getElementById('btnOpenTermsPopup');
+        const termsInput = document.getElementById('termsConfirmedInput');
+        const termsBadge = document.getElementById('termsStatusBadge');
+        const termsText = document.getElementById('termsStatusText');
+
+        function openTermsModal() {
+            if (termsModal) termsModal.classList.remove('hidden');
+        }
+
+        function closeTermsModal() {
+            if (termsModal) termsModal.classList.add('hidden');
+        }
+
+        function confirmTermsAgreement() {
+            if (termsInput) termsInput.value = "true";
+            window.isTermsAccepted = true;
+            if (termsBadge) {
+                termsBadge.className = "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold";
+                termsBadge.innerHTML = `<span class="material-symbols-outlined text-[14px]">check_circle</span><span>Đã xác nhận</span>`;
+            }
+            closeTermsModal();
+        }
+
+        if (btnOpenTerms) {
+            btnOpenTerms.addEventListener('click', openTermsModal);
+        }
+
+        // =========================================================================
+        // XỬ LÝ ĐĂNG KÝ THÀNH CÔNG & CHUYỂN HƯỚNG VỀ TRANG ĐĂNG NHẬP
+        // =========================================================================
+        let registeredUserPhone = '';
+
+        function redirectToLoginPage() {
+            const redirectUrl = registeredUserPhone ? `dang-nhap.html?phone=${encodeURIComponent(registeredUserPhone)}` : 'dang-nhap.html';
+            window.location.href = redirectUrl;
+        }
+
+        function showSignupSuccess(user) {
+            registeredUserPhone = user.phone || '';
+            const modal = document.getElementById('signupSuccessModal');
+            const nameEl = document.getElementById('displayRegisteredName');
+            const phoneEl = document.getElementById('displayRegisteredPhone');
+            const msgEl = document.getElementById('successMessageText');
+            const progressBar = document.getElementById('countdownProgressBar');
+
+            if (nameEl) nameEl.textContent = user.fullName || 'Thành viên mới';
+            if (phoneEl) phoneEl.textContent = user.phone || '';
+            if (msgEl) msgEl.textContent = `Chúc mừng ${user.fullName || 'bạn'}! Tài khoản đã được kích hoạt thành công.`;
+
+            if (modal) {
+                modal.classList.remove('hidden');
+            }
+
+            // Thanh chạy đếm ngược 1.8 giây tự động chuyển về đăng nhập
+            if (progressBar) {
+                setTimeout(() => {
+                    progressBar.style.width = '0%';
+                }, 50);
+            }
+
+            setTimeout(() => {
+                redirectToLoginPage();
+            }, 1800);
+        }
+
+        // BẮT SỰ KIỆN SUBMIT FORM ĐĂNG KÝ
+        const signupForm = document.getElementById('signupForm');
+        if (signupForm) {
+            signupForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const fullName = (document.getElementById('fullName')?.value || '').trim();
+                const phone = (document.getElementById('phoneNumber')?.value || '').replace(/[\s.\-]/g, '').replace(/^\+84/, '0');
+                const email = (document.getElementById('email')?.value || '').trim().toLowerCase();
+                const password = document.getElementById('password')?.value || '';
+                const confirmPassword = document.getElementById('confirmPassword')?.value || '';
+                const termsConfirmed = (termsInput && termsInput.value === 'true') || window.isTermsAccepted === true;
+
+                // Kiểm tra tính hợp lệ của dữ liệu
+                if (fullName.length < 2) {
+                    alert('Vui lòng nhập họ và tên đầy đủ.');
+                    return;
+                }
+                if (!/^0\d{9}$/.test(phone)) {
+                    alert('Số điện thoại không hợp lệ (phải gồm 10 chữ số, bắt đầu bằng số 0).');
+                    return;
+                }
+                if (password.length < 8) {
+                    alert('Mật khẩu phải có tối thiểu 8 ký tự.');
+                    return;
+                }
+                if (password !== confirmPassword) {
+                    alert('Mật khẩu và xác nhận mật khẩu không khớp. Vui lòng kiểm tra lại!');
+                    return;
+                }
+                if (!termsConfirmed) {
+                    // Nếu chưa đọc điều khoản, tự động mở popup điều khoản cho người dùng
+                    openTermsModal();
+                    return;
+                }
+
+                // Lưu tài khoản vào localStorage (sb_users) để đăng nhập được ngay
+                let users = [];
+                try {
+                    users = JSON.parse(localStorage.getItem('sb_users') || '[]');
+                } catch(err) { users = []; }
+
+                if (users.some(u => u.phone === phone)) {
+                    alert('Số điện thoại này đã được đăng ký tài khoản. Vui lòng sử dụng số khác hoặc bấm Đăng nhập!');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    fullName: fullName,
+                    name: fullName,
+                    phone: phone,
+                    email: email,
+                    password: password,
+                    role: 'user',
+                    gender: document.querySelector('input[name="gender"]:checked')?.value || 'nam',
+                    sport: document.getElementById('favoriteSport')?.value || 'bongda',
+                    level: document.querySelector('input[name="skillLevel"]:checked')?.value || 'intermediate',
+                    createdAt: new Date().toISOString()
+                };
+
+                users.push(newUser);
+                localStorage.setItem('sb_users', JSON.stringify(users));
+
+                // Hiển thị Popup Đăng ký thành công và tự động chuyển về dang-nhap.html
+                showSignupSuccess(newUser);
+            });
+        }
     </script>
 
-    <!-- SCRIPT CHUNG QUẢN LÝ PHIÊN & POPUP ĐIỀU KHOẢN[cite: 1] -->
+    <!-- SCRIPT CHUNG QUẢN LÝ PHIÊN -->
     <script src="auth.js"></script>
 </body>
 </html>
