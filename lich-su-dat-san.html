@@ -93,7 +93,6 @@
             </div>
 
             <div class="flex items-center gap-space-lg">
-                <!-- KHỐI CHUÔNG THÔNG BÁO -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button" title="Thông báo">
                         <span class="material-symbols-outlined text-[24px] align-middle">notifications</span>
@@ -120,7 +119,6 @@
                     </div>
                 </div>
 
-                <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ QUA AUTH.JS -->
                 <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
                     <div id="headerUserAvatar" class="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold flex items-center justify-center text-sm">
                         T
@@ -151,7 +149,7 @@
                         </p>
                     </div>
                     <div class="flex items-center gap-space-sm self-start md:self-auto">
-                        <button onclick="alert('Đã đồng bộ lịch thi đấu thành công vào Google Calendar của bạn!')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-semibold transition-colors shadow-sm cursor-pointer" type="button">
+                        <button onclick="showToast('Đã đồng bộ lịch thi đấu vào Google Calendar!')" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-sm font-semibold transition-colors shadow-sm cursor-pointer" type="button">
                             <span class="material-symbols-outlined text-lg text-primary">calendar_month</span>
                             <span>Đồng bộ Google Calendar</span>
                         </button>
@@ -244,7 +242,7 @@
                     </div>
                 </div>
 
-                <!-- Danh sách thẻ đặt sân (Render động) -->
+                <!-- Danh sách thẻ đặt sân -->
                 <div class="flex flex-col gap-space-lg" id="bookings-list"></div>
 
                 <!-- Phân trang -->
@@ -260,7 +258,7 @@
         </div>
 
         <!-- ========================================================================= -->
-        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY VĨNH VIỄN LỒNG TRỰC TIẾP TẠI TRANG LỊCH SỬ -->
+        <!-- HỘP THOẠI MODAL XÁC NHẬN HỦY VĨNH VIỄN -->
         <!-- ========================================================================= -->
         <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" id="cancel-modal">
             <div aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[620px] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all transform scale-100 border border-gray-100" role="dialog">
@@ -483,7 +481,7 @@
         }
 
         // =========================================================================
-        // TÍNH TOÁN TRẠNG THÁI & CHÍNH SÁCH HOÀN TIỀN THEO THỜI GIAN THỰC (ĐIỀU 5)
+        // TÍNH TOÁN TRẠNG THÁI & HOÀN TIỀN THEO THỜI GIAN THỰC (ĐIỀU 5)
         // =========================================================================
         function getRealtimeBookingStatus(item) {
             const rawStatus = String(item.status || '').toLowerCase();
@@ -694,14 +692,17 @@
                     ];
                 }
 
-                // Quét đơn mới nhất nếu có
                 let recentOrder = null;
                 try { recentOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch (e) {}
 
                 if (recentOrder) {
                     const orderId = recentOrder.order_id || recentOrder.orderId || recentOrder.id;
                     if (orderId) {
-                        const existingIdx = userBookings.findIndex(b => b.id === orderId);
+                        const cleanId = String(orderId).replace(/^SB-/i, '');
+                        const existingIdx = userBookings.findIndex(b => {
+                            const bId = String(b.id || '').replace(/^SB-/i, '');
+                            return bId === cleanId;
+                        });
                         const orderPrice = extractCleanPrice(recentOrder) || 104500;
                         const sportType = recentOrder.sport || "pickleball";
                         const newBooking = {
@@ -880,7 +881,6 @@
                     sportColor = "text-tertiary";
                 }
 
-                // KHÔNG CÒN NÚT "MỞ RADAR", NÚT HỦY MỞ TRỰC TIẾP MODAL XÁC NHẬN
                 let actionButtonsHtml = '';
                 if (isUpcoming || isInProgress) {
                     actionButtonsHtml = `
@@ -1000,7 +1000,7 @@
                                 ${isCancelled ? `
                                     <p class="text-xs text-primary font-medium flex items-center gap-1">
                                         <span class="material-symbols-outlined text-sm">check</span>
-                                        <span>Đã hoàn tiền cọc theo chính sách Điều 5 về tài khoản nguồn.</span>
+                                        <span>Đã hủy đơn thành công. Tiền hoàn đã được cập nhật theo Điều 5.</span>
                                     </p>
                                 ` : ''}
                             </div>
@@ -1036,7 +1036,11 @@
 
         function viewBookingDetail(bookingId) {
             if (!bookingId) return;
-            const booking = userBookings.find(b => b.id === bookingId || b.id === `SB-${bookingId}` || String(b.id).replace('SB-', '') === String(bookingId).replace('SB-', ''));
+            const cleanId = String(bookingId).replace(/^SB-/i, '');
+            const booking = userBookings.find(b => {
+                const bId = String(b.id || '').replace(/^SB-/i, '');
+                return bId === cleanId;
+            });
             if (booking) {
                 localStorage.setItem('sb_selected_booking_detail', JSON.stringify(booking));
                 localStorage.setItem('sb_final_order', JSON.stringify(booking));
@@ -1045,15 +1049,19 @@
         }
 
         // =========================================================================
-        // MỞ VÀ XỬ LÝ MODAL HỦY SÂN NGAY TRÊN TRANG LỊCH SỬ ĐẶT SÂN
+        // MỞ VÀ XỬ LÝ MODAL HỦY SÂN NGAY TRÊN TRANG LỊCH SỬ
         // =========================================================================
         function openCancelModalInHistory(bookingId) {
-            const booking = userBookings.find(b => b.id === bookingId || b.id === `SB-${bookingId}` || String(b.id).replace('SB-', '') === String(bookingId).replace('SB-', ''));
+            const cleanId = String(bookingId).replace(/^SB-/i, '');
+            const booking = userBookings.find(b => {
+                const bId = String(b.id || '').replace(/^SB-/i, '');
+                return bId === cleanId;
+            });
             if (!booking) return;
 
             const rt = getRealtimeBookingStatus(booking);
             if (!rt.canCancel) {
-                alert(`⚠️ ${rt.refundLabel || 'Bạn không thể hủy đơn này!'}`);
+                showToast(`⚠️ ${rt.refundLabel || 'Bạn không thể hủy đơn này!'}`, false);
                 return;
             }
 
@@ -1061,7 +1069,7 @@
 
             const orderId = booking.id;
             const venueName = booking.venue_name || "Sân thể thao";
-            const courtName = booking.court_number || "Sân Acrylic 01";
+            const courtName = booking.court_number || "Sân thi đấu";
             const matchTime = booking.time_slot || "19:00 - 20:00";
             const matchDate = booking.date || "01/11/2026";
             const refundFormatted = `${rt.refundAmount.toLocaleString('vi-VN')}₫`;
@@ -1095,18 +1103,20 @@
             currentCancelTargetOrder = null;
         }
 
+        // HỦY SÂN VÀ CẬP NHẬT TRẠNG THÁI NGAY TRÊN GIAO DIỆN
         async function confirmAndExecuteCancelOrderInHistory() {
             if (!currentCancelTargetOrder) return;
 
             const booking = currentCancelTargetOrder;
             const rt = getRealtimeBookingStatus(booking);
             if (!rt.canCancel) {
-                alert(`⚠️ ${rt.refundLabel}`);
+                showToast(`⚠️ ${rt.refundLabel || 'Không thể hủy đơn này!'}`, false);
                 closeCancelModal();
                 return;
             }
 
-            const orderId = booking.id;
+            const orderId = String(booking.id || '').trim();
+            const cleanId = orderId.replace(/^SB-/i, '');
             const selectedReason = document.getElementById('selectCancelReason').value || 'Bận việc đột xuất / Lịch công tác';
             const btnConfirm = document.getElementById('btn-confirm-cancel');
 
@@ -1118,7 +1128,7 @@
                 `;
             }
 
-            // Gửi API backend nếu server đang hoạt động
+            // Gửi API backend nếu server đang kết nối
             try {
                 await fetch(`/api/bookings/${orderId}/cancel`, {
                     method: 'POST',
@@ -1128,7 +1138,12 @@
             } catch (err) {}
 
             setTimeout(() => {
-                const idx = userBookings.findIndex(b => b.id === orderId);
+                // Tìm kiếm chuẩn xác đơn và cập nhật trạng thái đã hủy
+                const idx = userBookings.findIndex(b => {
+                    const bId = String(b.id || '').replace(/^SB-/i, '');
+                    return bId === cleanId;
+                });
+
                 if (idx !== -1) {
                     userBookings[idx].status = 'cancelled';
                     userBookings[idx].status_label = 'Đã hủy theo yêu cầu';
@@ -1140,9 +1155,18 @@
                     const userId = currentUser ? (currentUser.id || currentUser.phone || currentUser.email || 'truclam') : 'truclam';
                     localStorage.setItem(`sb_bookings_${userId}`, JSON.stringify(userBookings));
                     localStorage.setItem('sb_my_booking_history', JSON.stringify(userBookings));
+
+                    try {
+                        let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null');
+                        if (finalOrder && String(finalOrder.id || finalOrder.order_id || '').replace(/^SB-/i, '') === cleanId) {
+                            finalOrder.status = 'cancelled';
+                            finalOrder.status_label = 'Đã hủy theo yêu cầu';
+                            localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
+                        }
+                    } catch(e) {}
                 }
 
-                // Ghi nhận thông báo đã hủy
+                // Ghi nhận thông báo hủy vào hệ thống
                 try {
                     let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
                     const newCancelNotif = {
@@ -1173,9 +1197,32 @@
                     `;
                 }
 
+                // Vẽ lại toàn bộ giao diện: thẻ sân đổi màu xám và hiện nhãn Đã hủy ngay lập tức
                 renderAll();
-                alert(`Đã hủy đặt sân #${orderId} thành công! Tiền hoàn ${rt.refundAmount.toLocaleString('vi-VN')}₫ đang được xử lý.`);
-            }, 600);
+
+                // Hiển thị toast thông báo nổi mượt mà (không dùng alert xám)
+                showToast(`Đã hủy đặt sân #${orderId} thành công! Tiền hoàn: ${rt.refundAmount.toLocaleString('vi-VN')}₫.`);
+            }, 400);
+        }
+
+        // HÀM HIỂN THỊ TOAST THÔNG BÁO TỰ ĐỘNG
+        function showToast(message, isSuccess = true) {
+            let toast = document.getElementById('sb-custom-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'sb-custom-toast';
+                toast.className = 'fixed top-24 left-1/2 -translate-x-1/2 z-[9999] px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-sm font-bold transition-all duration-300 text-white pointer-events-none';
+                document.body.appendChild(toast);
+            }
+            toast.style.backgroundColor = isSuccess ? '#006b2c' : '#ba1a1a';
+            toast.innerHTML = `<span class="material-symbols-outlined text-base">${isSuccess ? 'check_circle' : 'error'}</span><span>${message}</span>`;
+            toast.style.display = 'flex';
+            toast.style.opacity = '1';
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => { toast.style.display = 'none'; }, 300);
+            }, 3500);
         }
 
         function handleLogout() {
