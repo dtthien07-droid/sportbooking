@@ -27,6 +27,7 @@
                         "secondary-container": "#fd761a",
                         "on-secondary": "#ffffff",
                         "secondary-fixed": "#ffdbca",
+                        "on-secondary-fixed": "#341100",
                         "on-secondary-fixed-variant": "#783200",
                         "tertiary": "#0051d5",
                         "tertiary-fixed": "#dbe1ff",
@@ -67,16 +68,17 @@
 
 <body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
 
-    <!-- HEADER TRANG ĐĂNG KÝ: ĐÃ BỎ THANH ĐIỀU HƯỚNG & CHUÔNG -->
+    <!-- HEADER: ĐÃ BỎ KHỐI AVATAR / USER INFO -->
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div class="h-20 max-w-[1440px] mx-auto px-4 lg:px-8 flex items-center justify-between">
             <a class="flex items-center gap-2" href="trangchu-user.html">
                 <span class="text-2xl text-primary font-bold tracking-tight">SportBooking</span>
             </a>
 
-            <div id="userHeaderArea" class="flex items-center">
-                <a class="px-5 py-2.5 rounded-full bg-primary hover:bg-primary-container text-white text-sm font-bold transition-all shadow-sm flex items-center justify-center" href="dang-nhap.html">
-                    Đăng nhập
+            <div>
+                <a class="px-5 py-2.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-1.5" href="dang-nhap.html">
+                    <span class="material-symbols-outlined text-lg">login</span>
+                    <span>Đăng nhập</span>
                 </a>
             </div>
         </div>
@@ -92,7 +94,7 @@
                 <div class="absolute bottom-0 left-1/3 w-80 h-80 bg-surface-container-high/60 rounded-full blur-2xl pointer-events-none"></div>
 
                 <div class="w-full max-w-4xl relative z-10 my-4">
-                    <!-- Huy hiệu trạng thái hệ thống -->
+                    <!-- Huy hiệu trạng thái -->
                     <div class="flex items-center justify-between mb-space-md">
                         <a class="inline-flex items-center gap-space-xs text-on-surface-variant hover:text-primary transition-colors text-sm font-medium" href="trangchu-user.html">
                             <span class="material-symbols-outlined text-lg"></span>
@@ -363,30 +365,16 @@
                                 </div>
                             </div>
 
-                            <!-- ĐIỀU KHOẢN & BẢO MẬT: BẤM MỞ POPUP ĐỌC ĐỂ XÁC NHẬN -->
+                            <!-- ĐIỀU KHOẢN & BẢO MẬT: CHECKBOX ĐỒNG Ý -->
                             <div class="flex flex-col gap-2 p-4 rounded-2xl bg-surface-container-low/70 border border-gray-100" id="termsAgreementBox">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs font-bold uppercase text-gray-500">Quy định &amp; Thỏa thuận nền tảng</span>
-                                    <span id="termsStatusBadge" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-error text-[11px] font-bold">
-                                        <span class="material-symbols-outlined text-[14px]">cancel</span>
-                                        <span id="termsStatusText">Chưa xác nhận</span>
+                                <label class="flex items-start gap-3 cursor-pointer">
+                                    <input type="checkbox" id="termsCheckbox" class="mt-1 w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary accent-primary cursor-pointer">
+                                    <span class="text-xs sm:text-sm text-gray-700 leading-snug">
+                                        Tôi đã đọc và đồng ý với 
+                                        <a href="dieu-khoan-su-dung.html" target="_blank" class="font-bold text-primary hover:underline">Điều khoản sử dụng</a> và 
+                                        <a href="chinh-sach-bao-mat.html" target="_blank" class="font-bold text-primary hover:underline">Chính sách bảo mật</a> của SportBooking.
                                     </span>
-                                </div>
-                               
-                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                                    <p class="text-xs sm:text-sm text-gray-700 leading-snug">
-                                        Bắt buộc đọc và xác nhận
-                                        <span class="font-bold text-on-surface">Điều khoản sử dụng</span> &amp;
-                                        <span class="font-bold text-on-surface">Chính sách bảo mật</span> trước khi tạo tài khoản.
-                                    </p>
-                                    <button type="button" id="btnOpenTermsPopup" class="px-4 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer">
-                                        <span class="material-symbols-outlined text-[18px]">menu_book</span>
-                                        <span>Đọc &amp; Xác nhận ngay</span>
-                                    </button>
-                                </div>
-
-                                <!-- Input ẩn để kiểm soát tính hợp lệ của form -->
-                                <input type="hidden" id="termsConfirmedInput" name="termsConfirmed" value="false">
+                                </label>
                             </div>
 
                             <!-- Nút Đăng Ký Chính -->
@@ -449,18 +437,9 @@
         </div>
     </footer>
 
-    <!-- ========================================================================= -->
-    <!-- 1. MODAL ĐỌC & XÁC NHẬN ĐIỀU KHOẢN & BẢO MẬT (POPUP HIỆN ĐẠI) -->
-    <!-- ========================================================================= -->
-    
-
-
-    <!-- ========================================================================= -->
-    <!-- 2. POPUP MODAL ĐĂNG KÝ THÀNH CÔNG (TỰ ĐỘNG CHUYỂN VỀ TRANG ĐĂNG NHẬP) -->
-    <!-- ========================================================================= -->
+    <!-- POPUP MODAL ĐĂNG KÝ THÀNH CÔNG -->
     <div id="signupSuccessModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-gray-100 p-6 md:p-8 flex flex-col items-center text-center gap-4 animate-in fade-in zoom-in-95 duration-200">
-            <!-- Icon vòng tròn tích xanh hiệu ứng đẹp -->
             <div class="w-20 h-20 rounded-full bg-emerald-50 border-4 border-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
                 <span class="material-symbols-outlined text-5xl">check_circle</span>
             </div>
@@ -472,7 +451,6 @@
                 </p>
             </div>
 
-            <!-- Khung thông tin tóm tắt tài khoản -->
             <div class="w-full p-3.5 bg-surface-container-low rounded-2xl border border-gray-100 text-left text-xs flex flex-col gap-1.5">
                 <div class="flex justify-between items-center text-gray-500">
                     <span>Họ và tên:</span>
@@ -488,7 +466,6 @@
                 </div>
             </div>
 
-            <!-- Thanh tiến trình tự động chuyển hướng -->
             <div class="w-full flex flex-col gap-2 pt-1">
                 <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
                     <div id="countdownProgressBar" class="bg-primary h-full w-full transition-all duration-[1500ms] ease-linear"></div>
@@ -498,7 +475,6 @@
                 </p>
             </div>
 
-            <!-- Nút bấm thủ công nếu không muốn chờ -->
             <button type="button" onclick="redirectToLoginPage()" class="w-full py-3 rounded-xl bg-primary hover:bg-primary-container text-white text-sm font-bold shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
                 <span>Đăng nhập ngay</span>
                 <span class="material-symbols-outlined text-base">arrow_forward</span>
@@ -612,40 +588,7 @@
             });
         });
 
-        // =========================================================================
-        // XỬ LÝ MODAL ĐIỀU KHOẢN VÀ XÁC NHẬN
-        // =========================================================================
-        const termsModal = document.getElementById('termsModal');
-        const btnOpenTerms = document.getElementById('btnOpenTermsPopup');
-        const termsInput = document.getElementById('termsConfirmedInput');
-        const termsBadge = document.getElementById('termsStatusBadge');
-        const termsText = document.getElementById('termsStatusText');
-
-        function openTermsModal() {
-            if (termsModal) termsModal.classList.remove('hidden');
-        }
-
-        function closeTermsModal() {
-            if (termsModal) termsModal.classList.add('hidden');
-        }
-
-        function confirmTermsAgreement() {
-            if (termsInput) termsInput.value = "true";
-            window.isTermsAccepted = true;
-            if (termsBadge) {
-                termsBadge.className = "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold";
-                termsBadge.innerHTML = `<span class="material-symbols-outlined text-[14px]">check_circle</span><span>Đã xác nhận</span>`;
-            }
-            closeTermsModal();
-        }
-
-        if (btnOpenTerms) {
-            btnOpenTerms.addEventListener('click', openTermsModal);
-        }
-
-        // =========================================================================
-        // XỬ LÝ ĐĂNG KÝ THÀNH CÔNG & CHUYỂN HƯỚNG VỀ TRANG ĐĂNG NHẬP
-        // =========================================================================
+        // Điều hướng đăng nhập
         let registeredUserPhone = '';
 
         function redirectToLoginPage() {
@@ -669,7 +612,6 @@
                 modal.classList.remove('hidden');
             }
 
-            // Thanh chạy đếm ngược 1.8 giây tự động chuyển về đăng nhập
             if (progressBar) {
                 setTimeout(() => {
                     progressBar.style.width = '0%';
@@ -681,7 +623,7 @@
             }, 1800);
         }
 
-        // BẮT SỰ KIỆN SUBMIT FORM ĐĂNG KÝ
+        // Bắt sự kiện submit form đăng ký
         const signupForm = document.getElementById('signupForm');
         if (signupForm) {
             signupForm.addEventListener('submit', function (e) {
@@ -692,9 +634,8 @@
                 const email = (document.getElementById('email')?.value || '').trim().toLowerCase();
                 const password = document.getElementById('password')?.value || '';
                 const confirmPassword = document.getElementById('confirmPassword')?.value || '';
-                const termsConfirmed = (termsInput && termsInput.value === 'true') || window.isTermsAccepted === true;
+                const termsConfirmed = document.getElementById('termsCheckbox')?.checked;
 
-                // Kiểm tra tính hợp lệ của dữ liệu
                 if (fullName.length < 2) {
                     alert('Vui lòng nhập họ và tên đầy đủ.');
                     return;
@@ -712,12 +653,11 @@
                     return;
                 }
                 if (!termsConfirmed) {
-                    // Nếu chưa đọc điều khoản, tự động mở popup điều khoản cho người dùng
-                    openTermsModal();
+                    alert('Vui lòng tích chọn đồng ý với Điều khoản sử dụng và Chính sách bảo mật.');
                     return;
                 }
 
-                // Lưu tài khoản vào localStorage (sb_users) để đăng nhập được ngay
+                // Lưu tài khoản vào localStorage (sb_users)
                 let users = [];
                 try {
                     users = JSON.parse(localStorage.getItem('sb_users') || '[]');
@@ -745,13 +685,9 @@
                 users.push(newUser);
                 localStorage.setItem('sb_users', JSON.stringify(users));
 
-                // Hiển thị Popup Đăng ký thành công và tự động chuyển về dang-nhap.html
                 showSignupSuccess(newUser);
             });
         }
     </script>
-
-    <!-- SCRIPT CHUNG QUẢN LÝ PHIÊN -->
-    <script src="auth.js"></script>
 </body>
 </html>

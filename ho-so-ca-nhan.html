@@ -72,7 +72,7 @@
 </head>
 <body class="bg-surface font-['Be_Vietnam_Pro'] text-on-surface antialiased">
 
-    <!-- HEADER: ĐỒNG BỘ CHUẨN XÁC THEO ẢNH -->
+    <!-- HEADER -->
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm">
         <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
             <div class="flex items-center gap-space-xl">
@@ -89,27 +89,24 @@
             </div>
 
             <div class="flex items-center gap-space-lg">
-                <!-- KHỐI CHUÔNG THÔNG BÁO (ĐÃ BỎ SỐ 36 VÀ DẤU CHẤM NHẤP NHÁY) -->
+                <!-- KHỐI CHUÔNG THÔNG BÁO -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" id="btnToggleNotifDropdown" onclick="toggleNotifDropdown(event)" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button" title="Bấm để xem thông báo">
                         <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
-                        <!-- Đã ẩn hoàn toàn chấm đỏ nhấp nháy -->
                         <span class="hidden absolute top-2 right-2 w-2 h-2 bg-error rounded-full" id="badgeQuickCount"></span>
                     </button>
 
-                    <!-- KHUNG POPOVER XEM NHANH THÔNG BÁO (ĐÃ BỎ HUY HIỆU SỐ 36) -->
+                    <!-- KHUNG POPOVER XEM NHANH THÔNG BÁO -->
                     <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
                         <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-bold text-on-surface">Thông báo</h3>
-                                <!-- Đã bỏ hoàn toàn chữ '36 chưa đọc' -->
                             </div>
                             <button type="button" onclick="markAllNotifsAsRead(event)" class="text-xs text-primary font-bold hover:underline cursor-pointer">
                                 Đã đọc tất cả
                             </button>
                         </div>
 
-                        <!-- Danh sách thông báo thực tế (Tự động tính giờ real-time và không dính số 36) -->
                         <div class="max-h-[340px] overflow-y-auto divide-y divide-gray-100 text-left text-xs" id="quickNotifList">
                             <!-- Render bằng JS -->
                         </div>
@@ -126,10 +123,10 @@
                 <!-- KHU VỰC THÔNG TIN USER ĐỒNG BỘ -->
                 <div id="userHeaderArea" class="flex items-center gap-2 pl-2">
                     <div id="headerUserAvatar" class="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold flex items-center justify-center text-sm">
-                        T
+                        U
                     </div>
                     <div class="flex flex-col text-right">
-                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Trúc Lam</span>
+                        <span id="headerUsername" class="text-sm font-semibold leading-tight text-on-surface">Người dùng</span>
                         <span id="headerUserRole" class="text-[11px] font-bold text-secondary">Thành viên</span>
                     </div>
                     <button onclick="handleLogout()" title="Đăng xuất" class="p-1 text-gray-400 hover:text-gray-700 transition-colors ml-1 cursor-pointer">
@@ -168,15 +165,15 @@
                         <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col items-center text-center relative overflow-hidden">
                             <div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full pointer-events-none"></div>
 
-                            <!-- Avatar chữ T -->
+                            <!-- Avatar chữ cái -->
                             <div class="relative mb-space-md">
                                 <div id="sidebarDefaultAvatarLarge" class="w-24 h-24 rounded-full bg-green-100 text-primary font-headline-lg text-headline-lg flex items-center justify-center border-2 border-green-300 shadow-sm mx-auto font-bold">
-                                    T
+                                    U
                                 </div>
                             </div>
 
                             <!-- Name & Badge -->
-                            <h2 id="sidebarDisplayName" class="font-headline-sm text-headline-sm text-on-surface mb-1 font-bold">Trúc Lam</h2>
+                            <h2 id="sidebarDisplayName" class="font-headline-sm text-headline-sm text-on-surface mb-1 font-bold">Người dùng</h2>
                             <div class="inline-flex items-center gap-1.5 px-space-md py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm mb-space-md font-semibold">
                                 <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
                                 <span id="sidebarRoleBadge">Thành viên</span>
@@ -188,13 +185,13 @@
                                     <span class="text-on-surface-variant flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[16px]">call</span> Điện thoại:
                                     </span>
-                                    <span id="sidebarDisplayPhone" class="font-label-md text-label-md text-on-surface font-mono font-semibold">0838 *** 234</span>
+                                    <span id="sidebarDisplayPhone" class="font-label-md text-label-md text-on-surface font-mono font-semibold">Chưa cập nhật</span>
                                 </div>
                                 <div class="flex items-center justify-between font-body-sm text-body-sm">
                                     <span class="text-on-surface-variant flex items-center gap-1">
                                         <span class="material-symbols-outlined text-[16px]">calendar_today</span> Ngày tham gia:
                                     </span>
-                                    <span id="sidebarMemberSince" class="font-label-md text-label-md text-on-surface">Tháng 03/2024</span>
+                                    <span id="sidebarMemberSince" class="font-label-md text-label-md text-on-surface">Mới tham gia</span>
                                 </div>
                             </div>
 
@@ -203,7 +200,7 @@
                                 <span class="text-on-surface-variant">Hạng ghép đối:</span>
                                 <span id="sidebarDisplaySportLevel" class="font-label-md text-label-md text-primary font-semibold flex items-center gap-1">
                                     <span class="material-symbols-outlined text-[16px]">sports_tennis</span>
-                                    <span>Trung bình (TB+)</span>
+                                    <span>Mới chơi (Beginner)</span>
                                 </span>
                             </div>
                         </div>
@@ -223,10 +220,8 @@
                                     <span class="material-symbols-outlined text-[20px]">calendar_month</span>
                                     <span>Lịch sử đặt sân</span>
                                 </div>
-                                <span id="sidebarHistoryCountBadge" class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-label-sm">3</span>
+                                <span id="sidebarHistoryCountBadge" class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary font-label-sm text-label-sm">0</span>
                             </a>
-
-                           
 
                             <a class="flex items-center justify-between px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-label-lg text-label-lg transition-colors" href="thong-bao.html">
                                 <div class="flex items-center gap-space-sm">
@@ -267,14 +262,14 @@
                     <!-- Right Column: Account Details & Sport Statistics (8 Cols) -->
                     <section class="lg:col-span-8 flex flex-col gap-space-xl">
                         
-                        <!-- Section 1: Thống kê nhanh Metric Bento -->
+                        <!-- Section 1: Thống kê nhanh Metric Bento (Được gắn ID động) -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
                             <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center gap-space-md">
                                 <div class="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center text-primary shrink-0">
                                     <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">timer</span>
                                 </div>
                                 <div class="flex flex-col min-w-0">
-                                    <span class="font-headline-md text-headline-md text-on-surface leading-tight">48 giờ</span>
+                                    <span id="statPlayedHours" class="font-headline-md text-headline-md text-on-surface leading-tight">0 giờ</span>
                                     <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Thời gian đã chơi</span>
                                 </div>
                             </div>
@@ -284,7 +279,7 @@
                                     <span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">handshake</span>
                                 </div>
                                 <div class="flex flex-col min-w-0">
-                                    <span class="font-headline-md text-headline-md text-on-surface leading-tight">18 đối tác</span>
+                                    <span id="statMatchedPartners" class="font-headline-md text-headline-md text-on-surface leading-tight">0 đối tác</span>
                                     <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Ghép thành công</span>
                                 </div>
                             </div>
@@ -295,8 +290,8 @@
                                 </div>
                                 <div class="flex flex-col min-w-0">
                                     <div class="flex items-center gap-1 leading-tight">
-                                        <span class="font-headline-md text-headline-md text-on-surface">4.9</span>
-                                        <span class="text-secondary font-label-md text-label-md">/ 5.0</span>
+                                        <span id="statRatingScore" class="font-headline-md text-headline-md text-on-surface">--</span>
+                                        <span id="statRatingMax" class="text-secondary font-label-md text-label-md">/ 5.0</span>
                                     </div>
                                     <span class="font-body-sm text-body-sm text-on-surface-variant truncate">Đánh giá bạn chơi</span>
                                 </div>
@@ -321,7 +316,7 @@
                                         <label class="font-label-md text-label-md text-on-surface font-semibold" for="fullName">Họ và tên <span class="text-error">*</span></label>
                                         <div class="relative">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">badge</span>
-                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="fullName" type="text" value="Trúc Lam" required>
+                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="fullName" type="text" placeholder="Nhập họ và tên" required>
                                         </div>
                                     </div>
 
@@ -376,7 +371,7 @@
                                         <label class="font-label-md text-label-md text-on-surface font-semibold" for="dob">Ngày sinh</label>
                                         <div class="relative">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">cake</span>
-                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="dob" type="text" value="15/08/1998">
+                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="dob" type="text" placeholder="DD/MM/YYYY">
                                         </div>
                                     </div>
 
@@ -390,7 +385,7 @@
                                         </div>
                                         <div class="relative">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">call</span>
-                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all font-mono" id="phone" type="tel" value="0838 491 234" required>
+                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all font-mono" id="phone" type="tel" placeholder="0xxxxxxxxx" required>
                                         </div>
                                     </div>
 
@@ -404,7 +399,7 @@
                                         </div>
                                         <div class="relative">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">mail</span>
-                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="email" type="email" value="dtthien07@gmail.com" required>
+                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="email" type="email" placeholder="email@example.com" required>
                                         </div>
                                     </div>
 
@@ -412,7 +407,7 @@
                                         <label class="font-label-md text-label-md text-on-surface font-semibold" for="location">Địa bàn thường chơi</label>
                                         <div class="relative">
                                             <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">location_on</span>
-                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="location" type="text" value="Cầu Giấy, Hà Nội">
+                                            <input class="w-full bg-surface-container-low rounded-xl pl-11 pr-space-md py-2.5 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary transition-all" id="location" type="text" placeholder="Khu vực thường chơi">
                                         </div>
                                     </div>
                                 </div>
@@ -443,13 +438,13 @@
                                     <div class="relative w-10 h-10 flex items-center justify-center">
                                         <svg class="w-10 h-10 transform -rotate-90" viewBox="0 0 36 36">
                                             <path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3"></path>
-                                            <path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="98, 100" stroke-linecap="round" stroke-width="3"></path>
+                                            <path id="reputationCirclePath" class="text-primary transition-all duration-500" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="100, 100" stroke-linecap="round" stroke-width="3"></path>
                                         </svg>
-                                        <span class="absolute font-label-sm text-label-sm font-bold text-primary">98</span>
+                                        <span id="reputationScoreVal" class="absolute font-label-sm text-label-sm font-bold text-primary">100</span>
                                     </div>
                                     <div class="flex flex-col">
                                         <span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Điểm uy tín</span>
-                                        <span class="font-label-md text-label-md font-semibold text-primary">98/100 (Tuyệt vời)</span>
+                                        <span id="reputationTextVal" class="font-label-md text-label-md font-semibold text-primary">100/100 (Khởi tạo)</span>
                                     </div>
                                 </div>
                             </div>
@@ -459,19 +454,15 @@
                                     <span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5">
                                         <span class="material-symbols-outlined text-[18px] text-primary">sports</span> Bộ môn tham gia
                                     </span>
-                                    <div class="flex flex-wrap gap-space-xs mt-1">
+                                    <div class="flex flex-wrap gap-space-xs mt-1" id="profileSportsList">
                                         <span class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm flex items-center gap-1.5">
                                             <span class="w-2 h-2 rounded-full bg-primary"></span>
-                                            Cầu lông <strong class="text-primary">(Chính)</strong>
-                                        </span>
-                                        <span class="px-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md shadow-sm flex items-center gap-1.5">
-                                            <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                                            Pickleball <strong class="text-secondary">(Phụ)</strong>
+                                            <span id="displayPrimarySportBadge">Cầu lông</span> <strong class="text-primary">(Chính)</strong>
                                         </span>
                                     </div>
                                     <div class="mt-space-xs pt-space-xs flex items-center justify-between font-body-sm text-body-sm">
                                         <span class="text-on-surface-variant">Trình độ tự đánh giá:</span>
-                                        <span id="cardSkillLevelDisplay" class="font-label-md text-label-md text-primary font-semibold bg-surface-container px-2 py-0.5 rounded">Trung bình (TB+)</span>
+                                        <span id="cardSkillLevelDisplay" class="font-label-md text-label-md text-primary font-semibold bg-surface-container px-2 py-0.5 rounded">Mới chơi (Beginner)</span>
                                     </div>
                                 </div>
 
@@ -480,14 +471,14 @@
                                         <span class="material-symbols-outlined text-[18px] text-primary">task_alt</span> Tỷ lệ có mặt &amp; Kỷ luật
                                     </span>
                                     <div class="flex items-baseline justify-between mt-1">
-                                        <span class="font-display-lg text-display-lg text-primary leading-none font-bold">100%</span>
+                                        <span id="attendanceRateText" class="font-display-lg text-display-lg text-primary leading-none font-bold">100%</span>
                                         <span class="font-label-sm text-label-sm text-on-surface-variant">Chưa từng bùng kèo</span>
                                     </div>
                                     <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
-                                        <div class="bg-primary h-full rounded-full w-full"></div>
+                                        <div id="attendanceProgressBar" class="bg-primary h-full rounded-full w-full"></div>
                                     </div>
-                                    <span class="font-body-sm text-body-sm text-on-surface-variant">
-                                        Đã hoàn thành <strong class="text-on-surface font-semibold">24/24 trận</strong> giao lưu xác thực trên app.
+                                    <span class="font-body-sm text-body-sm text-on-surface-variant" id="completedMatchesText">
+                                        Đã hoàn thành <strong class="text-on-surface font-semibold">0/0 trận</strong> giao lưu xác thực trên app.
                                     </span>
                                 </div>
 
@@ -509,7 +500,7 @@
                                     <span class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1.5">
                                         <span class="material-symbols-outlined text-[18px] text-primary">near_me</span> Khu vực tìm đối ưu tiên
                                     </span>
-                                    <p class="font-label-lg text-label-lg text-on-surface mt-1">
+                                    <p class="font-label-lg text-label-lg text-on-surface mt-1" id="preferredLocationText">
                                         Quận Cầu Giấy, Nam Từ Liêm
                                     </p>
                                     <span class="font-body-sm text-body-sm text-on-surface-variant mt-1">
@@ -525,7 +516,7 @@
                                     </div>
                                     <div class="flex flex-col text-left">
                                         <span class="font-label-md text-label-md text-on-surface font-semibold">Tự động nhận lời mời thi đấu</span>
-                                        <span class="font-body-sm text-body-sm text-on-surface-variant">Cho phép các cơ trưởng trong khu vực Cầu Giấy gửi lời mời trực tiếp</span>
+                                        <span class="font-body-sm text-body-sm text-on-surface-variant">Cho phép các cơ trưởng trong khu vực lân cận gửi lời mời trực tiếp</span>
                                     </div>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer shrink-0">
@@ -628,7 +619,7 @@
 
     <!-- JAVASCRIPT XỬ LÝ TOÀN BỘ -->
     <script>
-        // 1. TÍNH THỜI GIAN THỰC TẾ (REAL-TIME RELATIVE TIME)
+        // 1. TÍNH THỜI GIAN THỰC TẾ
         function formatRelativeTime(timestamp) {
             if (!timestamp) return 'Vừa xong';
             let ts = null;
@@ -672,7 +663,7 @@
             return `${day}/${month}/${year} ${h}:${m}`;
         }
 
-        // Lấy danh sách thông báo và tự động đánh dấu đã đọc để KHÔNG CÒN SỐ 36
+        // Lấy danh sách thông báo
         function getProfileNotifications() {
             let notifs = [];
             try {
@@ -687,7 +678,6 @@
                 } catch(e) { notifs = []; }
             }
 
-            // Tự động chuẩn hóa mốc thời gian và xóa trường tĩnh
             const now = Date.now();
             let hasFix = false;
             notifs.forEach((n, idx) => {
@@ -700,7 +690,6 @@
                 if (n.content === undefined && n.desc) { n.content = n.desc; hasFix = true; }
                 if (n.time) { delete n.time; hasFix = true; }
                 
-                // ĐÁNH DẤU TẤT CẢ LÀ ĐÃ ĐỌC ĐỂ XÓA SẠCH SỐ 36
                 if (!n.read || n.unread) {
                     n.read = true;
                     n.unread = false;
@@ -721,13 +710,11 @@
             return notifs;
         }
 
-        // Render popup danh sách thông báo (Không hiển thị số 36, không chấm đỏ nhấp nháy)
         function renderProfileQuickNotifs() {
             const notifs = getProfileNotifications();
             const badgeCount = document.getElementById('badgeQuickCount');
             const listEl = document.getElementById('quickNotifList');
 
-            // Ẩn hoàn toàn chấm đỏ trên chuông
             if (badgeCount) {
                 badgeCount.classList.add('hidden');
             }
@@ -749,7 +736,7 @@
                         const colorClass = n.bgIcon || (n.color ? `${n.color} bg-gray-100` : 'bg-primary/10 text-primary');
 
                         return `
-                            <div onclick="handleProfileNotifClick('${n.id}', '${targetLink}')" class="p-3.5 hover:bg-surface-container-low transition-colors flex items-start gap-3 cursor-pointer bg-white opacity-85">
+                            <div onclick="handleProfileNotifClick('${n.id}','${targetLink}')" class="p-3.5 hover:bg-surface-container-low transition-colors flex items-start gap-3 cursor-pointer bg-white opacity-85">
                                 <div class="w-10 h-10 rounded-xl ${colorClass} flex items-center justify-center shrink-0 mt-0.5">
                                     <span class="material-symbols-outlined text-[20px]">${iconName}</span>
                                 </div>
@@ -801,7 +788,6 @@
             showToast("Đã đánh dấu tất cả thông báo là đã đọc!");
         }
 
-        // Bấm ra ngoài để đóng popup
         document.addEventListener('click', function(e) {
             const container = document.getElementById('notifDropdownContainer');
             const popover = document.getElementById('quickNotifPopover');
@@ -813,21 +799,24 @@
             }
         });
 
-        // 2. DỮ LIỆU TÀI KHOẢN MẪU
-        const DEFAULT_USER_PROFILE = {
-            id: "usr-0838491234",
-            fullName: "Trúc Lam",
-            name: "Trúc Lam",
-            phone: "0838 491 234",
-            rawPhone: "0838491234",
-            email: "dtthien07@gmail.com",
+        // 2. DỮ LIỆU TÀI KHOẢN & KHỞI TẠO ĐỘNG
+        const DEFAULT_NEW_USER_PROFILE = {
+            id: "usr-" + Date.now(),
+            fullName: "Người dùng mới",
+            name: "Người dùng mới",
+            phone: "",
+            rawPhone: "",
+            email: "",
             gender: "female",
-            dob: "15/08/1998",
+            dob: "",
             location: "Cầu Giấy, Hà Nội",
             role: "Thành viên",
-            skill_level: 3,
+            skill_level: 1,
             primary_sport: "badminton",
-            joined_date: "Tháng 03/2024"
+            joined_date: "Mới tham gia",
+            played_hours: 0,
+            matched_partners: 0,
+            rating: 0
         };
 
         let currentUserData = null;
@@ -840,9 +829,9 @@
             }
 
             if (!currentUserData) {
-                currentUserData = { ...DEFAULT_USER_PROFILE };
+                currentUserData = { ...DEFAULT_NEW_USER_PROFILE };
             } else {
-                currentUserData = { ...DEFAULT_USER_PROFILE, ...currentUserData };
+                currentUserData = { ...DEFAULT_NEW_USER_PROFILE, ...currentUserData };
             }
 
             if (!currentUserData.role || currentUserData.role.toLowerCase() === 'user') {
@@ -857,15 +846,16 @@
         }
 
         function renderProfileUI(user) {
-            const name = user.fullName || user.name || "Trúc Lam";
-            const phone = user.phone || "0838 491 234";
-            const email = user.email || "dtthien07@gmail.com";
+            const name = user.fullName || user.name || "Người dùng";
+            const phone = user.phone || "";
+            const email = user.email || "";
             const gender = user.gender || "female";
-            const level = Number(user.skill_level || 3);
+            const level = Number(user.skill_level || 1);
             const sport = user.primary_sport || "badminton";
             let role = (user.role && (user.role.toLowerCase() === 'admin' || user.is_admin)) ? "Admin" : "Thành viên";
-            const firstLetter = name.trim().charAt(0).toUpperCase() || 'T';
+            const firstLetter = name.trim().charAt(0).toUpperCase() || 'U';
 
+            // Cập nhật Header
             const hName = document.getElementById('headerUsername');
             const hRole = document.getElementById('headerUserRole');
             const hAvatar = document.getElementById('headerUserAvatar');
@@ -873,6 +863,7 @@
             if (hRole) hRole.textContent = role;
             if (hAvatar) hAvatar.textContent = firstLetter;
 
+            // Cập nhật Sidebar Profile
             const sName = document.getElementById('sidebarDisplayName');
             const sRole = document.getElementById('sidebarRoleBadge');
             const sPhone = document.getElementById('sidebarDisplayPhone');
@@ -884,11 +875,11 @@
             if (sName) sName.textContent = name;
             if (sRole) sRole.textContent = role;
             if (sAvatar) sAvatar.textContent = firstLetter;
-            if (sMember) sMember.textContent = user.joined_date || "Tháng 03/2024";
+            if (sMember) sMember.textContent = user.joined_date || "Mới tham gia";
 
             const cleanP = phone.replace(/\s/g, '');
             if (sPhone) {
-                sPhone.textContent = cleanP.length >= 10 ? `${cleanP.slice(0, 4)} *** ${cleanP.slice(-3)}` : phone;
+                sPhone.textContent = cleanP.length >= 10 ? `${cleanP.slice(0, 4)} *** ${cleanP.slice(-3)}` : (phone || "Chưa cập nhật");
             }
 
             const levelTexts = {
@@ -900,12 +891,13 @@
             };
 
             if (sLevel) {
-                sLevel.innerHTML = `<span class="material-symbols-outlined text-[16px]">sports_tennis</span> <span>${levelTexts[level] || "Trung bình (TB+)"}</span>`;
+                sLevel.innerHTML = `<span class="material-symbols-outlined text-[16px]">sports_tennis</span> <span>${levelTexts[level] || "Mới chơi (Beginner)"}</span>`;
             }
             if (cLevelDisplay) {
-                cLevelDisplay.textContent = levelTexts[level] || "Trung bình (TB+)";
+                cLevelDisplay.textContent = levelTexts[level] || "Mới chơi (Beginner)";
             }
 
+            // Điền form thông tin
             const inputName = document.getElementById('fullName');
             const selectGender = document.getElementById('gender');
             const selectLevel = document.getElementById('skillLevel');
@@ -919,16 +911,69 @@
             if (selectGender) selectGender.value = gender;
             if (selectLevel) selectLevel.value = String(level);
             if (selectSport) selectSport.value = sport;
-            if (inputDob) inputDob.value = user.dob || "15/08/1998";
+            if (inputDob) inputDob.value = user.dob || "";
             if (inputPhone) inputPhone.value = phone;
             if (inputEmail) inputEmail.value = email;
-            if (inputLoc) inputLoc.value = user.location || "Cầu Giấy, Hà Nội";
+            if (inputLoc) inputLoc.value = user.location || "";
 
+            // Cập nhật tên môn thể thao chính ở Card thể thao
+            const sportBadge = document.getElementById('displayPrimarySportBadge');
+            if (sportBadge) {
+                const sportNames = { badminton: 'Cầu lông', pickleball: 'Pickleball', soccer: 'Bóng đá' };
+                sportBadge.textContent = sportNames[sport] || 'Cầu lông';
+            }
+
+            const prefLoc = document.getElementById('preferredLocationText');
+            if (prefLoc) prefLoc.textContent = user.location || "Chưa cập nhật";
+
+            // ==========================================
+            // LOGIC TÍNH CHỈ SỐ THỰC TẾ (REAL-TIME METRICS)
+            // ==========================================
+            let history = [];
             try {
-                const history = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
-                const countBadge = document.getElementById('sidebarHistoryCountBadge');
-                if (countBadge) countBadge.textContent = String(history.length || 3);
-            } catch(e) {}
+                history = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
+            } catch(e) { history = []; }
+
+            const countBadge = document.getElementById('sidebarHistoryCountBadge');
+            if (countBadge) countBadge.textContent = String(history.length);
+
+            // 1. Tính tổng giờ chơi thực tế
+            let totalHours = 0;
+            if (user.played_hours !== undefined && Number(user.played_hours) > 0) {
+                totalHours = Number(user.played_hours);
+            } else if (history.length > 0) {
+                totalHours = history.reduce((sum, item) => sum + (Number(item.duration) || 1.5), 0);
+            }
+            const elHours = document.getElementById('statPlayedHours');
+            if (elHours) elHours.textContent = `${totalHours} giờ`;
+
+            // 2. Tính số đối tác ghép thành công
+            const matchedCount = Number(user.matched_partners !== undefined ? user.matched_partners : 0);
+            const elMatched = document.getElementById('statMatchedPartners');
+            if (elMatched) elMatched.textContent = `${matchedCount} đối tác`;
+
+            // 3. Đánh giá bạn chơi
+            const elRatingScore = document.getElementById('statRatingScore');
+            const elRatingMax = document.getElementById('statRatingMax');
+            if (elRatingScore) {
+                if (user.rating && Number(user.rating) > 0) {
+                    elRatingScore.textContent = Number(user.rating).toFixed(1);
+                    if (elRatingMax) elRatingMax.style.display = 'inline';
+                } else if (history.length === 0 && matchedCount === 0) {
+                    elRatingScore.textContent = "--";
+                    if (elRatingMax) elRatingMax.style.display = 'none';
+                } else {
+                    elRatingScore.textContent = "5.0";
+                    if (elRatingMax) elRatingMax.style.display = 'inline';
+                }
+            }
+
+            // 4. Tỷ lệ có mặt & trận đấu thực tế
+            const completedMatches = history.length;
+            const completedMatchesText = document.getElementById('completedMatchesText');
+            if (completedMatchesText) {
+                completedMatchesText.innerHTML = `Đã hoàn thành <strong class="text-on-surface font-semibold">${completedMatches}/${completedMatches} trận</strong> giao lưu xác thực trên app.`;
+            }
         }
 
         document.getElementById('profileForm')?.addEventListener('submit', function(e) {
@@ -939,7 +984,7 @@
         function saveProfileChanges() {
             const fullName = document.getElementById('fullName')?.value.trim();
             const gender = document.getElementById('gender')?.value;
-            const skillLevel = Number(document.getElementById('skillLevel')?.value || 3);
+            const skillLevel = Number(document.getElementById('skillLevel')?.value || 1);
             const primarySport = document.getElementById('primarySport')?.value || 'badminton';
             const dob = document.getElementById('dob')?.value.trim();
             const phone = document.getElementById('phone')?.value.trim();
@@ -1081,7 +1126,11 @@
             if (e.key === 'sb_notifications_list' || (e.key && e.key.startsWith('sb_notifs_user_'))) {
                 renderProfileQuickNotifs();
             }
+            if (e.key === 'currentUser' || e.key === 'sb_my_booking_history') {
+                initProfileData();
+            }
         });
+
         window.addEventListener('sb_notifs_updated', function() {
             renderProfileQuickNotifs();
         });

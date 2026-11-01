@@ -5,10 +5,21 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(cors());
+
+const cookieParser = require('cookie-parser');
+
 app.use(express.json());
-// Mở giao diện HTML trực tiếp từ máy chủ Render
-app.use(express.static(__dirname));
-app.get('/', (req, res) => res.redirect('/dang-nhap.html'));
+app.use(cookieParser());
+app.use(express.static(__dirname, { index: false }));
+
+// Trang mặc định
+app.get('/', (req, res) => {
+  if (req.cookies.token) {
+    res.redirect('/trangchu-user.html');   // đã đăng nhập
+  } else {
+    res.redirect('/dang-nhap.html');       // chưa đăng nhập
+  }
+});
 // =========================================================================
 // 1. CẤU HÌNH GỬI EMAIL TỰ ĐỘNG QUA GMAIL (NODEMAILER)
 // =========================================================================
