@@ -90,7 +90,7 @@
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="trangchu-user.html">Trang chủ</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-san.html">Tìm sân</a>
                     <a class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container shadow-sm transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
-                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tim-doi-choi.html">Ghép đối</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
                 </nav>
             </div>
@@ -265,7 +265,7 @@
                             </div>
                         </section>
 
-                        <!-- 3. KHỐI MATCHMAKER -->
+                        <!-- 3. KHỐI MATCHMAKER (GHÉP ĐỐI) -->
                         <section class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex flex-col gap-space-md border border-gray-100 transition-all duration-300" id="matchmakingSection">
                             
                             <!-- Header khối MatchMaker -->
@@ -275,14 +275,14 @@
                                         <span class="material-symbols-outlined text-[22px]" id="matchHeaderIcon">sensors</span>
                                     </div>
                                     <div>
-                                        <h3 class="text-base font-bold text-on-surface" id="matchmakingTitle">Tìm Đối Chơi Cùng (MatchMaker)</h3>
+                                        <h3 class="text-base font-bold text-on-surface" id="matchmakingTitle">Ghép Đối Thi Đấu (MatchMaker)</h3>
                                         <p class="text-xs text-on-surface-variant mt-0.5" id="matchmakingSub">Kèo ghép đối giao lưu kết nối người chơi</p>
                                     </div>
                                 </div>
                                 <div id="matchmakingBadgeContainer"></div>
                             </div>
 
-                            <!-- NỘI DUNG 1: ĐANG TÌM ĐỐI -->
+                            <!-- NỘI DUNG 1: ĐANG TÌM ĐỐI GHÉP -->
                             <div id="matchStateFinding" class="hidden flex-col gap-3">
                                 <div class="flex flex-wrap items-center gap-2 text-xs">
                                     <span class="text-slate-500 font-semibold">Tiêu chí đã đăng:</span>
@@ -298,7 +298,7 @@
                                             <span class="material-symbols-outlined text-secondary text-[18px] animate-spin" style="animation-duration: 3s;">radar</span>
                                         </div>
                                         <div>
-                                            <span class="font-bold text-orange-900 block" id="findingStatusHeading">Đang quét tìm kiếm đối thủ quanh bán kính 5km...</span>
+                                            <span class="font-bold text-orange-900 block" id="findingStatusHeading">Đang quét tìm kiếm người ghép đối quanh bán kính 5km...</span>
                                             <p class="mt-0.5 leading-relaxed text-orange-800 text-[11px]" id="findingStatusDesc">Kèo của bạn đang hiển thị công khai trên bảng lịch sân để người chơi khác bấm "Xin ghép".</p>
                                         </div>
                                     </div>
@@ -312,7 +312,7 @@
                                 <div class="flex flex-col sm:flex-row items-center gap-2 pt-1">
                                     <button onclick="handleStopMatchmakingInDetail()" type="button" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-surface-container-lowest hover:bg-red-50 text-error border border-red-200 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                                         <span class="material-symbols-outlined text-[17px]">pause_circle</span>
-                                        <span>Dừng tìm đối</span>
+                                        <span>Dừng ghép đối</span>
                                     </button>
                                 </div>
                             </div>
@@ -336,7 +336,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-1 border-t border-gray-200">
+                                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-gray-200">
                                         <div class="flex items-center gap-1.5 text-slate-700">
                                             <span class="material-symbols-outlined text-[16px] text-primary">call</span>
                                             <span>Liên hệ: <strong class="font-mono text-primary text-sm font-bold">0987.654.890</strong></span>
@@ -353,7 +353,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-950 font-semibold flex items-center gap-2">
+                                    <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center gap-1.5">
                                         <span class="material-symbols-outlined text-primary text-[18px] shrink-0">payments</span>
                                         <span>Đối thủ sẽ thanh toán trực tiếp <strong>38.000đ</strong> cho bạn tại sân.</span>
                                     </div>
@@ -378,7 +378,7 @@
                                     <div class="flex flex-col sm:flex-row items-center gap-2 pt-1 border-t border-amber-200">
                                         <button onclick="handleRelaxCriteria()" type="button" class="w-full sm:w-auto flex-1 py-2.5 px-4 rounded-xl bg-secondary hover:bg-orange-600 text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
                                             <span class="material-symbols-outlined text-[17px]">tune</span>
-                                            <span>Nới lỏng tiêu chí & Quét lại</span>
+                                            <span>Nới lỏng tiêu chí &amp; Quét lại</span>
                                         </button>
                                         <button onclick="handleKeepCourtPrivate()" type="button" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-white hover:bg-gray-100 text-slate-700 border border-gray-300 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
                                             <span class="material-symbols-outlined text-[17px]">lock</span>
@@ -485,7 +485,7 @@
         <!-- ========================================================================= -->
         <div class="fixed inset-0 z-50 bg-inverse-surface/65 backdrop-blur-md hidden flex items-center justify-center p-4 transition-all duration-300" id="cancel-modal">
             <div aria-labelledby="modal-title" aria-modal="true" class="relative w-full max-w-[620px] bg-surface-container-lowest rounded-2xl shadow-2xl overflow-hidden flex flex-col transition-all transform scale-100 border border-gray-100" role="dialog">
-               
+                
                 <!-- Dải màu cảnh báo trên cùng -->
                 <div class="w-full h-1.5 bg-gradient-to-r from-error via-secondary-container to-error"></div>
 
@@ -496,7 +496,7 @@
 
                 <!-- Nội dung Modal -->
                 <div class="p-5 md:p-6 flex flex-col gap-4">
-                   
+                    
                     <!-- Tiêu đề & Icon Cảnh Báo -->
                     <div class="flex items-start gap-3.5">
                         <div class="relative shrink-0 w-12 h-12 rounded-2xl bg-error-container text-error flex items-center justify-center shadow-xs">
@@ -637,6 +637,9 @@
 
     <!-- SCRIPT TỰ ĐỘNG NẠP VÀ ĐỒNG BỘ ĐÚNG DỮ LIỆU ĐƠN HÀNG THỰC TẾ -->
     <script>
+        const LOCKED_SLOTS_STORAGE_KEY = 'sb_locked_slots';
+        const BOOKED_SLOTS_STORAGE_KEY = 'sb_booked_slots';
+
         // BẢN ĐỒ DỮ LIỆU 29 CỤM SÂN HÀ NỘI
         window.FACILITIES_29_DB = {
   "san-bong-dong-do": {
@@ -1387,7 +1390,6 @@
             return 'https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80';
         }
 
-        // Hàm trích xuất giá tiền sạch
         function parsePrice(val, defaultVal = 0) {
             if (val === undefined || val === null || val === '') return defaultVal;
             const str = String(val).replace(/[^\d]/g, '');
@@ -1395,9 +1397,6 @@
             return (!isNaN(num) && num > 0) ? num : defaultVal;
         }
 
-        // =========================================================================
-        // HÀM TIỆN ÍCH TÍNH TOÁN TRẠNG THÁI & CHÍNH SÁCH HOÀN TIỀN THEO THỜI GIAN THỰC (ĐIỀU 5)
-        // =========================================================================
         function calculateRealtimeBookingStatus(order) {
             const rawStatus = String(order.status || '').toLowerCase();
             if (rawStatus === 'cancelled' || rawStatus === 'đã hủy' || rawStatus === 'da huy') {
@@ -1414,8 +1413,6 @@
             }
 
             const now = new Date();
-
-            // Xử lý chuỗi ngày: DD/MM/YYYY hoặc YYYY-MM-DD
             let dateStr = order.date || order.booking_date || order.bookingDate || '';
             let formattedDate = '';
             if (dateStr.includes('/')) {
@@ -1429,7 +1426,6 @@
                 formattedDate = now.toISOString().split('T')[0];
             }
 
-            // Xử lý khung giờ bắt đầu và kết thúc: VD "19:00 - 20:00"
             const timeSlot = order.time_slot || order.slot || order.start_time || '19:00 - 20:00';
             let startHourStr = '19:00';
             let endHourStr = '20:00';
@@ -1450,7 +1446,6 @@
             let depositPaid = parsePrice(order.deposit_paid || order.deposit, totalPrice >= 300000 ? totalPrice / 2 : totalPrice);
             if (depositPaid > totalPrice) depositPaid = totalPrice;
 
-            // 1. Sau giờ kết thúc (VD sau 15:00 là 15:01) -> Hoàn thành
             if (now >= endDateTime) {
                 return {
                     status: 'completed',
@@ -1464,7 +1459,6 @@
                 };
             }
 
-            // 2. Trong khung giờ thi đấu (14:00 - 15:00) -> Đang trong trận (CẤM HỦY)
             if (now >= startDateTime && now < endDateTime) {
                 return {
                     status: 'in_progress',
@@ -1478,24 +1472,20 @@
                 };
             }
 
-            // 3. Trước giờ thi đấu -> Sắp tới (Tính tiền hoàn theo Điều 5)
             const diffHours = (startDateTime - now) / (1000 * 60 * 60);
             let refundPercent = 0;
             let refundLabel = 'Không hoàn cọc (0%)';
             let policyDesc = 'Hủy sát giờ (dưới 6 giờ) theo quy định Điều 5';
 
             if (diffHours >= 24) {
-                // Trước 24 giờ: Hoàn 100%
                 refundPercent = 100;
                 refundLabel = '100% Hoàn tiền';
                 policyDesc = 'Hủy trước 24 giờ thi đấu được hoàn 100% cọc';
             } else if (diffHours >= 6 && diffHours < 24) {
-                // Từ 6 đến 24 giờ: Hoàn 50%
                 refundPercent = 50;
                 refundLabel = '50% Hoàn tiền';
                 policyDesc = 'Hủy từ 6 đến 24 giờ trước trận được hoàn 50% cọc';
             } else {
-                // Dưới 6 giờ / Sát giờ: Không hoàn cọc (0%)
                 refundPercent = 0;
                 refundLabel = 'Không hoàn cọc (0%)';
                 policyDesc = 'Hủy sát giờ dưới 6 giờ không áp dụng hoàn cọc';
@@ -1520,18 +1510,21 @@
             try {
                 const user = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || 'null');
                 if (user) {
-                    const name = user.name || "Trúc Lam";
+                    const name = user.fullName || user.full_name || user.name || "Trúc Lam";
                     document.getElementById('headerUsername').textContent = name;
-                    document.getElementById('headerUserRole').textContent = user.role || "Thành viên";
+                    document.getElementById('headerUserRole').textContent = user.role === 'admin' ? "Admin" : "Thành viên";
                     document.getElementById('headerUserAvatar').textContent = name.charAt(0).toUpperCase();
                 }
             } catch(e) {}
 
-            // 2. Tìm kiếm thông tin đơn hàng từ các nguồn thực tế
+            // 2. Tìm kiếm thông tin đơn hàng từ các nguồn thực tế theo tài khoản
             const params = new URLSearchParams(window.location.search);
             const queryOrderId = params.get('id');
 
-            // Cố gắng gọi API backend nếu server đang chạy để dữ liệu luôn mới nhất
+            const userObj = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || '{}');
+            const uid = userObj.phone || userObj.id || 'user';
+            const userHistoryKey = `sb_bookings_user_${uid}`;
+
             if (queryOrderId) {
                 try {
                     const res = await fetch(`/api/bookings/${queryOrderId}`);
@@ -1545,7 +1538,7 @@
             }
 
             let savedList = [];
-            try { savedList = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]'); } catch(e) {}
+            try { savedList = JSON.parse(localStorage.getItem(userHistoryKey) || localStorage.getItem('sb_my_booking_history') || '[]'); } catch(e) {}
             let finalOrder = null;
             try { finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null'); } catch(e) {}
             let selectedDetail = null;
@@ -1593,10 +1586,8 @@
                 };
             }
 
-            // ĐỔ DỮ LIỆU ĐỘNG CHUẨN XÁC VÀO TỪNG THÀNH PHẦN GIAO DIỆN
             renderOrderDetails(currentActiveOrder);
 
-            // Tự động mở Modal Hủy nếu được điều hướng từ trang lịch sử với ?action=cancel
             if (params.get('action') === 'cancel') {
                 const rtInfo = calculateRealtimeBookingStatus(currentActiveOrder);
                 if (rtInfo.canCancel) {
@@ -1606,7 +1597,6 @@
                 }
             }
 
-            // Tự động làm mới mỗi 30s để cập nhật đồng hồ thực (15:00 sang 15:01)
             setInterval(() => {
                 if (currentActiveOrder && currentActiveOrder.status !== 'cancelled') {
                     renderOrderDetails(currentActiveOrder);
@@ -1617,19 +1607,15 @@
         function renderOrderDetails(order) {
             const orderId = order.id || order.order_id || order.orderId || "SB-76681";
             
-            // Mã đơn & Tiêu đề
             document.getElementById('breadcrumbOrderId').innerText = `Đơn #${orderId}`;
             document.getElementById('pageTitleOrderId').innerText = `Đơn đặt sân #${orderId}`;
             document.getElementById('displayCheckinCode').innerText = `${orderId}-CKIN`;
             
-            // Mã giao dịch
             const numPart = orderId.replace(/[^0-9]/g, '') || '76681';
             document.getElementById('displayTransactionId').innerText = `VNP${numPart}88`;
 
-            // Mã QR quét tự động
             document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=SPORTBOOKING-ORDER-${orderId}`;
 
-            // Thời gian đặt
             let orderTime = order.created_at || order.createdAt || Date.now();
             const dateObj = new Date(orderTime);
             const hours = String(dateObj.getHours()).padStart(2, '0');
@@ -1639,7 +1625,6 @@
             const year = dateObj.getFullYear();
             document.getElementById('orderTimeDisplay').innerText = `${hours}:${minutes}, ${day}/${month}/${year}`;
 
-            // Thông tin cơ sở & Sân thi đấu
             const venueNameText = order.venue_name || order.facility_name || "Pickleball G.S77";
             document.getElementById('venueName').innerText = venueNameText;
             document.getElementById('venueAddress').innerText = order.address || "12 Khuất Duy Tiến, Thanh Xuân, Hà Nội";
@@ -1647,14 +1632,12 @@
             document.getElementById('displayMatchDate').innerText = order.date || `${day}/${month}/${year}`;
             document.getElementById('displayMatchTime').innerText = order.time_slot || order.slot || "19:00 - 20:00";
             
-            // Hotline & Bản đồ
             if (order.hotline) {
                 document.getElementById('venueHotline').innerText = order.hotline;
                 document.getElementById('venueHotline').href = `tel:${order.hotline}`;
             }
             document.getElementById('venueMapLink').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueNameText + ' ' + (order.address || 'Hà Nội'))}`;
 
-            // Môn thể thao & Ảnh sân
             const sportType = (order.sport || "pickleball").toLowerCase();
             let sportBadgeName = "Pickleball tiêu chuẩn";
             let sportIcon = "sports_cricket";
@@ -1671,19 +1654,14 @@
             document.getElementById('sportBadgeIcon').innerText = sportIcon;
             document.getElementById('venueImage').src = getFacilityAccurateImage(order.facility_id || venueNameText, sportType);
 
-            // =========================================================================
-            // ĐỒNG BỘ TRẠNG THÁI THỜI GIAN THỰC & ĐIỀU KHIỂN NÚT HỦY
-            // =========================================================================
             const statusBadge = document.getElementById('orderStatusBadge');
             const statusIcon = document.getElementById('orderStatusIcon');
             const statusText = document.getElementById('orderStatusText');
             const cancelWrapper = document.getElementById('cancelActionWrapper');
 
-            // Tính toán động trạng thái thực tế
             const realTimeInfo = calculateRealtimeBookingStatus(order);
 
             if (realTimeInfo.status === 'cancelled') {
-                // 1. ĐƠN ĐÃ HỦY: KHÔNG CHO PHÉP HỦY LẠI
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-error text-sm font-bold shadow-sm";
                 statusIcon.innerText = "cancel";
                 statusText.innerText = "Đã hủy đơn";
@@ -1694,7 +1672,7 @@
                             <span class="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5">info</span>
                             <div class="flex flex-col gap-0.5">
                                 <span class="font-bold text-error">Đơn đặt sân này đã được hủy</span>
-                                <span class="text-[11px] text-red-700">Tiền cọc đang được hoàn trả về tài khoản gốc. Bạn không thể thực hiện hủy lại đơn này.</span>
+                                <span class="text-[11px] text-red-700">Tiền cọc đang được hoàn trả về tài khoản gốc. Khung giờ đã được mở lại cho người chơi khác.</span>
                             </div>
                         </div>
                         <button disabled class="w-full py-3 rounded-xl bg-gray-100 text-gray-400 text-sm font-bold flex items-center justify-center gap-2 cursor-not-allowed border border-gray-200 shadow-none select-none" type="button">
@@ -1718,7 +1696,6 @@
                 }
 
             } else if (realTimeInfo.status === 'in_progress') {
-                // 2. ĐANG TRONG TRẬN: HIỂN THỊ ĐANG TRONG TRẬN & CẤM HỦY
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-sm font-bold shadow-sm animate-pulse";
                 statusIcon.innerText = "sports_score";
                 statusText.innerText = "Đang trong trận";
@@ -1740,7 +1717,6 @@
                 }
 
             } else if (realTimeInfo.status === 'completed') {
-                // 3. ĐÃ HOÀN THÀNH (QUÁ GIỜ THI ĐẤU): CẤM HỦY
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 text-tertiary text-sm font-bold shadow-sm";
                 statusIcon.innerText = "check_circle";
                 statusText.innerText = "Hoàn thành";
@@ -1755,7 +1731,6 @@
                 }
 
             } else {
-                // 4. SẮP TỚI: CHO PHÉP BẤM HỦY
                 statusBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DCFCE7] text-[#15803D] text-sm font-bold shadow-sm";
                 statusIcon.innerText = "verified";
                 statusText.innerText = "Đã xác nhận";
@@ -1770,7 +1745,6 @@
                 }
             }
 
-            // Chi tiết tài chính
             const totalPrice = parsePrice(order.total_price || order.price || order.totalAmount, 104500);
             let depositPaid = parsePrice(order.deposit_paid || order.deposit, totalPrice);
             if (depositPaid > totalPrice) depositPaid = totalPrice;
@@ -1787,7 +1761,7 @@
                 document.getElementById('paymentStatusSubtext').innerText = "Đã cọc trực tuyến";
             }
 
-            // ĐỒNG BỘ KHỐI MATCHMAKER
+            // ĐỒNG BỘ KHỐI GHÉP ĐỐI (MATCHMAKER)
             const params = new URLSearchParams(window.location.search);
             const matchParam = params.get('match') || params.get('isMatch') || params.get('state');
 
@@ -1820,15 +1794,11 @@
             }
         }
 
-        // =========================================================================
-        // CÁC HÀM XỬ LÝ MODAL HỦY SÂN TỰ TÍNH TIỀN HOÀN THEO ĐIỀU 5
-        // =========================================================================
         function openCancelModal() {
             if (!currentActiveOrder) return;
 
             const realTime = calculateRealtimeBookingStatus(currentActiveOrder);
 
-            // KIỂM TRA CHẶN: ĐÃ HỦY / ĐANG TRONG TRẬN / HOÀN THÀNH
             if (!realTime.canCancel) {
                 alert(`⚠️ ${realTime.reasonDesc || 'Bạn không thể thực hiện hủy đơn này!'}`);
                 return;
@@ -1842,14 +1812,12 @@
 
             const refundFormatted = `${realTime.refundAmount.toLocaleString('vi-VN')}₫`;
 
-            // Gán dữ liệu vào modal xác nhận
             document.getElementById('displayModalOrderId').innerText = `#${orderId}`;
             document.getElementById('displayModalVenueName').innerText = venueName;
             document.getElementById('displayModalCourtNumber').innerText = courtName;
             document.getElementById('displayModalMatchTime').innerText = matchTime;
             document.getElementById('displayModalMatchDate').innerText = matchDate;
             
-            // Cập nhật nhãn và số tiền hoàn chính xác theo Điều 5
             document.getElementById('displayModalRefundPercentBadge').innerText = realTime.refundLabel;
             if (realTime.refundPercent === 100) {
                 document.getElementById('displayModalRefundPercentBadge').className = "text-[10px] bg-green-100 text-primary px-1.5 py-0.5 rounded-full font-bold";
@@ -1863,7 +1831,6 @@
             document.getElementById('displayModalRefundAmount').innerText = refundFormatted;
             document.getElementById('bannerRefundText').innerText = refundFormatted;
 
-            // Mở modal
             const modal = document.getElementById('cancel-modal');
             if (modal) modal.classList.remove('hidden');
         }
@@ -1873,7 +1840,9 @@
             if (modal) modal.classList.add('hidden');
         }
 
-        // THỰC HIỆN HỦY SÂN CHÍNH THỨC VÀ GỬI LÊN SERVER/MYSQL
+        // =========================================================================
+        // THỰC HIỆN HỦY SÂN VÀ GIẢI PHÓNG SLOT VỀ KHUNG GIỜ TRỐNG
+        // =========================================================================
         async function confirmAndExecuteCancelOrder() {
             if (!currentActiveOrder) return;
 
@@ -1889,6 +1858,7 @@
             const courtName = currentActiveOrder.court_number || currentActiveOrder.sub_court || "Sân thi đấu";
             const matchTime = currentActiveOrder.time_slot || currentActiveOrder.slot || "19:00 - 20:00";
             const matchDate = currentActiveOrder.date || "01/11/2026";
+            const rawDate = currentActiveOrder.raw_date || matchDate;
 
             const refundFormatted = `${realTime.refundAmount.toLocaleString('vi-VN')}₫`;
             const selectedReason = document.getElementById('selectCancelReason').value || 'Bận việc đột xuất';
@@ -1902,7 +1872,6 @@
                 `;
             }
 
-            // GỌI API BACKEND SERVER ĐỂ CẬP NHẬT TRỰC TIẾP VÀO DATABASE MYSQL
             try {
                 await fetch(`/api/bookings/${orderId}/cancel`, {
                     method: 'POST',
@@ -1910,11 +1879,36 @@
                     body: JSON.stringify({ reason: selectedReason })
                 });
             } catch(apiErr) {
-                console.warn('API backend chưa khả dụng hoặc đang chạy offline, tiến hành đồng bộ localStorage:', apiErr);
+                console.warn('API backend offline, tiếp tục lưu cục bộ:', apiErr);
             }
 
             setTimeout(() => {
-                // 1. Cập nhật đối tượng hiện tại
+                // 1. GIẢI PHÓNG SLOT TRONG sb_booked_slots VÀ sb_locked_slots ĐỂ KHUNG GIỜ TRỐNG TRỞ LẠI
+                try {
+                    let bookedSlots = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]');
+                    if (Array.isArray(bookedSlots)) {
+                        bookedSlots = bookedSlots.filter(b => !(
+                            (b.courtName === courtName || b.court_number === courtName) &&
+                            (b.time === matchTime || b.time_slot === matchTime) &&
+                            (b.date === rawDate || b.date === matchDate)
+                        ));
+                        localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(bookedSlots));
+                    }
+
+                    let lockedSlots = JSON.parse(localStorage.getItem(LOCKED_SLOTS_STORAGE_KEY) || '[]');
+                    if (Array.isArray(lockedSlots)) {
+                        lockedSlots = lockedSlots.filter(l => !(
+                            (l.courtName === courtName || l.court_number === courtName) &&
+                            (l.time === matchTime || l.time_slot === matchTime) &&
+                            (l.date === rawDate || l.date === matchDate)
+                        ));
+                        localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(lockedSlots));
+                    }
+                } catch(e) {
+                    console.error("Lỗi khi giải phóng slot:", e);
+                }
+
+                // 2. CẬP NHẬT TRẠNG THÁI VÀO TÀI KHOẢN ĐANG ĐĂNG NHẬP
                 currentActiveOrder.status = 'cancelled';
                 currentActiveOrder.status_label = 'Đã hủy đơn';
                 currentActiveOrder.cancelled_at = Date.now();
@@ -1922,22 +1916,25 @@
                 currentActiveOrder.refund_amount = realTime.refundAmount;
                 currentActiveOrder.refund_percent = realTime.refundPercent;
 
-                // Đồng bộ vào sb_my_booking_history (ĐỂ TRANG LỊCH SỬ NHẬN NGAY)
+                const userObj = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('sb_session') || '{}');
+                const uid = userObj.phone || userObj.id || 'user';
+                const userHistoryKey = `sb_bookings_user_${uid}`;
+
                 try {
-                    let savedList = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
-                    const idx = savedList.findIndex(b => b.id === orderId || b.id === `SB-${orderId}` || String(b.id).replace('SB-', '') === String(orderId).replace('SB-', ''));
+                    let userBookings = JSON.parse(localStorage.getItem(userHistoryKey) || '[]');
+                    const cleanId = String(orderId).replace(/^SB-/i, '');
+                    const idx = userBookings.findIndex(b => String(b.id || b.order_id || '').replace(/^SB-/i, '') === cleanId);
                     if (idx !== -1) {
-                        savedList[idx].status = 'cancelled';
-                        savedList[idx].status_label = 'Đã hủy đơn';
-                        savedList[idx].cancelled_at = Date.now();
-                        savedList[idx].cancel_reason = selectedReason;
-                        savedList[idx].refund_amount = realTime.refundAmount;
-                        savedList[idx].refund_percent = realTime.refundPercent;
-                        localStorage.setItem('sb_my_booking_history', JSON.stringify(savedList));
+                        userBookings[idx].status = 'cancelled';
+                        userBookings[idx].status_label = 'Đã hủy đơn';
+                        userBookings[idx].cancelled_at = Date.now();
+                        userBookings[idx].cancel_reason = selectedReason;
+                        userBookings[idx].refund_amount = realTime.refundAmount;
+                        userBookings[idx].refund_percent = realTime.refundPercent;
+                        localStorage.setItem(userHistoryKey, JSON.stringify(userBookings));
                     }
                 } catch(e) {}
 
-                // Đồng bộ vào sb_final_order
                 try {
                     let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || 'null');
                     if (finalOrder && (finalOrder.id === orderId || finalOrder.order_id === orderId)) {
@@ -1947,20 +1944,11 @@
                     }
                 } catch(e) {}
 
-                // Đồng bộ vào sb_selected_booking_detail
+                // 3. TẠO THÔNG BÁO VÀO TÀI KHOẢN
                 try {
-                    let sel = JSON.parse(localStorage.getItem('sb_selected_booking_detail') || 'null');
-                    if (sel && (sel.id === orderId || sel.order_id === orderId)) {
-                        sel.status = 'cancelled';
-                        sel.status_label = 'Đã hủy đơn';
-                        localStorage.setItem('sb_selected_booking_detail', JSON.stringify(sel));
-                    }
-                } catch(e) {}
-
-                // 2. GHI THÔNG BÁO VÀO HỆ THỐNG
-                try {
-                    let notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
-                    const newCancelNotif = {
+                    const notifKey = `sb_notifs_user_${uid}`;
+                    let notifs = JSON.parse(localStorage.getItem(notifKey) || '[]');
+                    notifs.unshift({
                         id: 'notif-cancel-' + Date.now(),
                         category: 'booking',
                         court_name: courtName,
@@ -1968,25 +1956,16 @@
                         summary_info: `${venueName} • ${courtName} • ${matchTime} (${matchDate})`,
                         title: `❌ Đã hủy đặt sân #${orderId} - Hoàn tiền ${realTime.refundLabel}`,
                         desc: `Đã hủy ca ${matchTime} ngày ${matchDate} tại ${venueName}. Số tiền hoàn: ${refundFormatted}.`,
-                        content: `Lượt đặt #${orderId} tại ${venueName} (${courtName}, khung giờ ${matchTime} ngày ${matchDate}) đã được hủy thành công theo yêu cầu của bạn. Lý do: "${selectedReason}". Số tiền ${refundFormatted} (${realTime.refundLabel}) đang được ngân hàng xử lý hoàn trả về tài khoản nguồn trong 1 - 3 ngày làm việc.`,
+                        content: `Lượt đặt #${orderId} tại ${venueName} (${courtName}, khung giờ ${matchTime} ngày ${matchDate}) đã được hủy thành công. Số tiền ${refundFormatted} (${realTime.refundLabel}) đang được hoàn trả trong 1 - 3 ngày làm việc.`,
                         timestamp: Date.now(),
                         time: 'Vừa xong',
                         unread: true,
                         read: false,
-                        link: `chi-tiet-don-dat-san.html?id=${orderId}`,
-                        actionText: 'Xem chi tiết đơn hủy',
-                        actionIcon: 'receipt_long',
-                        icon: 'event_busy',
-                        color: 'text-red-600',
-                        bgIcon: 'bg-red-50 border border-red-200',
-                        badgeCategoryText: 'Hủy đặt sân',
-                        badgeClass: 'bg-red-100 text-red-800 border border-red-200'
-                    };
-                    notifs.unshift(newCancelNotif);
-                    localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
+                        link: `chi-tiet-don-dat-san.html?id=${orderId}`
+                    });
+                    localStorage.setItem(notifKey, JSON.stringify(notifs));
                 } catch(e) {}
 
-                // 3. Đóng modal và render lại toàn bộ trang chi tiết
                 closeCancelModal();
 
                 if (btnConfirm) {
@@ -1998,15 +1977,10 @@
                 }
 
                 renderOrderDetails(currentActiveOrder);
-                showToast(`Đã hủy đơn đặt sân #${orderId} thành công! Tiền hoàn ${refundFormatted} đang được xử lý.`);
-
-                const notifDots = document.querySelectorAll('header .bg-error');
-                notifDots.forEach(d => d.classList.remove('hidden'));
-
-            }, 600);
+                showToast(`Đã hủy đặt sân #${orderId} thành công! Khung giờ đã được mở lại cho người khác.`);
+            }, 500);
         }
 
-        // Các hàm phụ trợ MatchMaker
         let currentDetailMode = 'regular';
         let countdownTimerInterval = null;
         let remainingFindingSeconds = 590;
@@ -2055,14 +2029,14 @@
                 if (mode === 'finding') {
                     if (headerIconBox) headerIconBox.className = "w-10 h-10 rounded-xl bg-orange-100 text-secondary flex items-center justify-center shrink-0";
                     if (headerIcon) headerIcon.innerText = "sensors";
-                    if (titleEl) titleEl.innerText = isRelaxed ? "Tìm Đối Chơi Cùng (Đã nới lỏng)" : "Tìm Đối Chơi Cùng (MatchMaker)";
+                    if (titleEl) titleEl.innerText = isRelaxed ? "Ghép Đối Thi Đấu (Đã nới lỏng)" : "Ghép Đối Thi Đấu (MatchMaker)";
                     if (subEl) subEl.innerText = isRelaxed ? "Đang quét tìm kiếm với tiêu chí mở rộng trong bán kính 10km" : "Kèo của bạn đang hiển thị công khai trên bảng lịch để người chơi khác xin ghép";
 
                     if (badgeContainer) {
                         badgeContainer.innerHTML = `
                             <span class="px-3 py-1 rounded-full bg-orange-100 text-secondary border border-orange-300 text-xs font-extrabold flex items-center gap-1.5 shadow-2xs">
                                 <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
-                                <span>${isRelaxed ? 'ĐANG TÌM ĐỐI (ĐÃ NỚI LỎNG)' : 'ĐANG TÌM ĐỐI THỦ'}</span>
+                                <span>${isRelaxed ? 'ĐANG GHÉP ĐỐI (ĐÃ NỚI LỎNG)' : 'ĐANG TÌM NGƯỜI GHÉP'}</span>
                             </span>
                         `;
                     }
@@ -2097,7 +2071,7 @@
                     if (countdownTimerInterval) clearInterval(countdownTimerInterval);
                     if (headerIconBox) headerIconBox.className = "w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0";
                     if (headerIcon) headerIcon.innerText = "tune";
-                    if (titleEl) titleEl.innerText = "Hết Hạn Tìm Đối - Nới Lỏng Tiêu Chí";
+                    if (titleEl) titleEl.innerText = "Hết Hạn Ghép Đối - Nới Lỏng Tiêu Chí";
                     if (subEl) subEl.innerText = "Đã qua thời gian quét nhanh, đề xuất mở rộng phạm vi tìm kiếm";
 
                     if (badgeContainer) {
@@ -2125,8 +2099,8 @@
 
             if (gEl) gEl.innerText = "⚥ Mọi giới tính (Nam & Nữ)";
             if (lEl) lEl.innerText = "Trình độ: Mọi trình độ";
-            if (sHeading) sHeading.innerText = "Đang quét tìm kiếm đối thủ trong bán kính mở rộng 10km...";
-            if (sDesc) sDesc.innerText = "Hệ thống đã nới lỏng tiêu chí (chấp nhận mọi trình độ và giới tính) để tăng cơ hội ghép cặp nhanh nhất.";
+            if (sHeading) sHeading.innerText = "Đang quét tìm kiếm người ghép trong bán kính mở rộng 10km...";
+            if (sDesc) sDesc.innerText = "Hệ thống đã nới lỏng tiêu chí để tăng cơ hội ghép cặp nhanh nhất.";
 
             remainingFindingSeconds = 600;
             setDetailViewMode('finding', true);
@@ -2145,18 +2119,17 @@
         }
 
         function handleStopMatchmakingInDetail() {
-            if (confirm("Bạn có chắc chắn muốn dừng tìm kiếm đối thủ? Sân và tiền cọc được giữ nguyên 100%.")) {
+            if (confirm("Bạn có chắc chắn muốn dừng tìm kiếm người ghép đối? Sân và tiền cọc được giữ nguyên 100%.")) {
                 if (currentActiveOrder) {
                     currentActiveOrder.is_matching_enabled = false;
                     currentActiveOrder.isMatchMaker = false;
                     currentActiveOrder.match_status = 'stopped';
                 }
-                showToast("Đã dừng tìm đối thủ. Đơn chuyển thành đơn Đặt thường.");
+                showToast("Đã dừng ghép đối. Đơn chuyển thành đơn Đặt thường.");
                 setDetailViewMode('regular');
             }
         }
 
-        // TOAST NỔI ĐẸP MẮT
         function showToast(message, isSuccess = true) {
             let t = document.getElementById('sb-detail-toast');
             if (!t) {
@@ -2176,7 +2149,6 @@
             }, 4000);
         }
 
-        // ĐĂNG XUẤT AN TOÀN
         function handleLogout() {
             if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?")) {
                 localStorage.removeItem("currentUser");
@@ -2185,7 +2157,6 @@
             }
         }
 
-        // Phím Escape để đóng modal
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') closeCancelModal();
         });

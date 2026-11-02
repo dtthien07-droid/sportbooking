@@ -78,7 +78,6 @@
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/95 backdrop-blur-md shadow-sm border-b border-gray-100">
         <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
             <div class="flex items-center gap-space-xl">
-                <!-- LOGO CHỮ SPORTBOOKING THUẦN XANH LÁ -->
                 <a class="flex items-center gap-space-sm" href="trangchu-user.html">
                     <span class="text-2xl font-bold text-primary tracking-tight">SportBooking</span>
                 </a>
@@ -92,14 +91,12 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <!-- KHỐI CHUÔNG THÔNG BÁO XEM NHANH -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button">
                         <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse hidden" id="badgeQuickCount"></span>
                     </button>
 
-                    <!-- KHUNG POPOVER XEM NHANH THÔNG BÁO -->
                     <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
                         <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -120,7 +117,6 @@
                     </div>
                 </div>
 
-                <!-- KHU VỰC USER HEADER CHUẨN ĐÚNG ẢNH MẪU -->
                 <div id="userHeaderArea" class="flex items-center pl-2"></div>
             </div>
         </div>
@@ -136,15 +132,12 @@
                         <span class="material-symbols-outlined text-[19px] text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
                         <span id="btnBackText">Quay lại chọn khung giờ</span>
                     </button>
-
-                    <!-- Tên sân phụ hiển thị phía đối diện -->
                     <span class="text-xs text-on-surface-variant hidden sm:inline" id="breadcrumbVenueName">Sân bóng mini Đông Đô</span>
                 </div>
 
-                <!-- THANH TIẾN TRÌNH STEPPER (BỐ CỤC CHUẨN CỦA BƯỚC 1) -->
+                <!-- THANH TIẾN TRÌNH STEPPER -->
                 <div class="mb-space-lg bg-surface-container-lowest p-space-md rounded-2xl shadow-sm border border-gray-100">
                     <div class="grid grid-cols-3 items-center relative">
-                        <!-- Đường kẻ tiến trình kết nối 3 bước -->
                         <div class="absolute left-[16.6%] right-[16.6%] top-1/2 -translate-y-1/2 h-1 bg-surface-container-high rounded-full -z-0">
                             <div id="stepperProgressBar" class="h-full w-0 bg-primary rounded-full transition-all duration-300"></div>
                         </div>
@@ -178,7 +171,7 @@
                     </div>
                 </div>
 
-                <!-- BANNER ĐẾM NGƯỢC GIỮ CHỖ 10 PHÚT (HIỂN THỊ TRONG BƯỚC 1 & 2 - TỰ ĐỘNG QUAY VỀ KHI HẾT GIỜ) -->
+                <!-- BANNER ĐẾM NGƯỢC GIỮ CHỖ 10 PHÚT -->
                 <div id="countdownBanner" class="mb-space-lg p-space-md rounded-2xl bg-secondary-fixed/40 text-on-secondary-fixed flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md shadow-sm border border-secondary-fixed">
                     <div class="flex items-center gap-space-md">
                         <div class="w-10 h-10 rounded-xl bg-secondary-container text-white flex items-center justify-center shrink-0 shadow-sm animate-pulse">
@@ -188,27 +181,23 @@
                             <div class="flex items-center gap-1.5 flex-wrap">
                                 <span class="text-sm font-bold text-on-secondary-fixed">Lưu ý giữ chỗ:</span>
                                 <span class="text-sm text-on-secondary-fixed">Khung giờ đã chọn đang được tạm giữ trong</span>
-                                <span class="px-2 py-0.5 rounded-lg bg-secondary-container text-white text-sm font-mono font-bold" id="countdown-badge">09:59</span>
+                                <span class="px-2 py-0.5 rounded-lg bg-secondary-container text-white text-sm font-mono font-bold" id="countdown-badge">10:00</span>
                             </div>
                             <p class="text-xs text-on-secondary-fixed-variant mt-0.5">Vui lòng hoàn tất xác nhận &amp; thanh toán để đảm bảo slot không bị hủy nhường cho người chơi khác.</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white text-secondary text-xs font-bold shrink-0 self-end sm:self-center shadow-sm">
                         <span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
-                        <span>Hệ thống đang giữ slot</span>
+                        <span>Hệ thống đang tạm khóa slot</span>
                     </div>
                 </div>
 
-                <!-- ========================================== -->
-                <!-- BƯỚC 1: XÁC NHẬN THÔNG TIN ĐẶT SÂN        -->
-                <!-- ========================================== -->
+                <!-- BƯỚC 1: XÁC NHẬN THÔNG TIN ĐẶT SÂN -->
                 <div id="step-panel-1" class="step-panel">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
                         
-                        <!-- CỘT TRÁI BƯỚC 1 (7 cols) -->
+                        <!-- CỘT TRÁI BƯỚC 1 -->
                         <div class="lg:col-span-7 flex flex-col gap-space-lg">
-                            
-                            <!-- Thẻ Tóm tắt Sân & Khung giờ -->
                             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
                                 <div class="flex items-start justify-between gap-space-md mb-space-md">
                                     <div>
@@ -240,7 +229,7 @@
                                         <span class="text-xs text-on-surface-variant flex items-center gap-1">
                                             <span class="material-symbols-outlined text-[15px]">calendar_today</span> Ngày chơi
                                         </span>
-                                        <span class="text-sm font-bold text-on-surface mt-1" id="displaySelectedDate">Hôm nay (31/10/2026)</span>
+                                        <span class="text-sm font-bold text-on-surface mt-1" id="displaySelectedDate">Hôm nay</span>
                                         <span class="text-[11px] text-primary font-bold">Ngày đã chọn</span>
                                     </div>
                                     <div class="flex flex-col">
@@ -297,16 +286,16 @@
                                 </div>
                             </div>
 
-                            <!-- TÍNH NĂNG TÌM ĐỐI CHƠI CÙNG (MẶC ĐỊNH TẮT) -->
+                            <!-- TÍNH NĂNG GHÉP ĐỐI CÙNG (MATCHMAKER) -->
                             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
                                 <div class="flex items-start justify-between gap-space-md">
                                     <div>
                                         <div class="flex items-center gap-2">
                                             <span class="material-symbols-outlined text-secondary text-[22px]">groups</span>
-                                            <h3 class="text-base font-bold text-on-surface">Tìm đối chơi cùng</h3>
+                                            <h3 class="text-base font-bold text-on-surface">Ghép đối thi đấu cùng</h3>
                                             <span class="px-2 py-0.5 rounded-md bg-orange-100 text-secondary text-[11px] font-bold">MatchMaker</span>
                                         </div>
-                                        <p class="text-xs text-on-surface-variant mt-1">Đăng tin ghép cặp tự động lên bảng tin cộng đồng SportBooking khu vực sân.</p>
+                                        <p class="text-xs text-on-surface-variant mt-1">Đăng tin ghép đối tự động lên bảng tin cộng đồng SportBooking khu vực sân.</p>
                                     </div>
 
                                     <label class="relative inline-flex items-center cursor-pointer shrink-0">
@@ -334,7 +323,7 @@
                                                 <span class="material-symbols-outlined text-[20px]">radar</span>
                                             </div>
                                             <div class="flex-1">
-                                                <p class="text-xs font-bold text-on-surface">Quét tìm người chơi quanh bán kính 5km</p>
+                                                <p class="text-xs font-bold text-on-surface">Quét tìm người ghép đối quanh bán kính 5km</p>
                                                 <p class="text-[11px] text-on-surface-variant mt-0.5">Hệ thống sẽ gửi thông báo đến các thành viên rảnh trong khung giờ thi đấu này.</p>
                                             </div>
                                         </div>
@@ -442,19 +431,17 @@
                                                 <span class="text-[11px] text-gray-400" id="charCountLabel">Tối đa 150 ký tự</span>
                                             </div>
                                             <div class="relative">
-                                                <textarea id="matchingNoteText" maxlength="150" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-xs focus:ring-2 focus:ring-primary/20 outline-none resize-none transition-all border border-gray-200">Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!</textarea>
+                                                <textarea id="matchingNoteText" maxlength="150" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-low text-on-surface text-xs focus:ring-2 focus:ring-primary/20 outline-none resize-none transition-all border border-gray-200">Chào các bạn, mình tìm bạn ghép đối giao lưu vui vẻ, tinh thần fair-play!</textarea>
                                                 <span class="material-symbols-outlined absolute right-2.5 bottom-2 text-gray-400 text-[16px] pointer-events-none">edit_note</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
 
-                        <!-- CỘT PHẢI BƯỚC 1: TÓM TẮT CHI PHÍ & NÚT TIẾP TỤC (5 cols) -->
+                        <!-- CỘT PHẢI BƯỚC 1 -->
                         <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
-                            
                             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm border border-gray-100">
                                 <div class="flex items-center justify-between pb-3 border-b">
                                     <h3 class="text-base font-bold text-on-surface">Tóm tắt chi phí</h3>
@@ -492,7 +479,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tùy chọn cọc hay thanh toán hết -->
                                 <div class="mt-4 p-3 rounded-xl bg-surface-container-low border border-gray-200">
                                     <span class="block text-xs font-bold text-on-surface mb-2">Tùy chọn thanh toán giữ sân:</span>
                                     <div class="flex flex-col gap-2">
@@ -524,7 +510,6 @@
                                     </div>
                                 </div>
 
-                                <!-- CHECKBOX ĐIỀU KHOẢN -->
                                 <div class="mt-4">
                                     <label class="flex items-center gap-2 cursor-pointer select-none">
                                         <input checked class="w-5 h-5 rounded accent-primary text-primary cursor-pointer shrink-0" id="terms-checkbox" type="checkbox">
@@ -537,7 +522,6 @@
                                     </label>
                                 </div>
 
-                                <!-- NÚT TIẾP TỤC ĐẾN BƯỚC 2 -->
                                 <div class="mt-4 flex flex-col gap-2">
                                     <button onclick="handleProceedToPayment()" class="w-full h-12 rounded-xl bg-secondary-container hover:bg-secondary text-white text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer active:scale-95" id="cta-checkout" type="button">
                                         <span id="cta-text">TIẾP TỤC ĐẾN THANH TOÁN (171.000đ)</span>
@@ -562,25 +546,20 @@
                                 </div>
                             </div>
 
-                            <!-- Thông tin chính sách hủy -->
                             <div class="p-4 rounded-2xl bg-surface-container-lowest shadow-sm flex items-start gap-3 border border-gray-100">
                                 <span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
                                 <p class="text-xs text-on-surface-variant leading-relaxed">
                                     Hủy sân miễn phí trước giờ chơi ≥ 12 tiếng. Sau thời gian này, tiền cọc sẽ được xử lý theo quy định bảo vệ chủ sân.
                                 </p>
                             </div>
-
                         </aside>
                     </div>
                 </div>
 
-                <!-- ========================================== -->
-                <!-- BƯỚC 2: THANH TOÁN & GIỮ CHỖ              -->
-                <!-- ========================================== -->
+                <!-- BƯỚC 2: THANH TOÁN & GIỮ CHỖ -->
                 <div id="step-panel-2" class="step-panel hidden">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
                         
-                        <!-- CỘT TRÁI: PHƯƠNG THỨC THANH TOÁN (7 cols) -->
                         <div class="lg:col-span-7 flex flex-col gap-space-lg">
                             <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
                                 <div class="flex flex-wrap items-center justify-between gap-space-sm">
@@ -601,10 +580,7 @@
                                     </p>
                                 </div>
 
-                                <!-- Danh sách phương thức -->
                                 <div class="flex flex-col gap-space-sm mt-1" id="payment-options-container">
-                                    
-                                    <!-- VietQR (Mặc định) -->
                                     <label class="relative flex flex-col p-4 rounded-xl bg-white cursor-pointer transition-all shadow-sm ring-2 ring-primary border border-primary/20">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-3">
@@ -623,7 +599,6 @@
                                             <span class="material-symbols-outlined text-primary text-[22px]">expand_less</span>
                                         </div>
 
-                                        <!-- Khung thông tin QR demo -->
                                         <div class="mt-4 pt-4 border-t border-gray-100 bg-surface-container-low rounded-xl p-4 flex flex-col md:flex-row items-center gap-5">
                                             <div class="bg-white p-3 rounded-xl shadow-sm flex flex-col items-center shrink-0 border border-gray-200">
                                                 <div class="w-36 h-36 bg-surface-container-high rounded-lg p-2 flex items-center justify-center relative">
@@ -704,11 +679,9 @@
                                         </div>
                                         <span class="material-symbols-outlined text-gray-400 text-[20px]">chevron_right</span>
                                     </label>
-
                                 </div>
                             </div>
 
-                            <!-- Quy định hoàn cọc -->
                             <div class="bg-surface-container-low p-4 rounded-2xl flex items-start gap-3 border border-gray-200">
                                 <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-primary shrink-0 shadow-sm">
                                     <span class="material-symbols-outlined text-[20px]">rule</span>
@@ -723,23 +696,20 @@
                             </div>
                         </div>
 
-                        <!-- CỘT PHẢI: TÓM TẮT ĐƠN & NÚT XÁC NHẬN BƯỚC 2 (5 cols) -->
+                        <!-- CỘT PHẢI BƯỚC 2 -->
                         <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
                             <div class="bg-surface-container-lowest rounded-2xl shadow-sm p-space-lg flex flex-col gap-space-md border border-gray-100">
-                               
-                                <!-- Header mã giữ chỗ -->
                                 <div class="flex items-center justify-between pb-3 border-b">
                                     <div class="flex flex-col">
                                         <span class="text-[10px] text-gray-400 uppercase font-bold">Mã giữ chỗ tạm thời</span>
                                         <span class="font-mono text-sm text-primary font-bold" id="displaySidebarOrderId">#SB-89201</span>
                                     </div>
                                     <span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-bold flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                                        <span>Đang giữ slot</span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+                                        <span>Đang tạm khóa slot</span>
                                     </span>
                                 </div>
 
-                                <!-- Thông tin sân tóm tắt -->
                                 <div class="flex gap-3 items-start">
                                     <img id="sidebarVenueImg" class="w-16 h-16 rounded-xl object-cover shrink-0 border" alt="Sân thi đấu" src="https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80"/>
                                     <div class="flex flex-col min-w-0">
@@ -770,7 +740,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Tính toán chi phí chuẩn xác -->
                                 <div class="flex flex-col gap-2 pt-1 text-xs">
                                     <div class="flex items-center justify-between text-on-surface-variant">
                                         <span>Giá thuê sân:</span>
@@ -794,7 +763,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Nút hành động xác nhận thanh toán -->
                                 <div class="flex flex-col gap-2 mt-2">
                                     <button onclick="handleExecutePayment()" class="w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95" id="btn-submit-payment" type="button">
                                         <span class="material-symbols-outlined text-[20px]">check_circle</span>
@@ -819,9 +787,7 @@
                     </div>
                 </div>
 
-                <!-- ========================================== -->
-                <!-- BƯỚC 3: HOÀN TẤT ĐẶT LỊCH (VÉ ĐIỆN TỬ)      -->
-                <!-- ========================================== -->
+                <!-- BƯỚC 3: HOÀN TẤT ĐẶT LỊCH (VÉ ĐIỆN TỬ & LIVE RADAR GHÉP ĐỐI ĐẦY ĐỦ) -->
                 <div id="step-panel-3" class="step-panel hidden">
                     <section class="flex flex-col items-center text-center max-w-2xl mx-auto mb-space-lg">
                         <div class="relative mb-space-md">
@@ -857,10 +823,8 @@
                         </div>
                     </section>
 
-                    <!-- Khung Thẻ Vé Điện Tử & Cột phụ theo chuẩn Bước 1 -->
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
-                        
-                        <!-- Cột Trái: Chi tiết Vé điện tử (7 cols) -->
+                        <!-- Cột Trái: Vé điện tử -->
                         <div class="lg:col-span-7 flex flex-col gap-space-lg">
                             <article class="relative bg-surface-container-lowest rounded-2xl shadow-md overflow-hidden border border-gray-100">
                                 <div class="h-3 w-full bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
@@ -889,7 +853,6 @@
                                         <div class="h-[1px] w-full bg-surface-container-highest"></div>
                                     </div>
 
-                                    <!-- 4 thông số chi tiết vé -->
                                     <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md">
                                         <div class="bg-surface-container-low p-space-md rounded-xl border border-gray-100">
                                             <span class="text-xs uppercase text-on-surface-variant flex items-center gap-1">
@@ -921,7 +884,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Tính toán tiền & QR Code -->
                                     <div class="grid grid-cols-1 md:grid-cols-12 gap-space-lg items-center bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-gray-100">
                                         <div class="md:col-span-8 flex flex-col gap-space-xs text-xs">
                                             <div class="flex justify-between items-center py-1">
@@ -947,20 +909,9 @@
                                             <span class="text-[10px] text-on-surface-variant mt-1 text-center font-bold" id="step3QrCodeText">Quét QR tại quầy để nhận sân</span>
                                         </div>
                                     </div>
-
-                                    <div class="flex items-start gap-space-sm bg-surface-container-high/60 p-space-md rounded-xl text-on-surface">
-                                        <span class="material-symbols-outlined text-secondary text-xl mt-0.5">info</span>
-                                        <div class="flex flex-col gap-0.5">
-                                            <span class="text-xs font-bold text-on-surface">Lưu ý quan trọng khi đến sân:</span>
-                                            <p class="text-[11px] text-on-surface-variant leading-relaxed">
-                                                Vui lòng mang theo trang phục thi đấu phù hợp. Có mặt trước 10 phút để nhận sân và làm thủ tục thanh toán phần còn lại tại lễ tân.
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </article>
 
-                            <!-- Hàng nút hành động dưới vé -->
                             <div class="flex flex-wrap items-center gap-space-md">
                                 <a id="step3GoDetailLink" href="chi-tiet-don-dat-san.html" class="flex-1 min-w-[200px] h-12 px-space-lg rounded-xl bg-secondary-container text-white text-sm font-bold flex items-center justify-center gap-space-xs shadow-md hover:bg-secondary transition-all">
                                     <span class="material-symbols-outlined text-xl">receipt_long</span>
@@ -981,10 +932,8 @@
                             </div>
                         </div>
 
-                        <!-- Cột Phải: Rủ bạn bè thi đấu HOẶC Widget Live Radar MatchMaker (5 cols) -->
+                        <!-- Cột Phải: Rủ bạn bè HOẶC Live Radar Ghép đối đầy đủ -->
                         <aside class="lg:col-span-5 flex flex-col gap-space-lg lg:sticky lg:top-24">
-                            
-                            <!-- 1. KHỐI RỦ BẠN BÈ THI ĐẤU (HIỂN THỊ KHI isMatchMaker = false) -->
                             <div id="friendInviteCard" class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
                                 <div class="flex items-center gap-space-sm">
                                     <div class="w-9 h-9 rounded-lg bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center">
@@ -1011,11 +960,9 @@
                                 </button>
                             </div>
 
-                            <!-- 2. WIDGET RADAR QUÉT ĐỐI NHỎ GỌN (LIVE MATCHMAKER MINI-CARD) (HIỂN THỊ KHI isMatchMaker = true) -->
+                            <!-- LIVE RADAR GHÉP ĐỐI MINI-CARD -->
                             <div id="matchmakerMiniCard" class="hidden bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-primary/30 relative overflow-hidden transition-all duration-300">
-                                
-                                <!-- Header khối -->
-                                <div class="flex items-center justify-between pb-3 border-b border-gray-100" id="miniCardHeader">
+                                <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                                     <div class="flex items-center gap-2">
                                         <span id="miniCardStatusDot" class="relative flex h-3 w-3">
                                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
@@ -1043,15 +990,12 @@
                                     </div>
                                 </div>
 
-                                <!-- THÂN KHỐI 1: ĐANG QUÉT RADAR (LIVE SCANNING) -->
                                 <div id="miniCardScanningBody" class="flex flex-col items-center text-center py-1 relative">
-                                    <!-- Mini Radar Animation Sonar -->
                                     <div class="relative w-28 h-28 flex items-center justify-center my-1">
                                         <div class="absolute inset-0 rounded-full border border-primary/20 animate-ping" style="animation-duration: 2.6s;"></div>
                                         <div class="absolute inset-3 rounded-full border border-primary/35 animate-pulse"></div>
                                         <div class="absolute inset-6 rounded-full bg-primary/5 flex items-center justify-center"></div>
 
-                                        <!-- Tia Quét Radar Scanner Mini -->
                                         <svg class="absolute inset-0 w-full h-full animate-spin" style="animation-duration: 4s; transform-origin: center center;" viewBox="0 0 100 100">
                                             <defs>
                                                 <linearGradient id="mini-scanner-beam" x1="0%" x2="100%" y1="0%" y2="100%">
@@ -1062,22 +1006,17 @@
                                             <path d="M 50 50 L 50 0 A 50 50 0 0 1 95 25 Z" fill="url(#mini-scanner-beam)"></path>
                                         </svg>
 
-                                        <!-- Tâm Radar Icon -->
                                         <div class="relative z-10 w-11 h-11 rounded-full bg-white shadow-md flex items-center justify-center text-primary border border-primary/25">
                                             <span class="material-symbols-outlined text-2xl" id="miniRadarSportIcon">sports_soccer</span>
                                         </div>
-
-                                        <!-- Điểm ping đối thủ gần -->
                                         <div class="absolute top-2 right-4 w-3.5 h-3.5 rounded-full bg-secondary-container text-white flex items-center justify-center text-[8px] font-bold shadow-xs animate-bounce" title="Có 1 ứng viên tiềm năng">1</div>
                                         <div class="absolute bottom-3 left-3 w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></div>
                                     </div>
 
-                                    <!-- Dòng chữ trạng thái -->
                                     <p class="text-xs font-semibold text-on-surface mt-2 max-w-xs leading-relaxed" id="miniRadarStatusText">
                                         Đang quét tìm người chơi trình độ <strong class="text-primary font-bold" id="miniRadarLevel">Trung bình</strong> quanh bán kính 5km...
                                     </p>
 
-                                    <!-- Tóm tắt tiêu chí đã chọn -->
                                     <div class="flex flex-wrap items-center justify-center gap-1.5 mt-2.5" id="miniRadarBadges">
                                         <span class="px-2 py-0.5 rounded-md bg-surface-container-low text-on-surface text-[11px] font-semibold border border-gray-200" id="miniBadgeGender">Nữ</span>
                                         <span class="text-gray-300">•</span>
@@ -1087,7 +1026,6 @@
                                     </div>
                                 </div>
 
-                                <!-- THÂN KHỐI 2: HẾT GIỜ ĐẾM NGƯỢC (TRƯỜNG HỢP 1 - 00:00) -->
                                 <div id="miniCardExpiredBody" class="hidden flex-col items-center text-center py-2 relative">
                                     <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center border border-amber-200 shadow-xs mb-2">
                                         <span class="material-symbols-outlined text-3xl">hourglass_disabled</span>
@@ -1100,7 +1038,6 @@
                                     </p>
                                 </div>
 
-                                <!-- THÂN KHỐI 3: GHÉP ĐỐI THÀNH CÔNG (TRƯỜNG HỢP 2 - KHỚP KÈO) -->
                                 <div id="miniCardMatchedBody" class="hidden flex-col items-center text-center py-1 relative">
                                     <div class="w-14 h-14 rounded-full bg-emerald-100 text-primary flex items-center justify-center border-2 border-emerald-300 my-1 shadow-sm animate-bounce">
                                         <span class="material-symbols-outlined text-3xl">handshake</span>
@@ -1133,20 +1070,13 @@
                                     </div>
                                 </div>
 
-                                <!-- CÁC HÀNG NÚT BẤM HÀNH ĐỘNG THEO TỪNG TRẠNG THÁI -->
-                                
-                                <!-- 1. Nút khi đang quét LIVE -->
                                 <div id="miniCardScanningActions" class="flex flex-col gap-2 pt-2 border-t border-gray-100">
-                                 
-                                     
-                                    </a>
                                     <button id="btnStopMatchmaking" onclick="handleStopMatchmaking()" type="button" class="w-full py-2 px-4 rounded-xl bg-surface-container hover:bg-red-50 hover:text-error text-on-surface-variant text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer">
                                         <span class="material-symbols-outlined text-[16px]">pause_circle</span>
                                         <span>Dừng tìm đối</span>
                                     </button>
                                 </div>
 
-                                <!-- 2. Nút khi Hết giờ (Trường hợp 1) -->
                                 <div id="miniCardExpiredActions" class="hidden flex-col gap-2 pt-2 border-t border-gray-100">
                                     <button onclick="window.location.href='lich-su-dat-san.html'" type="button" class="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
                                         <span class="material-symbols-outlined text-[17px]">calendar_month</span>
@@ -1158,11 +1088,10 @@
                                     </button>
                                 </div>
 
-                                <!-- 3. Nút khi Khớp kèo thành công (Trường hợp 2) -->
                                 <div id="miniCardMatchedActions" class="hidden flex-col gap-2 pt-2 border-t border-gray-100">
                                     <button onclick="goToMatchedOrderDetail()" type="button" class="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
                                         <span class="material-symbols-outlined text-[17px]">receipt_long</span>
-                                        <span>Xem chi tiết trận đấu & Lịch hẹn</span>
+                                        <span>Xem chi tiết trận đấu &amp; Lịch hẹn</span>
                                     </button>
                                     <a href="tel:0977234567" class="w-full py-2 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-primary text-xs font-bold transition-colors flex items-center justify-center gap-1 border border-emerald-200">
                                         <span class="material-symbols-outlined text-[16px]">call</span>
@@ -1170,15 +1099,6 @@
                                     </a>
                                 </div>
 
-                                <!-- Link mời bạn riêng ở dưới cùng -->
-                                <div class="text-center pt-1 border-t border-gray-100" id="miniCardInviteFooter">
-                                    <button onclick="copyInviteLink(this)" type="button" class="text-[11px] text-gray-500 hover:text-primary transition-colors cursor-pointer inline-flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[13px]">link</span>
-                                        <span>Hoặc sao chép link rủ bạn riêng</span>
-                                    </button>
-                                </div>
-
-                                <!-- BỘ ĐIỀU KHIỂN MÔ PHỎNG TEST CẢ 3 TRẠNG THÁI -->
                                 <div class="bg-gray-50 border-t border-gray-100 -mx-6 -mb-6 p-2.5 px-6 flex items-center justify-between text-[11px] text-slate-500">
                                     <span class="font-bold flex items-center gap-1 text-slate-700">
                                         <span class="material-symbols-outlined text-[14px] text-secondary">science</span> Test kịch bản:
@@ -1189,10 +1109,8 @@
                                         <button onclick="setMiniRadarScenario('matched')" type="button" class="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-primary font-bold shadow-2xs">3. Khớp kèo</button>
                                     </div>
                                 </div>
-
                             </div>
 
-                            <!-- KHỐI VỊ TRÍ & HOTLINE (LUÔN HIỂN THỊ) -->
                             <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border border-gray-100">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-space-sm">
@@ -1218,7 +1136,6 @@
                                 </div>
                             </div>
                         </aside>
-
                     </div>
                 </div>
 
@@ -1226,7 +1143,6 @@
         </div>
     </main>
 
-    <!-- FOOTER ĐỒNG BỘ CHUẨN BƯỚC 1 -->
     <footer class="w-full bg-[#f1f3ff] border-t border-gray-200 shadow-[0_-1px_6px_rgba(0,0,0,0.02)]">
         <div class="max-w-[1440px] mx-auto px-margin py-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex flex-col gap-1 text-left">
@@ -1250,24 +1166,23 @@
         </div>
     </footer>
 
-    <!-- ============================================================== -->
-    <!-- JAVASCRIPT ĐIỀU KHIỂN ĐỒNG BỘ 3 BƯỚC & ĐẾM NGƯỢC 10 PHÚT      -->
-    <!-- ============================================================== -->
+    <!-- JAVASCRIPT ĐỒNG BỘ 10 PHÚT, SLOT-LOCK VÀ TÁCH BIỆT DỮ LIỆU TÀI KHOẢN -->
     <script>
-        // Kho ảnh sân thực tế chuẩn theo môn thể thao
         const VENUE_IMAGES = {
             badminton: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
             soccer: "https://images.unsplash.com/photo-1529900245534-47fbf82a44b1?w=800&q=80",
             pickleball: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800&q=80"
         };
 
+        const LOCKED_SLOTS_STORAGE_KEY = 'sb_locked_slots';
+        const BOOKED_SLOTS_STORAGE_KEY = 'sb_booked_slots';
+
         let currentStep = 1;
         let countdownTimer = null;
-        let timeLeft = 599; // 9 phút 59 giây (10 phút)
+        let timeLeft = 599; // 10 phút
         let bookingData = null;
         let targetFacilityId = "fac-011";
 
-        // 1. LẤY THÔNG TIN USER ĐĂNG NHẬP
         function getLoggedInUser() {
             try {
                 return JSON.parse(sessionStorage.getItem('sb_session')) ||
@@ -1280,7 +1195,6 @@
         function syncHeaderUserInfo() {
             const userContainer = document.getElementById('userHeaderArea');
             if (!userContainer) return;
-
             const user = getLoggedInUser();
 
             if (user) {
@@ -1295,15 +1209,10 @@
                                 ${firstLetter}
                             </div>
                             <div class="flex flex-col text-left">
-                                <span class="text-sm font-bold text-slate-900 leading-tight">
-                                    ${displayName}
-                                </span>
-                                <span class="text-xs font-bold leading-tight" style="color: #9d4300;">
-                                    ${roleText}
-                                </span>
+                                <span class="text-sm font-bold text-slate-900 leading-tight">${displayName}</span>
+                                <span class="text-xs font-bold leading-tight" style="color: #9d4300;">${roleText}</span>
                             </div>
                         </div>
-
                         <button onclick="handleLogout()" type="button" title="Đăng xuất" class="p-1 text-slate-400 hover:text-red-500 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer flex items-center justify-center outline-none">
                             <span class="material-symbols-outlined text-[20px]">logout</span>
                         </button>
@@ -1312,12 +1221,8 @@
             } else {
                 userContainer.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <a href="dang-nhap.html" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
-                            Đăng nhập
-                        </a>
-                        <a href="dang-ky.html" class="px-3.5 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-container transition-colors shadow-sm">
-                            Đăng ký
-                        </a>
+                        <a href="dang-nhap.html" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors">Đăng nhập</a>
+                        <a href="dang-ky.html" class="px-3 py-1.5 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-container transition-colors shadow-sm">Đăng ký</a>
                     </div>
                 `;
             }
@@ -1325,6 +1230,7 @@
 
         function handleLogout() {
             if (confirm('Bạn có chắc chắn muốn đăng xuất tài khoản?')) {
+                releaseCurrentSlotLock();
                 sessionStorage.removeItem('sb_session');
                 localStorage.removeItem('sb_session');
                 localStorage.removeItem('currentUser');
@@ -1334,7 +1240,21 @@
             }
         }
 
-        // 2. QUẢN LÝ THÔNG BÁO POPUP
+        // GIẢI PHÓNG SLOT KHỎI DANH SÁCH TẠM KHÓA
+        function releaseCurrentSlotLock() {
+            try {
+                if (!bookingData) return;
+                let locks = JSON.parse(localStorage.getItem(LOCKED_SLOTS_STORAGE_KEY) || '[]');
+                locks = locks.filter(l => !(
+                    String(l.facilityId) === String(bookingData.facility_id) &&
+                    l.date === bookingData.raw_date &&
+                    l.courtName === bookingData.court_number &&
+                    l.time === bookingData.time_slot
+                ));
+                localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(locks));
+            } catch(e) {}
+        }
+
         function loadUserNotifications() {
             const user = getLoggedInUser();
             const uid = user ? (user.id || user.phone || 'user') : 'guest';
@@ -1388,12 +1308,14 @@
             }
         }
 
-        // 3. QUAY LẠI CHỌN KHUNG GIỜ CỦA ĐÚNG SÂN VÀ NGÀY ĐANG ĐẶT
         function goBackToPreviousStep() {
             if (currentStep === 2) {
                 goToStep(1);
                 return;
             }
+            // Giải phóng khóa slot khi người dùng bấm quay lại chọn lại ca
+            releaseCurrentSlotLock();
+
             const params = new URLSearchParams(window.location.search);
             const facId = bookingData.facility_id || params.get('facilityId') || params.get('id') || 'fac-011';
             const date = bookingData.raw_date || params.get('date') || '';
@@ -1403,10 +1325,14 @@
             window.location.href = targetUrl;
         }
 
-        // 4. BỘ ĐẾM NGƯỢC 10 PHÚT - HẾT GIỜ TỰ ĐỘNG QUAY VỀ CHỌN KHUNG GIỜ
-        function startCountdownTimer() {
+        function startCountdownTimer(lockedUntil) {
             if (countdownTimer) clearInterval(countdownTimer);
             const badge = document.getElementById('countdown-badge');
+
+            if (lockedUntil) {
+                const diffSec = Math.max(0, Math.floor((lockedUntil - Date.now()) / 1000));
+                timeLeft = diffSec > 0 ? diffSec : 599;
+            }
 
             function updateTime() {
                 if (!badge) return;
@@ -1421,6 +1347,8 @@
                     badge.textContent = "00:00";
                     badge.classList.add('bg-error');
 
+                    // Hết 10 phút -> giải phóng slot và thông báo
+                    releaseCurrentSlotLock();
                     alert("Đã hết thời gian giữ chỗ tạm thời (10 phút)!\n\nHệ thống sẽ tự động chuyển bạn quay lại trang Chọn khung giờ của sân để chọn lại slot thi đấu.");
                     const facId = bookingData.facility_id || targetFacilityId || 'fac-011';
                     const rawDate = bookingData.raw_date || '2026-10-31';
@@ -1432,24 +1360,17 @@
             updateTime();
         }
 
-        // 5. HÀM CHUYỂN BƯỚC MƯỢT MÀ TỪ BƯỚC 1 -> BƯỚC 2 -> BƯỚC 3
         function goToStep(targetStep) {
             targetStep = parseInt(targetStep) || 1;
             if (targetStep === currentStep) return;
 
-            // Ẩn toàn bộ các panel
             document.querySelectorAll('.step-panel').forEach(p => p.classList.add('hidden'));
 
-            // Hiển thị panel mục tiêu
             const targetPanel = document.getElementById(`step-panel-${targetStep}`);
-            if (targetPanel) {
-                targetPanel.classList.remove('hidden');
-            }
+            if (targetPanel) targetPanel.classList.remove('hidden');
 
-            // Cập nhật Stepper theo layout Bước 1
             updateStepperUI(targetStep);
 
-            // Bật / Tắt Banner đếm ngược
             const banner = document.getElementById('countdownBanner');
             const topNav = document.getElementById('topNavArea');
             if (targetStep === 3) {
@@ -1461,22 +1382,12 @@
                 if (topNav) topNav.classList.remove('hidden');
             }
 
-            // Đồng bộ dữ liệu khi chuyển sang Bước 2
-            if (targetStep === 2) {
-                syncStep2Data();
-            }
-
-            // Đồng bộ dữ liệu khi chuyển sang Bước 3
-            if (targetStep === 3) {
-                syncStep3Data();
-            }
+            if (targetStep === 2) syncStep2Data();
+            if (targetStep === 3) syncStep3Data();
 
             currentStep = targetStep;
-
-            // Cuộn mượt lên đầu trang
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Cập nhật tham số URL
             try {
                 const url = new URL(window.location);
                 url.searchParams.set('step', targetStep);
@@ -1484,7 +1395,6 @@
             } catch(e) {}
         }
 
-        // CẬP NHẬT GIAO DIỆN STEPPER
         function updateStepperUI(step) {
             const icon1 = document.getElementById('step-icon-1');
             const tag1 = document.getElementById('step-tag-1');
@@ -1501,66 +1411,37 @@
             const progressBar = document.getElementById('stepperProgressBar');
 
             if (step === 1) {
-                if (icon1) {
-                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
-                    icon1.innerHTML = "1";
-                }
+                if (icon1) { icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm"; icon1.innerHTML = "1"; }
                 if (tag1) tag1.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
                 if (title1) title1.className = "text-sm font-bold text-on-surface truncate";
 
-                if (icon2) {
-                    icon2.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
-                    icon2.innerHTML = "2";
-                }
+                if (icon2) { icon2.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base"; icon2.innerHTML = "2"; }
                 if (tag2) tag2.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
                 if (title2) title2.className = "text-sm font-medium text-on-surface-variant truncate";
 
-                if (icon3) {
-                    icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
-                    icon3.innerHTML = "3";
-                }
+                if (icon3) { icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base"; icon3.innerHTML = "3"; }
                 if (tag3) tag3.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
                 if (title3) title3.className = "text-sm font-medium text-on-surface-variant truncate";
 
                 if (progressBar) progressBar.style.width = "0%";
-            } 
-            else if (step === 2) {
-                if (icon1) {
-                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
-                    icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
-                }
+            } else if (step === 2) {
+                if (icon1) { icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm"; icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>'; }
                 if (tag1) tag1.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
                 if (title1) title1.className = "text-sm font-bold text-on-surface truncate";
 
-                if (icon2) {
-                    icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20";
-                    icon2.innerHTML = "2";
-                }
+                if (icon2) { icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20"; icon2.innerHTML = "2"; }
                 if (tag2) tag2.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
                 if (title2) title2.className = "text-sm font-bold text-primary truncate";
 
-                if (icon3) {
-                    icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base";
-                    icon3.innerHTML = "3";
-                }
+                if (icon3) { icon3.className = "w-10 h-10 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-base"; icon3.innerHTML = "3"; }
                 if (tag3) tag3.className = "text-[11px] text-on-surface-variant uppercase font-bold tracking-wider";
                 if (title3) title3.className = "text-sm font-medium text-on-surface-variant truncate";
 
                 if (progressBar) progressBar.style.width = "50%";
-            } 
-            else if (step === 3) {
-                if (icon1) {
-                    icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
-                    icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
-                }
-                if (icon2) {
-                    icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm";
-                    icon2.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>';
-                }
-                if (icon3) {
-                    icon3.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20";
-                    icon3.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">done_all</span>';
-                }
+            } else if (step === 3) {
+                if (icon1) { icon1.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm"; icon1.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>'; }
+                if (icon2) { icon2.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm"; icon2.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">check</span>'; }
+                if (icon3) { icon3.className = "w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center font-bold text-base shadow-sm ring-4 ring-primary/20"; icon3.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 1;">done_all</span>'; }
                 if (tag3) tag3.className = "text-[11px] text-primary uppercase font-bold tracking-wider";
                 if (title3) title3.className = "text-sm font-bold text-primary truncate";
 
@@ -1568,7 +1449,6 @@
             }
         }
 
-        // 6. THAO TÁC KHI NGƯỜI DÙNG BẤM "TIẾP TỤC ĐẾN THANH TOÁN" Ở BƯỚC 1
         function handleProceedToPayment() {
             const termsCheckbox = document.getElementById('terms-checkbox');
             if (termsCheckbox && !termsCheckbox.checked) {
@@ -1587,7 +1467,6 @@
                 return;
             }
 
-            // Cập nhật thông tin vào bookingData
             bookingData.user_name = nameInput.value.trim();
             bookingData.user_phone = phoneInput.value.trim();
             bookingData.user_email = (document.getElementById('bookerEmail') ? document.getElementById('bookerEmail').value.trim() : '') || 'truclam@gmail.com';
@@ -1597,7 +1476,6 @@
             bookingData.is_matching_enabled = matchingToggle ? matchingToggle.checked : false;
             bookingData.matching_criteria = { ...matchingCriteria };
 
-            // Kiểm tra phương thức thanh toán đã chọn (cọc hay toàn bộ)
             const choice = document.querySelector('input[name="payment_choice"]:checked');
             if (choice && choice.value === 'full') {
                 bookingData.is_full_payment = true;
@@ -1609,14 +1487,10 @@
                 bookingData.remaining_amount = bookingData.final_total - bookingData.deposit_paid;
             }
 
-            // Lưu dữ liệu nháp vào LocalStorage
             localStorage.setItem('sb_current_booking_draft', JSON.stringify(bookingData));
-
-            // Chuyển sang Bước 2 mượt mà
             goToStep(2);
         }
 
-        // ĐỒNG BỘ DỮ LIỆU SANG BƯỚC 2
         function syncStep2Data() {
             document.getElementById('displaySidebarOrderId').innerText = `#${bookingData.order_id}`;
             document.getElementById('sidebarVenueImg').src = bookingData.image;
@@ -1644,12 +1518,11 @@
 
             document.getElementById('displayTransferMemo').innerText = `SB ${bookingData.order_id.replace(/[^0-9]/g, '')} ${phoneStr.replace(/[^0-9]/g, '')}`;
 
-            // Cập nhật ảnh VietQR với số tiền thật
             const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=2|99|098888886886|MB|${bookingData.deposit_paid}|SPORTBOOKING%20${bookingData.order_id}`;
             document.getElementById('vietqr-image').src = qrApiUrl;
         }
 
-        // 7. THAO TÁC XÁC NHẬN THANH TOÁN (BƯỚC 2 -> BƯỚC 3)
+        // XÁC NHẬN THANH TOÁN: XÓA KHÓA TẠM, LƯU VÀO ĐÚNG TÀI KHOẢN
         function handleExecutePayment() {
             const payButton = document.getElementById('btn-submit-payment');
             if (payButton) {
@@ -1661,7 +1534,9 @@
             }
 
             setTimeout(() => {
-                // 1. Lưu đơn hàng hoàn tất vào sb_final_order
+                const user = getLoggedInUser();
+                const uid = user ? (user.phone || user.id || 'user') : 'guest';
+
                 const finalOrder = {
                     ...bookingData,
                     status: 'upcoming',
@@ -1670,10 +1545,10 @@
                 };
                 localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
 
-                // 2. Thêm vào sb_my_booking_history để trang Lịch sử đặt sân cộng tiền chính xác
+                // 1. Thêm vào lịch sử đặt sân của CHÍNH TÀI KHOẢN ĐANG ĐĂNG NHẬP
                 let history = [];
                 try {
-                    history = JSON.parse(localStorage.getItem('sb_my_booking_history') || '[]');
+                    history = JSON.parse(localStorage.getItem(`sb_bookings_user_${uid}`) || '[]');
                 } catch(e) {}
 
                 history = history.filter(h => h.id !== finalOrder.order_id);
@@ -1695,21 +1570,28 @@
                     status_label: 'Đã xác nhận',
                     image: finalOrder.image
                 });
-                localStorage.setItem('sb_my_booking_history', JSON.stringify(history));
+                localStorage.setItem(`sb_bookings_user_${uid}`, JSON.stringify(history));
 
-                // 3. Khóa khung giờ trong sb_booked_slots
-                let bookedSlots = {};
+                // 2. Chuyển slot sang trạng thái ĐÃ KÍN CHÍNH THỨC (CONFIRMED)
+                let bookedSlots = [];
                 try {
-                    bookedSlots = JSON.parse(localStorage.getItem('sb_booked_slots') || '{}');
+                    bookedSlots = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]');
                 } catch(e) {}
-                const slotKey = `${finalOrder.facility_id}_${finalOrder.raw_date}_${finalOrder.time_slot}`;
-                bookedSlots[slotKey] = true;
-                localStorage.setItem('sb_booked_slots', JSON.stringify(bookedSlots));
+                bookedSlots.push({
+                    courtName: finalOrder.court_number,
+                    time: finalOrder.time_slot,
+                    date: finalOrder.raw_date,
+                    facilityId: finalOrder.facility_id
+                });
+                localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(bookedSlots));
 
-                // 4. Bắn thông báo mới vào danh sách thông báo
+                // 3. Xóa slot khỏi danh sách TẠM KHÓA 10 PHÚT
+                releaseCurrentSlotLock();
+
+                // 4. Bắn thông báo mới vào đúng tài khoản
                 let notifs = [];
                 try {
-                    notifs = JSON.parse(localStorage.getItem('sb_notifications_list') || '[]');
+                    notifs = JSON.parse(localStorage.getItem(`sb_notifs_user_${uid}`) || '[]');
                 } catch(e) {}
                 notifs.unshift({
                     id: 'notif-' + Date.now(),
@@ -1726,10 +1608,6 @@
                     color: 'text-primary',
                     bgIcon: 'bg-green-100'
                 });
-                localStorage.setItem('sb_notifications_list', JSON.stringify(notifs));
-
-                const user = getLoggedInUser();
-                const uid = user ? (user.id || user.phone || 'user') : 'guest';
                 localStorage.setItem(`sb_notifs_user_${uid}`, JSON.stringify(notifs));
 
                 if (payButton) {
@@ -1740,12 +1618,10 @@
                     `;
                 }
 
-                // Chuyển sang Bước 3
                 goToStep(3);
             }, 600);
         }
 
-        // ĐỒNG BỘ DỮ LIỆU SANG BƯỚC 3
         function syncStep3Data() {
             document.getElementById('step3ConfirmEmail').innerText = bookingData.user_email || 'truclam@gmail.com';
             document.getElementById('step3BookingIdText').innerText = `#${bookingData.order_id}`;
@@ -1763,14 +1639,12 @@
 
             document.getElementById('step3QrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(bookingData.order_id)}`;
             document.getElementById('step3QrCodeText').innerText = `Mã vé: #${bookingData.order_id}`;
-
             document.getElementById('step3GoDetailLink').href = `chi-tiet-don-dat-san.html?id=${bookingData.order_id}`;
 
             const iconSpan = document.getElementById('step3SportIcon');
             const sportIconName = bookingData.sport === 'soccer' ? 'sports_soccer' : (bookingData.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball');
             if (iconSpan) iconSpan.innerText = sportIconName;
 
-            // XỬ LÝ HIỂN THỊ CỘT PHẢI THEO TRẠNG THÁI TÌM ĐỐI (isMatchMaker)
             const isMatchMaker = !!bookingData.is_matching_enabled;
             const friendCard = document.getElementById('friendInviteCard');
             const matchmakerCard = document.getElementById('matchmakerMiniCard');
@@ -1779,7 +1653,6 @@
                 if (friendCard) friendCard.classList.add('hidden');
                 if (matchmakerCard) matchmakerCard.classList.remove('hidden');
 
-                // Đồng bộ dữ liệu Live Radar Mini
                 const criteria = bookingData.matching_criteria || matchingCriteria;
                 const genderMap = { female: 'Nữ', male: 'Nam', any: 'Bất kỳ (Nam/Nữ)' };
                 const levelMap = { beginner: 'Mới chơi', intermediate: 'Trung bình', advanced: 'Khá / Chuyên' };
@@ -1801,13 +1674,6 @@
                 const radarIcon = document.getElementById('miniRadarSportIcon');
                 if (radarIcon) radarIcon.innerText = sportIconName;
 
-                // Nối link sang màn hình radar toàn cảnh với đúng dữ liệu đơn
-                const fullRadarBtn = document.getElementById('btnOpenFullRadar');
-                if (fullRadarBtn) {
-                    fullRadarBtn.href = `tim-doi-choi-status.html?id=${encodeURIComponent(bookingData.order_id)}&facilityId=${encodeURIComponent(bookingData.facility_id)}&date=${encodeURIComponent(bookingData.raw_date)}&time_slot=${encodeURIComponent(bookingData.time_slot)}&sport=${encodeURIComponent(bookingData.sport)}`;
-                }
-
-                // Bắt đầu đếm ngược mini radar
                 startMiniRadarCountdown();
             } else {
                 if (friendCard) friendCard.classList.remove('hidden');
@@ -1816,14 +1682,10 @@
             }
         }
 
-        // ĐIỀU KHIỂN CÁC TRẠNG THÁI WIDGET TÌM ĐỐI (LIVE RADAR MINI-CARD)
-        let miniRadarSeconds = 599; // 9 phút 59 giây
+        let miniRadarSeconds = 599;
         let miniRadarInterval = null;
-        let currentMiniRadarScenario = 'scanning'; // 'scanning' | 'expired' | 'matched'
 
         function setMiniRadarScenario(scenario) {
-            currentMiniRadarScenario = scenario;
-            
             const cardEl = document.getElementById('matchmakerMiniCard');
             const dotEl = document.getElementById('miniCardStatusDot');
             const titleEl = document.getElementById('miniCardTitle');
@@ -1842,16 +1704,9 @@
             const actionsMatched = document.getElementById('miniCardMatchedActions');
 
             if (scenario === 'expired') {
-                // TRƯỜNG HỢP 1: HẾT GIỜ ĐẾM NGƯỢC (00:00)
                 if (miniRadarInterval) clearInterval(miniRadarInterval);
-                if (cardEl) {
-                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-amber-300 relative overflow-hidden transition-all duration-300";
-                }
-                
-                // Chấm xanh đổi sang xám
-                if (dotEl) {
-                    dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-gray-400"></span>`;
-                }
+                if (cardEl) cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-amber-300 relative overflow-hidden transition-all duration-300";
+                if (dotEl) dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-gray-400"></span>`;
                 if (titleEl) titleEl.innerText = "Trạng thái ghép đối";
                 if (subTitleEl) subTitleEl.innerHTML = `<span class="text-gray-500 font-semibold">Treo công khai trên lịch sân</span>`;
 
@@ -1861,35 +1716,17 @@
 
                 if (bodyScanning) bodyScanning.classList.add('hidden');
                 if (bodyMatched) bodyMatched.classList.add('hidden');
-                if (bodyExpired) {
-                    bodyExpired.classList.remove('hidden');
-                    bodyExpired.classList.add('flex');
-                }
+                if (bodyExpired) { bodyExpired.classList.remove('hidden'); bodyExpired.classList.add('flex'); }
 
                 if (actionsScanning) actionsScanning.classList.add('hidden');
                 if (actionsMatched) actionsMatched.classList.add('hidden');
-                if (actionsExpired) {
-                    actionsExpired.classList.remove('hidden');
-                    actionsExpired.classList.add('flex');
-                }
-
-                // Cập nhật trạng thái slot trong ma trận thành 'waiting' (Chờ người ghép thông thường trên lịch)
-                updateSystemSlotMatchState('waiting');
-            } 
-            else if (scenario === 'matched') {
-                // TRƯỜNG HỢP 2: TÌM ĐƯỢC ĐỐI THÀNH CÔNG (KHỚP KÈO)
+                if (actionsExpired) { actionsExpired.classList.remove('hidden'); actionsExpired.classList.add('flex'); }
+            } else if (scenario === 'matched') {
                 if (miniRadarInterval) clearInterval(miniRadarInterval);
-                if (cardEl) {
-                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-emerald-500 relative overflow-hidden transition-all duration-300";
-                }
-
-                // Tiêu đề card đổi thành "GHÉP ĐỐI THÀNH CÔNG!"
+                if (cardEl) cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-emerald-500 relative overflow-hidden transition-all duration-300";
                 if (titleEl) titleEl.innerText = "GHÉP ĐỐI THÀNH CÔNG!";
                 if (subTitleEl) subTitleEl.innerHTML = `<span class="text-primary font-bold">Đã chốt danh sách người chơi</span>`;
-
-                if (dotEl) {
-                    dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>`;
-                }
+                if (dotEl) dotEl.innerHTML = `<span class="inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>`;
 
                 if (badgeLive) badgeLive.classList.add('hidden');
                 if (badgeExpired) badgeExpired.classList.add('hidden');
@@ -1897,32 +1734,14 @@
 
                 if (bodyScanning) bodyScanning.classList.add('hidden');
                 if (bodyExpired) bodyExpired.classList.add('hidden');
-                if (bodyMatched) {
-                    bodyMatched.classList.remove('hidden');
-                    bodyMatched.classList.add('flex');
-                }
+                if (bodyMatched) { bodyMatched.classList.remove('hidden'); bodyMatched.classList.add('flex'); }
 
                 if (actionsScanning) actionsScanning.classList.add('hidden');
                 if (actionsExpired) actionsExpired.classList.add('hidden');
-                if (actionsMatched) {
-                    actionsMatched.classList.remove('hidden');
-                    actionsMatched.classList.add('flex');
-                }
-
-                // Khóa khung giờ trên ma trận chung (chon-khung-gio.html) sang màu xám/Đã đủ người (4/4)
-                updateSystemSlotMatchState('matched');
-            }
-            else {
-                // TRẠNG THÁI MẶC ĐỊNH: ĐANG QUÉT LIVE
-                if (cardEl) {
-                    cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-primary/30 relative overflow-hidden transition-all duration-300";
-                }
-                if (dotEl) {
-                    dotEl.innerHTML = `
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                    `;
-                }
+                if (actionsMatched) { actionsMatched.classList.remove('hidden'); actionsMatched.classList.add('flex'); }
+            } else {
+                if (cardEl) cardEl.className = "bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm flex flex-col gap-space-md border-2 border-primary/30 relative overflow-hidden transition-all duration-300";
+                if (dotEl) dotEl.innerHTML = `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>`;
                 if (titleEl) titleEl.innerText = "Trạng thái ghép đối (Live Radar)";
                 if (subTitleEl) subTitleEl.innerHTML = `<span class="animate-pulse">Đang quét tìm kiếm...</span>`;
 
@@ -1939,52 +1758,7 @@
                 if (actionsScanning) actionsScanning.classList.remove('hidden');
 
                 startMiniRadarCountdown();
-                updateSystemSlotMatchState('live');
             }
-        }
-
-        // ĐỒNG BỘ TRẠNG THÁI KHUNG GIỜ VÀO LOCALSTORAGE CHO MA TRẬN SÂN (chon-khung-gio.html)
-        function updateSystemSlotMatchState(status) {
-            if (!bookingData) return;
-            try {
-                let states = JSON.parse(localStorage.getItem('sb_matchmaking_slots') || '{}');
-                const slotKey = `${bookingData.court_number}_${bookingData.time_slot}`;
-                
-                if (status === 'matched') {
-                    states[slotKey] = {
-                        status: 'matched',
-                        current: 4,
-                        max: 4,
-                        host: bookingData.user_name || "Trúc Lam",
-                        price: bookingData.base_price,
-                        opponent: { name: "Lê Minh Trang", phone: "0977 234 567", gender: "Nữ", level: "Trung bình" }
-                    };
-
-                    // Cập nhật vào sb_final_order
-                    let finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || '{}');
-                    finalOrder.match_status = 'matched';
-                    finalOrder.matched_opponent = { name: "Lê Minh Trang", phone: "0977 234 567" };
-                    localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
-                } else if (status === 'waiting') {
-                    states[slotKey] = {
-                        status: 'waiting',
-                        current: 3,
-                        max: 4,
-                        host: bookingData.user_name || "Trúc Lam",
-                        price: bookingData.base_price
-                    };
-                } else {
-                    states[slotKey] = {
-                        status: 'live',
-                        current: 3,
-                        max: 4,
-                        host: bookingData.user_name || "Trúc Lam",
-                        price: bookingData.base_price,
-                        isMyMatch: true
-                    };
-                }
-                localStorage.setItem('sb_matchmaking_slots', JSON.stringify(states));
-            } catch(e) {}
         }
 
         function goToMatchedOrderDetail() {
@@ -2007,7 +1781,6 @@
                 } else {
                     clearInterval(miniRadarInterval);
                     badge.innerText = "00:00";
-                    // TỰ ĐỘNG CHUYỂN SANG TRƯỜNG HỢP 1 KHI HẾT 10 PHÚT
                     setMiniRadarScenario('expired');
                 }
             }
@@ -2020,15 +1793,6 @@
                 bookingData.is_matching_enabled = false;
                 if (miniRadarInterval) clearInterval(miniRadarInterval);
 
-                // Cập nhật lại trong sb_final_order
-                let finalOrder = null;
-                try { finalOrder = JSON.parse(localStorage.getItem('sb_final_order')); } catch(e) {}
-                if (finalOrder) {
-                    finalOrder.is_matching_enabled = false;
-                    localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
-                }
-
-                // Chuyển lại hiển thị card Rủ bạn bè
                 const friendCard = document.getElementById('friendInviteCard');
                 const matchmakerCard = document.getElementById('matchmakerMiniCard');
                 if (friendCard) friendCard.classList.remove('hidden');
@@ -2038,7 +1802,6 @@
             }
         }
 
-        // 8. CÁC HÀM TIỆN ÍCH PHỤ
         function copyBookingId() {
             const text = document.getElementById('step3BookingIdText').textContent.replace('#', '').trim();
             navigator.clipboard.writeText(text).then(() => {
@@ -2056,26 +1819,21 @@
             setTimeout(() => { btn.innerHTML = original; }, 2000);
         }
 
-        // Quản lý tiêu chí ghép đối
         let matchingCriteria = {
             gender: 'female',
             level: 'intermediate',
             format: 'double',
-            note: 'Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!'
+            note: 'Chào các bạn, mình tìm bạn ghép đối giao lưu vui vẻ, tinh thần fair-play!'
         };
 
         function selectGender(gender, btn) {
             matchingCriteria.gender = gender;
             document.querySelectorAll('.gender-btn').forEach(b => {
                 b.className = "gender-btn py-2.5 px-3 rounded-xl bg-surface-container-low text-on-surface font-semibold border border-gray-200 hover:border-primary/50 transition-all text-center";
-                if (b.innerText.includes('Đang chọn')) {
-                    b.innerText = b.innerText.replace(' (Đang chọn)', '');
-                }
+                if (b.innerText.includes('Đang chọn')) b.innerText = b.innerText.replace(' (Đang chọn)', '');
             });
             btn.className = "gender-btn active py-2.5 px-3 rounded-xl bg-primary text-white font-bold shadow-sm transition-all text-center";
-            if (!btn.innerText.includes('Đang chọn')) {
-                btn.innerText = btn.innerText + ' (Đang chọn)';
-            }
+            if (!btn.innerText.includes('Đang chọn')) btn.innerText = btn.innerText + ' (Đang chọn)';
         }
 
         function selectSkillLevel(level, card) {
@@ -2083,20 +1841,14 @@
             document.querySelectorAll('.skill-card').forEach(c => {
                 c.className = "skill-card p-3.5 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex flex-col justify-between";
                 const radio = c.querySelector('.skill-radio');
-                if (radio) {
-                    radio.className = "skill-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]";
-                    radio.innerText = "";
-                }
+                if (radio) { radio.className = "skill-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]"; radio.innerText = ""; }
                 const title = c.querySelector('span.font-bold');
                 if (title) title.className = "text-xs font-bold text-on-surface";
             });
 
             card.className = "skill-card active p-3.5 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex flex-col justify-between";
             const currentRadio = card.querySelector('.skill-radio');
-            if (currentRadio) {
-                currentRadio.className = "skill-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]";
-                currentRadio.innerText = "✓";
-            }
+            if (currentRadio) { currentRadio.className = "skill-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]"; currentRadio.innerText = "✓"; }
             const currentTitle = card.querySelector('span.font-bold');
             if (currentTitle) currentTitle.className = "text-xs font-bold text-primary";
         }
@@ -2106,20 +1858,14 @@
             document.querySelectorAll('.format-card').forEach(c => {
                 c.className = "format-card p-3 rounded-xl border border-gray-200 bg-surface-container-lowest hover:border-primary/50 cursor-pointer transition-all flex items-center gap-3";
                 const radio = c.querySelector('.format-radio');
-                if (radio) {
-                    radio.className = "format-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]";
-                    radio.innerText = "";
-                }
+                if (radio) { radio.className = "format-radio w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center text-[10px]"; radio.innerText = ""; }
                 const title = c.querySelector('span.font-bold');
                 if (title) title.className = "text-xs font-bold text-on-surface block";
             });
 
             card.className = "format-card active p-3 rounded-xl border-2 border-primary bg-emerald-50/40 cursor-pointer transition-all flex items-center gap-3";
             const currentRadio = card.querySelector('.format-radio');
-            if (currentRadio) {
-                currentRadio.className = "format-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]";
-                currentRadio.innerText = "●";
-            }
+            if (currentRadio) { currentRadio.className = "format-radio w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]"; currentRadio.innerText = "●"; }
             const currentTitle = card.querySelector('span.font-bold');
             if (currentTitle) currentTitle.className = "text-xs font-bold text-primary block";
         }
@@ -2135,28 +1881,23 @@
             if (formatCards[1]) selectMatchFormat('double', formatCards[1]);
 
             const textarea = document.getElementById('matchingNoteText');
-            if (textarea) textarea.value = 'Chào các bạn, mình tìm bạn giao lưu vui vẻ, tinh thần fair-play!';
+            if (textarea) textarea.value = 'Chào các bạn, mình tìm bạn ghép đối giao lưu vui vẻ, tinh thần fair-play!';
         }
 
-        // 9. KHỞI TẠO DỮ LIỆU TOÀN TRANG KHI DOM SẴN SÀNG
         document.addEventListener('DOMContentLoaded', function () {
             syncHeaderUserInfo();
             loadUserNotifications();
 
-            // Khởi tạo đối tượng bookingData mặc định
             const params = new URLSearchParams(window.location.search);
             let orderId = params.get('id');
             if (!orderId) {
                 orderId = `SB-${Math.floor(10000 + Math.random() * 90000)}`;
             }
 
-            // Đọc dữ liệu từ localStorage
             let currentBooking = null;
             try { currentBooking = JSON.parse(localStorage.getItem('sb_current_booking')); } catch(e) {}
             let venueObj = null;
             try { venueObj = JSON.parse(localStorage.getItem('selected_venue')); } catch(e) {}
-            let draftBooking = null;
-            try { draftBooking = JSON.parse(localStorage.getItem('sb_current_booking_draft')); } catch(e) {}
 
             targetFacilityId = params.get('facilityId') || (venueObj ? venueObj.id : null) || (currentBooking ? currentBooking.facilityId : null) || 'fac-011';
 
@@ -2177,7 +1918,6 @@
                 timeSlot = currentBooking.slots.map(s => s.hour || s.time).join(', ');
             }
 
-            // Tính giá tiền
             let basePrice = 360000;
             if (currentBooking && currentBooking.totalPrice) {
                 basePrice = Number(String(currentBooking.totalPrice).replace(/[^0-9]/g, '')) || 360000;
@@ -2189,7 +1929,6 @@
                 basePrice = 180000;
             }
 
-            // Ưu đãi thành viên -5%
             const discount = Math.round(basePrice * 0.05);
             const finalTotal = basePrice - discount;
             const depositPrice = Math.round(finalTotal / 2);
@@ -2233,9 +1972,7 @@
                 image: (venueObj && venueObj.image) ? venueObj.image : venueImgUrl
             };
 
-            // Điền vào giao diện Bước 1
             document.getElementById('breadcrumbVenueName').innerText = venueName;
-            // CẬP NHẬT MỌI LINK GOOGLE MAP CHUẨN XÁC ĐẾN ĐÚNG ĐỊA CHỈ SÂN (KHÔNG RA MAP CHUNG CHUNG)
             const mapQuery = encodeURIComponent(`${bookingData.venue_name} ${bookingData.address}`);
             const accurateMapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
@@ -2266,7 +2003,6 @@
             document.getElementById('amount-payable').innerText = `${depositPrice.toLocaleString('vi-VN')}đ`;
             document.getElementById('cta-text').innerText = `TIẾP TỤC ĐẾN THANH TOÁN (${depositPrice.toLocaleString('vi-VN')}đ)`;
 
-            // Đổi icon theo môn thể thao
             const spIcon = document.getElementById('step1SportIcon');
             if (spIcon) {
                 if (sportType === 'soccer') spIcon.innerText = 'sports_soccer';
@@ -2274,7 +2010,6 @@
                 else spIcon.innerText = 'sports_baseball';
             }
 
-            // Bắt sự kiện chọn Radio cọc / toàn bộ ở Bước 1
             const radios = document.querySelectorAll('input[name="payment_choice"]');
             radios.forEach((radio) => {
                 radio.addEventListener('change', (e) => {
@@ -2290,7 +2025,6 @@
                 });
             });
 
-            // Toggle Ghép đội
             const matchingToggle = document.getElementById('matching-toggle');
             const matchingOptionsWrapper = document.getElementById('matching-options-wrapper');
             if (matchingToggle && matchingOptionsWrapper) {
@@ -2300,7 +2034,6 @@
                 });
             }
 
-            // Tab Ghép ngẫu nhiên vs Tiêu chí
             const tabRandom = document.getElementById('tab-random');
             const tabCriteria = document.getElementById('tab-criteria');
             const viewRandom = document.getElementById('view-random');
@@ -2321,7 +2054,6 @@
                 });
             }
 
-            // Popover chuông thông báo
             const notifBtn = document.getElementById('btnToggleNotifDropdown');
             const popover = document.getElementById('quickNotifPopover');
             const container = document.getElementById('notifDropdownContainer');
@@ -2346,7 +2078,7 @@
                 btnMarkAll.onclick = () => {
                     const user = getLoggedInUser();
                     const uid = user ? (user.id || user.phone || 'user') : 'guest';
-                     const key = `sb_notifs_user_${uid}`;
+                    const key = `sb_notifs_user_${uid}`;
                     let notifs = [];
                     try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
                     notifs.forEach(n => n.read = true);
@@ -2355,10 +2087,9 @@
                 };
             }
 
-            // Khởi động đồng hồ đếm ngược 10 phút
-            startCountdownTimer();
+            // Đồng bộ bộ đếm ngược từ mốc lockedUntil nếu có
+            startCountdownTimer(currentBooking ? currentBooking.lockedUntil : null);
 
-            // Kiểm tra nếu URL có chỉ định bước (?step=2 hoặc ?step=3)
             const initialStep = parseInt(params.get('step')) || 1;
             if (initialStep > 1 && initialStep <= 3) {
                 goToStep(initialStep);

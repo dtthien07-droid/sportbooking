@@ -66,7 +66,6 @@
     <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border-b border-gray-100">
         <div class="h-20 max-w-[1440px] mx-auto px-margin flex items-center justify-between gap-space-lg">
             <div class="flex items-center gap-space-xl">
-                <!-- LOGO CHỮ SPORTBOOKING NGUYÊN BẢN -->
                 <a class="flex items-center gap-space-sm" href="trangchu-user.html">
                     <span class="text-2xl font-bold text-primary tracking-tight">SportBooking</span>
                 </a>
@@ -74,20 +73,18 @@
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="trangchu-user.html">Trang chủ</a>
                     <a class="px-4 py-2 rounded-xl bg-primary text-white shadow-sm transition-all" href="tim-san.html">Tìm sân</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="lich-su-dat-san.html">Lịch sử đặt sân</a>
-                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="tim-doi-choi.html">Tìm đối chơi</a>
+                    <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="tim-doi-choi.html">Ghép đối</a>
                     <a class="px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-container-high transition-all" href="tin-tuc-the-thao.html">Tin tức thể thao</a>
                 </nav>
             </div>
 
             <div class="flex items-center gap-space-lg">
-                <!-- KHỐI CHUÔNG THÔNG BÁO & POPOVER XEM NHANH -->
                 <div class="relative" id="notifDropdownContainer">
                     <button aria-label="Thông báo" id="btnToggleNotifDropdown" class="relative p-2.5 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer flex items-center justify-center outline-none" type="button">
-                        <span class="material-symbols-outlined text-[24px] align-middle" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">notifications</span>
+                        <span class="material-symbols-outlined text-[24px] align-middle">notifications</span>
                         <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full animate-pulse hidden" id="badgeQuickCount"></span>
                     </button>
 
-                    <!-- KHUNG POPOVER XEM NHANH -->
                     <div class="hidden absolute right-0 top-full mt-2 w-[360px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col z-50 overflow-hidden" id="quickNotifPopover">
                         <div class="p-3.5 border-b border-gray-100 bg-surface-container-lowest flex items-center justify-between">
                             <div class="flex items-center gap-2">
@@ -98,10 +95,7 @@
                                 Đã đọc tất cả
                             </button>
                         </div>
-
-                        <!-- Danh sách thông báo thực tế của User -->
                         <div class="max-h-[340px] overflow-y-auto divide-y divide-gray-100" id="quickNotifList"></div>
-
                         <div class="p-2.5 bg-surface-container-low text-center border-t border-gray-100">
                             <a class="inline-flex items-center justify-center gap-1 text-xs font-bold text-primary hover:text-primary-container transition-colors cursor-pointer" href="thong-bao.html">
                                 <span>Xem tất cả thông báo</span>
@@ -111,7 +105,6 @@
                     </div>
                 </div>
 
-                <!-- KHU VỰC THÔNG TIN TÀI KHOẢN -->
                 <div id="userHeaderArea" class="flex items-center gap-2 pl-2"></div>
             </div>
         </div>
@@ -121,17 +114,16 @@
         <div class="flex flex-col w-full">
             <div class="relative w-full max-w-[1440px] mx-auto px-margin pt-space-md pb-space-xl">
                 
-                <!-- 1. NÚT QUAY LẠI TRANG TRƯỚC -->
+                <!-- 1. NÚT QUAY LẠI -->
                 <div class="flex items-center justify-between mb-space-md">
                     <button type="button" onclick="goBackPreviousPage()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface text-sm font-semibold border border-gray-200 shadow-sm transition-all cursor-pointer group hover:border-primary/50">
                         <span class="material-symbols-outlined text-[20px] text-primary group-hover:-translate-x-1 transition-transform">arrow_back</span>
                         <span id="btnBackText">Quay lại chi tiết sân</span>
                     </button>
-                    
                     <span class="text-xs text-on-surface-variant hidden sm:inline" id="quickNavFacilityName">Đang tải sân...</span>
                 </div>
 
-                <!-- 2. Facility Header & Quick Info Bar -->
+                <!-- 2. THÔNG TIN CỤM SÂN & THANH CHỌN NGÀY -->
                 <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm mb-space-lg border border-gray-100">
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-md border-b">
                         <div class="space-y-space-xs">
@@ -167,45 +159,41 @@
                             </div>
                         </div>
 
-                        <!-- ĐỒNG HỒ THỜI GIAN THỰC HIỆN TẠI -->
+                        <!-- ĐỒNG HỒ THỜI GIAN THỰC -->
                         <div class="flex items-center gap-2 p-1.5 bg-surface-container rounded-xl self-start lg:self-center text-xs font-bold">
                             <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
                             <span class="text-primary flex items-center gap-1">
                                 <span class="material-symbols-outlined text-[15px]">timer</span>
                                 <span>Giờ hiện tại:</span>
-                                <span id="currentLiveClock" class="font-mono text-sm font-extrabold text-slate-900">20:18</span>
+                                <span id="currentLiveClock" class="font-mono text-sm font-extrabold text-slate-900">--:--</span>
                             </span>
                         </div>
                     </div>
 
-                    <!-- Quick Date Carousel Strip (7 Ngày) -->
+                    <!-- THANH CHỌN 7 NGÀY -->
                     <div class="pt-space-md">
                         <div class="flex items-center justify-between gap-space-sm mb-space-sm">
                             <div class="flex items-center gap-space-xs">
                                 <span class="material-symbols-outlined text-primary text-xl">event</span>
                                 <span class="font-bold text-sm text-on-surface" id="weekRangeTitle">Lịch thi đấu các ngày trong tuần</span>
                             </div>
-                            <span class="text-[11px] text-gray-500 italic">* Các ca trong quá khứ của hôm nay sẽ tự động khóa</span>
+                            <span class="text-[11px] text-gray-500 italic">* Khóa giữ chỗ 10 phút bảo vệ lượt đặt của bạn</span>
                         </div>
-                        <div id="weekDaysTrack" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
-                            <!-- Render 7 ngày -->
-                        </div>
+                        <div id="weekDaysTrack" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2"></div>
                     </div>
                 </div>
 
-                <!-- 3. Chú thích trạng thái ô giờ & Bộ lọc sân con -->
+                <!-- 3. CHÚ THÍCH TRẠNG THÁI VÀ BỘ LỌC SÂN CON -->
                 <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm mb-space-lg flex flex-col xl:flex-row xl:items-center justify-between gap-space-md border border-gray-100">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="text-xs font-bold text-on-surface flex items-center gap-1">
                             <span class="material-symbols-outlined text-primary text-base">filter_alt</span>
                             <span>Lọc sân con:</span>
                         </span>
-                        <div class="inline-flex p-1 bg-surface-container rounded-xl text-xs" id="courtFilterPillGroup">
-                            <!-- Nạp động nút lọc sân con tương ứng bộ môn -->
-                        </div>
+                        <div class="inline-flex p-1 bg-surface-container rounded-xl text-xs" id="courtFilterPillGroup"></div>
                     </div>
 
-                    <!-- Chú thích trạng thái ô giờ (Bao gồm ĐÃ QUA GIỜ) -->
+                    <!-- CHÚ THÍCH 6 TRẠNG THÁI (CÓ THÊM ĐANG TẠM KHÓA GIỮ CHỖ) -->
                     <div class="flex flex-wrap items-center gap-3 text-xs text-on-surface-variant">
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-white border border-gray-300 text-primary flex items-center justify-center font-bold text-[10px]">✓</span>
@@ -216,37 +204,40 @@
                             <span class="text-primary font-bold">Đang chọn</span>
                         </div>
                         <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-amber-100 border border-amber-400 text-amber-800 flex items-center justify-center text-[10px] font-bold">🔒</span>
+                            <span class="text-amber-800 font-bold">Tạm khóa giữ chỗ (10p)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-orange-100 border-2 border-secondary text-secondary flex items-center justify-center text-[10px] font-bold">👥</span>
-                            <span class="text-secondary font-bold">Ghép đội (Xin ghép)</span>
+                            <span class="text-secondary font-bold">Ghép đối (Xin ghép)</span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-gray-200 text-gray-500 flex items-center justify-center text-[10px]">✕</span>
                             <span class="text-error font-semibold">Đã kín</span>
                         </div>
-                        <!-- TRẠNG THÁI MỚI: ĐÃ QUA GIỜ (QUÁ KHỨ KHÔNG THỂ ĐẶT) -->
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-gray-100 border border-gray-300 text-gray-400 flex items-center justify-center text-[10px]">
                                 <span class="material-symbols-outlined text-[11px]">history_toggle_off</span>
                             </span>
-                            <span class="text-gray-400 font-semibold">Đã qua giờ (Khóa)</span>
+                            <span class="text-gray-400 font-semibold">Đã qua giờ</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. Layout 2 cột: Trái ma trận (8 cols) - Phải tóm tắt đặt sân (4 cols) -->
+                <!-- 4. MA TRẬN KHUNG GIỜ VÀ PANEL TÓM TẮT -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
                     
                     <!-- CỘT TRÁI: MA TRẬN KHUNG GIỜ -->
                     <div class="lg:col-span-8 flex flex-col gap-space-md">
                         <div class="bg-primary/5 border border-green-200 p-space-md rounded-2xl flex items-center justify-between gap-space-md">
                             <div class="flex items-center gap-space-sm">
-                                <span class="material-symbols-outlined text-primary text-2xl">touch_app</span>
+                                <span class="material-symbols-outlined text-primary text-2xl">lock_clock</span>
                                 <div>
-                                    <p class="text-xs font-bold text-primary">Các ca giờ cách nhau đúng 1 tiếng:</p>
-                                    <p class="text-xs text-on-surface-variant">Hệ thống tự động khóa các khung giờ đã qua trong ngày. Bạn chỉ có thể chọn các ca thi đấu từ giờ hiện tại trở đi.</p>
+                                    <p class="text-xs font-bold text-primary">Cơ chế bảo vệ giữ chỗ (Slot-locking 10 phút):</p>
+                                    <p class="text-xs text-on-surface-variant">Khi bạn hoặc người khác chọn ca chuyển sang thanh toán, hệ thống sẽ tạm khóa ca 10 phút trên lịch chung để tránh trùng lịch.</p>
                                 </div>
                             </div>
-                            <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary text-white text-[11px] font-bold whitespace-nowrap">Khóa ca quá giờ</span>
+                            <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary text-white text-[11px] font-bold whitespace-nowrap">Auto Lock 10p</span>
                         </div>
 
                         <div class="bg-surface-container-lowest rounded-2xl p-space-md sm:p-space-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -259,14 +250,12 @@
                             </div>
 
                             <div class="overflow-x-auto pb-space-sm">
-                                <div class="min-w-[760px] flex flex-col gap-space-md" id="matrixCourtsList">
-                                    <!-- Render động ma trận các sân -->
-                                </div>
+                                <div class="min-w-[760px] flex flex-col gap-space-md" id="matrixCourtsList"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- CỘT PHẢI: TÓM TẮT ĐẶT SÂN / PANEL XIN GHÉP -->
+                    <!-- CỘT PHẢI: TÓM TẮT ĐẶT SÂN / PANEL GHÉP ĐỐI -->
                     <div class="lg:col-span-4 sticky top-24 space-y-space-md">
                         <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-md border border-gray-200 space-y-space-md">
                             
@@ -279,15 +268,13 @@
                             </div>
 
                             <!-- DANH SÁCH CÁC CA ĐƯỢC CHỌN -->
-                            <div class="space-y-2 max-h-[220px] overflow-y-auto" id="selectedSlotsContainer">
-                                <!-- Render danh sách các ca -->
-                            </div>
+                            <div class="space-y-2 max-h-[220px] overflow-y-auto" id="selectedSlotsContainer"></div>
 
-                            <!-- KHUNG THÔNG BÁO KHI XIN GHÉP -->
+                            <!-- KHUNG THÔNG BÁO KHI XIN GHÉP ĐỐI -->
                             <div id="matchmakingAlertBox" class="hidden p-3.5 rounded-xl bg-orange-50 border-2 border-secondary/40 space-y-2">
                                 <div class="flex items-center gap-2 text-secondary font-bold text-xs">
                                     <span class="material-symbols-outlined text-[18px]">handshake</span>
-                                    <span>PHƯƠNG ÁN GHÉP TRẬN TẠI SÂN</span>
+                                    <span>PHƯƠNG ÁN GHÉP ĐỐI TẠI SÂN</span>
                                 </div>
                                 <div class="p-2.5 bg-white rounded-lg border border-orange-200 text-xs text-gray-800 space-y-1">
                                     <p class="font-bold text-secondary text-sm" id="matchContributionFeeText">Số tiền bạn cần đóng góp tại sân: 40.000đ</p>
@@ -297,7 +284,7 @@
                                 </div>
                             </div>
 
-                            <!-- PHỤ PHÍ NẾU ĐẶT SÂN THƯỜNG -->
+                            <!-- PHỤ PHÍ THUÊ VỢT / DỤNG CỤ -->
                             <div id="regularAddonsContainer" class="space-y-2 pt-1 text-xs">
                                 <label class="flex items-center justify-between p-3 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer select-none">
                                     <div class="flex items-center gap-2">
@@ -311,7 +298,7 @@
                                 </label>
                             </div>
 
-                            <!-- Voucher -->
+                            <!-- VOUCHER -->
                             <div id="voucherContainer" class="p-3 rounded-xl bg-surface-container-low flex items-center justify-between text-xs border border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-secondary text-lg">confirmation_number</span>
@@ -323,7 +310,7 @@
                                 <span class="font-bold text-primary">-20.000đ</span>
                             </div>
 
-                            <!-- Chi tiết tính tiền -->
+                            <!-- CHI TIẾT TÍNH TIỀN -->
                             <div class="space-y-1.5 pt-2 text-xs text-on-surface-variant border-t">
                                 <div class="flex justify-between">
                                     <span id="lblBaseTotal">Tổng tiền các ca đã chọn:</span>
@@ -351,7 +338,7 @@
                                 </div>
                             </div>
 
-                            <!-- Nút Xác nhận CTA -->
+                            <!-- NÚT XÁC NHẬN CHUYỂN BƯỚC -->
                             <button id="btnProceedBookingConfirm" class="w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary text-white font-bold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95" type="button">
                                 <span id="btnProceedText">VUI LÒNG CHỌN CA SÂN</span>
                                 <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -360,9 +347,9 @@
                             <div class="p-2.5 rounded-xl bg-surface-container text-xs text-on-surface-variant space-y-1">
                                 <div class="flex items-center gap-1.5 text-primary font-bold text-[11px]">
                                     <span class="material-symbols-outlined text-sm">shield</span>
-                                    <span>Cam kết giữ chỗ & hoàn tiền:</span>
+                                    <span>Cam kết khóa giữ chỗ 10 phút:</span>
                                 </div>
-                                <p class="text-[10px] text-gray-500 leading-tight">Khóa giữ chỗ ngay khi xác nhận. Hủy trước 24h hoàn 100%.</p>
+                                <p class="text-[10px] text-gray-500 leading-tight">Tạm khóa ngay trên toàn hệ thống trong 10 phút để bạn yên tâm thực hiện thanh toán.</p>
                             </div>
                         </div>
                     </div>
@@ -383,9 +370,10 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT XỬ LÝ MA TRẬN & KHÓA CA ĐÃ QUA THỜI GIAN THỰC -->
+    <!-- JAVASCRIPT XỬ LÝ MA TRẬN, TẠM KHÓA 10 PHÚT VÀ GHÉP ĐỐI -->
     <script>
         const BOOKED_SLOTS_STORAGE_KEY = 'sb_booked_slots';
+        const LOCKED_SLOTS_STORAGE_KEY = 'sb_locked_slots'; // Kho lưu trữ tạm khóa chung của hệ thống
 
         let currentFacility = null;
         let selectedDateKey = '';
@@ -396,21 +384,89 @@
         let BASE_COURTS_CONFIG = [];
 
         /**
-         * 1. HÀM TÍNH TOÁN THỜI GIAN THEO MÚI GIỜ VIỆT NAM (ICT / UTC+7)
+         * 1. MODULE QUẢN LÝ TẠM KHÓA SLOT TRONG 10 PHÚT (SLOT-LOCKING)
          */
+        const SlotLockManager = {
+            // Lấy danh sách slot đang bị khóa hợp lệ (chưa quá 10 phút)
+            getActiveLocks: function() {
+                const now = Date.now();
+                let locks = [];
+                try {
+                    locks = JSON.parse(localStorage.getItem(LOCKED_SLOTS_STORAGE_KEY) || '[]');
+                } catch (e) { locks = []; }
+
+                // Tự động giải phóng những slot quá 10 phút chưa hoàn tất thanh toán
+                const validLocks = locks.filter(item => item.expiresAt > now);
+                if (validLocks.length !== locks.length) {
+                    localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(validLocks));
+                }
+                return validLocks;
+            },
+
+            // Kiểm tra một ca có đang bị khóa hay không
+            checkLockStatus: function(facilityId, courtName, dateKey, timeSlot) {
+                const locks = this.getActiveLocks();
+                const currentUser = getLoggedInUser();
+                const currentUid = currentUser ? (currentUser.id || currentUser.phone || 'me') : 'me';
+
+                const matchedLock = locks.find(l => 
+                    String(l.facilityId) === String(facilityId) &&
+                    l.courtName === courtName &&
+                    l.date === dateKey &&
+                    l.time === timeSlot
+                );
+
+                if (!matchedLock) return { isLocked: false };
+
+                // Tính số giây còn lại của phiên giữ chỗ 10 phút
+                const remainingSeconds = Math.max(0, Math.floor((matchedLock.expiresAt - Date.now()) / 1000));
+                const isOwner = matchedLock.userId === currentUid;
+
+                return {
+                    isLocked: true,
+                    isOwner: isOwner,
+                    remainingSeconds: remainingSeconds,
+                    expiresAt: matchedLock.expiresAt
+                };
+            },
+
+            // Đặt lệnh khóa tạm thời 10 phút khi người dùng bấm Tiếp tục
+            lockSlots: function(facilityId, courtName, dateKey, slotsArray, userId) {
+                const locks = this.getActiveLocks();
+                const now = Date.now();
+                const expiresAt = now + (10 * 60 * 1000); // 10 phút giữ chỗ
+
+                slotsArray.forEach(slot => {
+                    // Loại bỏ khóa cũ nếu có
+                    const idx = locks.findIndex(l => 
+                        String(l.facilityId) === String(facilityId) &&
+                        l.courtName === (slot.courtName || courtName) &&
+                        l.date === dateKey &&
+                        l.time === slot.time
+                    );
+                    if (idx > -1) locks.splice(idx, 1);
+
+                    locks.push({
+                        facilityId: String(facilityId),
+                        courtName: slot.courtName || courtName,
+                        date: dateKey,
+                        time: slot.time,
+                        userId: userId,
+                        lockedAt: now,
+                        expiresAt: expiresAt
+                    });
+                });
+
+                localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(locks));
+            }
+        };
+
         function getVietnamNow() {
             const now = new Date();
             const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
             return new Date(utcMs + (7 * 3600000));
         }
 
-        /**
-         * 2. HÀM KIỂM TRA MỘT KHUNG GIỜ ĐÃ TRÔI QUA SO VỚI HIỆN TẠI HAY CHƯA
-         * Ví dụ: Hôm nay là 31/10/2026, lúc 20:18 thì các ca:
-         * 06:00, 13:00, 19:00, 20:00 đều là ĐÃ QUA (isPast = true).
-         * Ca 21:00, 22:00 của hôm nay là CHƯA QUA (isPast = false).
-         * Các ngày tương lai (01/11, ...) toàn bộ ca là CHƯA QUA (isPast = false).
-         */
         function isSlotInPast(dateKey, timeSlot) {
             if (!dateKey) return false;
             const vnNow = getVietnamNow();
@@ -419,16 +475,9 @@
             const currentDate = String(vnNow.getDate()).padStart(2, '0');
             const todayKey = `${currentYear}-${currentMonth}-${currentDate}`;
 
-            // So sánh ngày
-            if (dateKey < todayKey) {
-                return true; // Ngày trong quá khứ -> toàn bộ ca đều đã qua
-            }
-            if (dateKey > todayKey) {
-                return false; // Ngày tương lai -> chưa qua ca nào
-            }
+            if (dateKey < todayKey) return true;
+            if (dateKey > todayKey) return false;
 
-            // Nếu là ngày hôm nay: so sánh giờ và phút
-            // timeSlot có dạng: "13:00 - 14:00" hoặc "20:00 - 21:00"
             const startTimeStr = timeSlot.split(' - ')[0].trim();
             const parts = startTimeStr.split(':');
             const slotHour = parseInt(parts[0], 10);
@@ -437,32 +486,19 @@
             const currentHour = vnNow.getHours();
             const currentMinute = vnNow.getMinutes();
 
-            // Nếu giờ bắt đầu nhỏ hơn giờ hiện tại -> Đã qua
-            if (slotHour < currentHour) {
-                return true;
-            }
-            // Nếu cùng giờ và phút hiện tại đã qua phút bắt đầu -> Đã qua
-            if (slotHour === currentHour && currentMinute >= slotMinute) {
-                return true;
-            }
-
+            if (slotHour < currentHour) return true;
+            if (slotHour === currentHour && currentMinute >= slotMinute) return true;
             return false;
         }
 
-        /**
-         * 3. ĐỒNG HỒ HIỂN THỊ THỜI GIAN THỰC TẾ
-         */
         function updateLiveClock() {
             const vnNow = getVietnamNow();
             const hh = String(vnNow.getHours()).padStart(2, '0');
             const mm = String(vnNow.getMinutes()).padStart(2, '0');
             const clockEl = document.getElementById('currentLiveClock');
-            if (clockEl) {
-                clockEl.textContent = `${hh}:${mm}`;
-            }
+            if (clockEl) clockEl.textContent = `${hh}:${mm}`;
         }
 
-        // 4. HÀM TỰ ĐỘNG NHẬN BIẾT NGUỒN VÀ QUAY LẠI CHUẨN XÁC
         function detectSourceAndSetupBackButton() {
             const urlParams = new URLSearchParams(window.location.search);
             const fromParam = urlParams.get('from');
@@ -470,50 +506,35 @@
             const btnTextEl = document.getElementById('btnBackText');
 
             const isFromListing = fromParam === 'tim-san' || fromParam === 'listing' || referrer.includes('tim-san.html');
-
             if (btnTextEl) {
-                if (isFromListing) {
-                    btnTextEl.textContent = 'Quay lại danh sách sân';
-                } else {
-                    btnTextEl.textContent = 'Quay lại chi tiết sân';
-                }
+                btnTextEl.textContent = isFromListing ? 'Quay lại danh sách sân' : 'Quay lại chi tiết sân';
             }
         }
 
         function goBackPreviousPage() {
             const urlParams = new URLSearchParams(window.location.search);
-            const facId = urlParams.get('facilityId') || urlParams.get('id') || (currentFacility && currentFacility.id) || '1';
+            const facId = urlParams.get('facilityId') || urlParams.get('id') || (currentFacility && currentFacility.id) || 'fac-011';
             const fromParam = urlParams.get('from');
             const referrer = document.referrer || '';
 
             const isFromListing = fromParam === 'tim-san' || fromParam === 'listing' || referrer.includes('tim-san.html');
-
             if (isFromListing) {
                 const lastSearch = sessionStorage.getItem('sb_last_search_url');
-                if (lastSearch) {
-                    window.location.href = lastSearch;
-                } else if (referrer.includes('tim-san.html')) {
-                    window.location.href = referrer;
-                } else {
-                    window.location.href = 'tim-san.html';
-                }
+                if (lastSearch) window.location.href = lastSearch;
+                else if (referrer.includes('tim-san.html')) window.location.href = referrer;
+                else window.location.href = 'tim-san.html';
             } else {
-                if (referrer.includes('chi-tiet-san.html')) {
-                    window.location.href = referrer;
-                } else {
-                    window.location.href = `chi-tiet-san.html?id=${encodeURIComponent(facId)}`;
-                }
+                if (referrer.includes('chi-tiet-san.html')) window.location.href = referrer;
+                else window.location.href = `chi-tiet-san.html?id=${encodeURIComponent(facId)}`;
             }
         }
 
-        // 5. HÀM SINH KHUNG GIỜ ĐỘNG CÁCH NHAU 1 TIẾNG THEO GIỜ MỞ/ĐÓNG CỬA CỦA SÂN
         function generateSlotsByFacilityHours(facility) {
             const openTimeStr = facility.opening_time || facility.open_time || "06:00";
             const closeTimeStr = facility.closing_time || facility.close_time || "23:00";
 
             let startHour = parseInt(openTimeStr.split(':')[0], 10);
             let endHour = parseInt(closeTimeStr.split(':')[0], 10);
-
             if (isNaN(startHour)) startHour = 6;
             if (isNaN(endHour) || endHour <= startHour) endHour = 23;
 
@@ -558,10 +579,10 @@
             return subCourts.map((court, cIdx) => {
                 const courtSlots = slots.map(s => {
                     const slotCopy = { ...s };
-                    // Tạo một số ca ghép mẫu vào buổi tối (từ 21:00 trở đi cho hôm nay)
+                    // Tạo một số ca Ghép đối mẫu buổi tối
                     if ((cIdx === 0 && s.time.startsWith('21:00')) || (cIdx === 1 && s.time.startsWith('22:00'))) {
                         slotCopy.defaultMatch = true;
-                        slotCopy.matchTag = sport === 'soccer' ? 'Tìm đối cưa đôi' : (sport === 'badminton' ? 'Ghép đội (3/4)' : 'Ghép cặp DUPR 3.0');
+                        slotCopy.matchTag = sport === 'soccer' ? 'Ghép đối cưa đôi' : (sport === 'badminton' ? 'Ghép đối (3/4)' : 'Ghép đối DUPR 3.0');
                         slotCopy.contribution = sport === 'soccer' ? 40000 : (sport === 'badminton' ? 35000 : 50000);
                     }
                     return slotCopy;
@@ -585,7 +606,6 @@
             `;
         }
 
-        // 6. QUẢN LÝ TÀI KHOẢN VÀ THÔNG BÁO THEO TÀI KHOẢN
         function getLoggedInUser() {
             try {
                 return JSON.parse(sessionStorage.getItem('sb_session')) ||
@@ -733,25 +753,14 @@
         }
 
         function getBookedSlots() {
-    try {
-        const raw = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY));
-        if (Array.isArray(raw)) return raw;
-        if (raw && typeof raw === 'object') return Object.keys(raw).map(k => ({ key: k }));
-        return [];
-    } catch (e) {
-        return [];
-    }
-}
-        function saveBookedSlots(slots) {
-            localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(slots));
+            try {
+                const raw = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY));
+                if (Array.isArray(raw)) return raw;
+                if (raw && typeof raw === 'object') return Object.keys(raw).map(k => ({ key: k }));
+                return [];
+            } catch (e) { return []; }
         }
 
-        async function fetchAllBookedSlots() {
-            let booked = getBookedSlots();
-            return booked;
-        }
-
-        // 7. KHỞI TẠO DỮ LIỆU SÂN & THIẾT LẬP LỊCH TỰ ĐỘNG
         function initPageData() {
             const urlParams = new URLSearchParams(window.location.search);
             const facilityId = urlParams.get('facilityId') || urlParams.get('id') || 'fac-011';
@@ -777,7 +786,6 @@
             document.getElementById('headerFacilityTitle').textContent = currentFacility.name;
             document.getElementById('quickNavFacilityName').textContent = currentFacility.name;
             
-            // Map Link chính xác
             const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentFacility.name + ' ' + currentFacility.address)}`;
             document.getElementById('headerAddressContainer').innerHTML = `
                 <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors hover:underline inline-flex items-center gap-1">
@@ -841,7 +849,6 @@
             });
             btn.className = 'week-day-btn flex flex-col items-center justify-between p-2.5 rounded-xl text-center transition-all bg-primary text-white shadow-md';
 
-            // Loại bỏ các slot đã chọn mà rơi vào quá khứ nếu chọn ngày hôm nay
             selectedSlotsList = selectedSlotsList.filter(s => !isSlotInPast(selectedDateKey, s.time));
 
             document.getElementById('matrixCurrentDateTitle').textContent = `Lịch chi tiết (${selectedDateDisplay})`;
@@ -849,13 +856,16 @@
             updateRightPanel();
         }
 
-        // 8. RENDER MA TRẬN KHUNG GIỜ VỚI LOGIC KHÓA CA ĐÃ QUA
+        /**
+         * 8. RENDER MA TRẬN KHUNG GIỜ VỚI LOGIC KHÓA CA GIỮ CHỖ 10 PHÚT & GHÉP ĐỐI
+         */
         async function renderMatrix() {
             const container = document.getElementById('matrixCourtsList');
             if (!container || !BASE_COURTS_CONFIG || BASE_COURTS_CONFIG.length === 0) return;
 
-            const bookedList = await fetchAllBookedSlots();
+            const bookedList = getBookedSlots();
             const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
+            const facId = currentFacility ? currentFacility.id : 'fac-011';
 
             container.innerHTML = BASE_COURTS_CONFIG.map(court => `
                 <div class="p-3.5 rounded-2xl bg-surface-container-low border border-gray-100 transition-all court-row" id="courtRow_${court.id}">
@@ -870,11 +880,7 @@
 
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                         ${court.slots.map(slot => {
-                            // =========================================================================
-                            // 1. KIỂM TRA QUAN TRỌNG NHẤT: CA ĐÃ QUA THỜI GIAN THỰC TẾ HAY CHƯA
-                            // Nếu hôm nay là 31/10 và giờ hiện tại là 20:18:
-                            // -> Ca 13:00, 19:00, 20:00 đều là ĐÃ QUA, KHÔNG THỂ ĐẶT ĐƯỢC!
-                            // =========================================================================
+                            // 1. Kiểm tra ca đã qua trong ngày hay chưa
                             const isPast = isSlotInPast(selectedDateKey, slot.time);
                             if (isPast) {
                                 return `
@@ -892,7 +898,7 @@
                                 `;
                             }
 
-                            // 2. Trạng thái: ĐÃ KÍN SÂN (CÓ NGƯỜI ĐẶT TRƯỚC)
+                            // 2. Kiểm tra ca đã được đặt chính thức (Đã thanh toán / CONFIRMED)
                             const isActuallyBooked = bookedList.some(b => 
                                 b.courtName === court.name && 
                                 b.time === slot.time && 
@@ -914,7 +920,26 @@
                                 `;
                             }
 
-                            // 3. Trạng thái: GHÉP KÈO (TÌM ĐỐI)
+                            // 3. TẠM KHÓA GIỮ CHỖ 10 PHÚT (KHI CÓ NGƯỜI ĐANG THAO TÁC ĐẶT)
+                            const lockInfo = SlotLockManager.checkLockStatus(facId, court.name, selectedDateKey, slot.time);
+                            if (lockInfo.isLocked && !lockInfo.isOwner) {
+                                const mins = Math.floor(lockInfo.remainingSeconds / 60);
+                                const secs = String(lockInfo.remainingSeconds % 60).padStart(2, '0');
+                                return `
+                                    <div class="p-2 rounded-xl bg-amber-50 border border-amber-300 text-left cursor-not-allowed select-none flex flex-col justify-between shadow-2xs" title="Đang có khách giữ chỗ thanh toán ca này trong 10 phút">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] text-amber-900 font-bold">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[13px] text-amber-600 animate-pulse">lock_clock</span>
+                                        </div>
+                                        <span class="text-[10px] text-amber-700 my-0.5">${fmt(slot.price)}</span>
+                                        <span class="text-[9px] bg-amber-200/80 text-amber-900 px-1 py-0.5 rounded font-bold truncate">
+                                            Đang giữ chỗ (${mins}:${secs})
+                                        </span>
+                                    </div>
+                                `;
+                            }
+
+                            // 4. GHÉP ĐỐI (ĐỔI TỪ TÌM ĐỐI THÀNH GHÉP ĐỐI)
                             if (slot.defaultMatch) {
                                 const isCurrentMatch = isMatchmakingMode && activeMatchmakingSlot && activeMatchmakingSlot.courtName === court.name && activeMatchmakingSlot.time === slot.time;
                                 return `
@@ -928,13 +953,13 @@
                                         </div>
                                         <button type="button" onclick="joinMatchmakingSlot('${court.name}', '${slot.time}', ${slot.price}, ${slot.contribution}, '${slot.matchTag}')" class="w-full py-1 bg-secondary hover:bg-secondary-container text-white rounded-lg text-[10px] font-bold text-center shadow-xs transition-transform active:scale-95 flex items-center justify-center gap-0.5 cursor-pointer">
                                             <span class="material-symbols-outlined text-[12px]">group_add</span>
-                                            <span>Xin ghép</span>
+                                            <span>Ghép đối</span>
                                         </button>
                                     </div>
                                 `;
                             }
 
-                            // 4. Trạng thái: ĐANG CHỌN
+                            // 5. CA ĐANG ĐƯỢC CHỌN BỞI CHÍNH USER
                             const isSelected = selectedSlotsList.some(s => s.courtName === court.name && s.time === slot.time);
                             if (isSelected) {
                                 return `
@@ -949,7 +974,7 @@
                                 `;
                             }
 
-                            // 5. Trạng thái: GIỜ VÀNG (17:00 - 21:00)
+                            // 6. GIỜ VÀNG (17:00 - 21:00)
                             if (slot.isPeak) {
                                 return `
                                     <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, true)" class="p-2 rounded-xl bg-secondary-fixed/50 hover:bg-secondary-fixed text-left transition-all flex flex-col justify-between cursor-pointer border border-orange-200">
@@ -963,7 +988,7 @@
                                 `;
                             }
 
-                            // 6. Trạng thái: CÒN TRỐNG (CÓ THỂ ĐẶT ĐƯỢC)
+                            // 7. CÒN TRỐNG (CÓ THỂ ĐẶT)
                             return `
                                 <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, false)" class="p-2 rounded-xl bg-white hover:bg-green-100/60 text-left transition-all flex flex-col justify-between cursor-pointer border border-gray-200">
                                     <span class="text-[11px] text-gray-800 font-semibold">${slot.time.split(' - ')[0]}</span>
@@ -977,11 +1002,16 @@
             `).join('');
         }
 
-        // 9. THAO TÁC CHỌN / BỎ CHỌN VÀ KIỂM TRA CHẶN CA QUÁ KHỨ
         function toggleSelectSlot(courtName, time, price, isPeak) {
-            // Chặn tuyệt đối nếu ca rơi vào quá khứ
             if (isSlotInPast(selectedDateKey, time)) {
                 alert(`Ca thi đấu (${time}) đã trôi qua so với giờ hiện tại. Bạn không thể đặt ca này!`);
+                return;
+            }
+
+            const facId = currentFacility ? currentFacility.id : 'fac-011';
+            const lockInfo = SlotLockManager.checkLockStatus(facId, courtName, selectedDateKey, time);
+            if (lockInfo.isLocked && !lockInfo.isOwner) {
+                alert(`Ca này hiện đang được một người dùng khác tạm khóa giữ chỗ trong 10 phút. Vui lòng chọn ca khác hoặc chờ hết hạn!`);
                 return;
             }
 
@@ -1000,9 +1030,8 @@
         }
 
         function joinMatchmakingSlot(courtName, time, fullPrice, contributionFee, matchTag) {
-            // Chặn tuyệt đối nếu ca rơi vào quá khứ
             if (isSlotInPast(selectedDateKey, time)) {
-                alert(`Ca ghép trận (${time}) đã trôi qua so với giờ hiện tại. Bạn không thể tham gia!`);
+                alert(`Ca ghép đối (${time}) đã trôi qua so với giờ hiện tại. Bạn không thể tham gia!`);
                 return;
             }
 
@@ -1033,8 +1062,8 @@
             const btnText = document.getElementById('btnProceedText');
 
             if (isMatchmakingMode && activeMatchmakingSlot) {
-                document.getElementById('panelMainHeading').textContent = 'Xác nhận xin ghép trận';
-                document.getElementById('badgeSelectedCount').textContent = 'Ghép đội';
+                document.getElementById('panelMainHeading').textContent = 'Xác nhận xin ghép đối';
+                document.getElementById('badgeSelectedCount').textContent = 'Ghép đối';
                 document.getElementById('badgeSelectedCount').className = 'px-2.5 py-0.5 rounded-full bg-orange-100 text-secondary text-xs font-bold';
 
                 alertBox.classList.remove('hidden');
@@ -1066,7 +1095,7 @@
                 document.getElementById('calcTotalPrice').textContent = fmt(activeMatchmakingSlot.contributionFee);
                 document.getElementById('lblVatNote').textContent = 'Thanh toán trực tiếp cho chủ kèo';
 
-                btnText.textContent = 'XÁC NHẬN THAM GIA GHÉP';
+                btnText.textContent = 'XÁC NHẬN XIN GHÉP ĐỐI';
                 btnConfirm.className = 'w-full py-3.5 px-4 rounded-xl bg-secondary hover:bg-secondary-container text-white font-bold text-sm tracking-wide shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95';
                 return;
             }
@@ -1146,9 +1175,7 @@
             document.querySelectorAll('.court-pill').forEach(b => {
                 b.className = 'court-pill px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface font-semibold';
             });
-            if (btn) {
-                btn.className = 'court-pill active px-3 py-1 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm';
-            }
+            if (btn) btn.className = 'court-pill active px-3 py-1 rounded-lg bg-surface-container-lowest text-primary font-bold shadow-sm';
 
             document.querySelectorAll('.court-row').forEach(row => {
                 if (courtId === 'all' || row.id === `courtRow_${courtId}`) {
@@ -1159,7 +1186,6 @@
             });
         }
 
-        // 10. KHỞI CHẠY VÀ XỬ LÝ SỰ KIỆN
         document.addEventListener('DOMContentLoaded', () => {
             syncHeaderUserInfo();
             loadUserNotifications();
@@ -1167,6 +1193,11 @@
 
             updateLiveClock();
             setInterval(updateLiveClock, 30000);
+
+            // Cập nhật đếm ngược khóa giữ chỗ mỗi giây
+            setInterval(() => {
+                renderMatrix();
+            }, 1000);
 
             document.getElementById('toggleRentalGear').addEventListener('change', updateRightPanel);
 
@@ -1190,20 +1221,19 @@
                 };
             }
 
-            if (btnMarkAll) {
-                btnMarkAll.onclick = markAllNotificationsAsRead;
-            }
+            if (btnMarkAll) btnMarkAll.onclick = markAllNotificationsAsRead;
 
-            // XỬ LÝ BẤM XÁC NHẬN -> CHUYỂN BƯỚC XÁC NHẬN THANH TOÁN
+            // XỬ LÝ BẤM XÁC NHẬN TIẾP TỤC ĐẶT SÂN
             document.getElementById('btnProceedBookingConfirm').addEventListener('click', () => {
                 const currentUser = getLoggedInUser();
                 const userName = currentUser ? (currentUser.fullName || currentUser.full_name || currentUser.name || currentUser.phone) : 'Khách vãng lai';
+                const userId = currentUser ? (currentUser.id || currentUser.phone || 'guest') : 'guest';
 
-                // TRƯỜNG HỢP A: XÁC NHẬN XIN GHÉP
+                // A. XÁC NHẬN GHÉP ĐỐI
                 if (isMatchmakingMode && activeMatchmakingSlot) {
                     pushNotificationToAccount({
-                        title: 'Đã gửi yêu cầu ghép kèo!',
-                        desc: `Bạn vừa gửi yêu cầu tham gia ghép trận tại ${currentFacility.name} (${activeMatchmakingSlot.courtName}, ${activeMatchmakingSlot.time}). Tiền góp tại sân: 40.000đ.`,
+                        title: 'Đã gửi yêu cầu ghép đối!',
+                        desc: `Bạn vừa gửi yêu cầu tham gia ghép đối tại ${currentFacility.name} (${activeMatchmakingSlot.courtName}, ${activeMatchmakingSlot.time}). Tiền góp tại sân: 40.000đ.`,
                         icon: 'handshake',
                         color: 'text-secondary bg-orange-100'
                     });
@@ -1221,8 +1251,17 @@
                     return;
                 }
 
-                // TRƯỜNG HỢP B: ĐẶT CA BÌNH THƯỜNG
+                // B. ĐẶT CA BÌNH THƯỜNG -> KÍCH HOẠT KHÓA GIỮ CHỖ 10 PHÚT
                 if (selectedSlotsList.length === 0) return;
+
+                // TẠM KHÓA SLOT 10 PHÚT TRÊN HỆ THỐNG
+                SlotLockManager.lockSlots(
+                    currentFacility.id,
+                    selectedSlotsList[0].courtName,
+                    selectedDateKey,
+                    selectedSlotsList,
+                    userId
+                );
 
                 const bookingPayload = {
                     facilityId: currentFacility.id,
@@ -1233,7 +1272,8 @@
                     dateDisplay: selectedDateDisplay,
                     slots: selectedSlotsList,
                     bookedBy: userName,
-                    totalPrice: document.getElementById('calcTotalPrice').textContent
+                    totalPrice: document.getElementById('calcTotalPrice').textContent,
+                    lockedUntil: Date.now() + 10 * 60 * 1000
                 };
                 localStorage.setItem('sb_current_booking', JSON.stringify(bookingPayload));
 
