@@ -114,6 +114,25 @@
         <div class="flex flex-col w-full">
             <div class="relative w-full max-w-[1440px] mx-auto px-margin pt-space-md pb-space-xl">
                 
+                <!-- BANNER NHẮC NHỞ TIẾP TỤC ĐƠN ĐANG GIỮ CHỖ CỦA CHÍNH TÀI KHOẢN -->
+                <div id="activeLockBanner" class="hidden mb-space-md p-4 rounded-2xl bg-amber-500 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 animate-pulse">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-3xl">lock_clock</span>
+                        <div>
+                            <p class="text-sm font-bold">Bạn có ca sân đang tạm giữ chỗ chưa thanh toán!</p>
+                            <p class="text-xs text-amber-100" id="activeLockBannerDetail">Thời gian giữ chỗ còn lại: <strong id="activeLockBannerTime" class="font-mono text-white text-sm">--:--</strong></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="resumePendingBooking()" class="px-4 py-2 rounded-xl bg-white text-amber-900 font-extrabold text-xs shadow hover:bg-amber-50 transition-colors cursor-pointer">
+                            Thanh toán ngay
+                        </button>
+                        <button type="button" onclick="cancelPendingLock()" class="px-3 py-2 rounded-xl bg-amber-700/60 hover:bg-amber-800 text-white font-bold text-xs transition-colors cursor-pointer">
+                            Hủy giữ chỗ
+                        </button>
+                    </div>
+                </div>
+
                 <!-- 1. NÚT QUAY LẠI -->
                 <div class="flex items-center justify-between mb-space-md">
                     <button type="button" onclick="goBackPreviousPage()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface text-sm font-semibold border border-gray-200 shadow-sm transition-all cursor-pointer group hover:border-primary/50">
@@ -205,7 +224,11 @@
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-amber-100 border border-amber-400 text-amber-800 flex items-center justify-center text-[10px] font-bold">🔒</span>
-                            <span class="text-amber-800 font-bold">Tạm khóa giữ chỗ (10p)</span>
+                            <span class="text-amber-800 font-bold">Đang giữ chỗ (10p)</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-4 h-4 rounded bg-emerald-100 border border-primary text-primary flex items-center justify-center text-[10px] font-bold">★</span>
+                            <span class="text-primary font-bold">Của bạn (Tiếp tục)</span>
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-orange-100 border-2 border-secondary text-secondary flex items-center justify-center text-[10px] font-bold">👥</span>
@@ -214,12 +237,6 @@
                         <div class="flex items-center gap-1.5">
                             <span class="w-4 h-4 rounded bg-gray-200 text-gray-500 flex items-center justify-center text-[10px]">✕</span>
                             <span class="text-error font-semibold">Đã kín</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-4 h-4 rounded bg-gray-100 border border-gray-300 text-gray-400 flex items-center justify-center text-[10px]">
-                                <span class="material-symbols-outlined text-[11px]">history_toggle_off</span>
-                            </span>
-                            <span class="text-gray-400 font-semibold">Đã qua giờ</span>
                         </div>
                     </div>
                 </div>
@@ -234,7 +251,7 @@
                                 <span class="material-symbols-outlined text-primary text-2xl">lock_clock</span>
                                 <div>
                                     <p class="text-xs font-bold text-primary">Cơ chế bảo vệ giữ chỗ (Slot-locking 10 phút):</p>
-                                    <p class="text-xs text-on-surface-variant">Khi người dùng bấm đặt ca, khung giờ sẽ lập tức khóa tạm 10 phút. Khi hoàn tất đặt hoặc ghép đối thành công, ca sẽ chuyển sang Đã kín.</p>
+                                    <p class="text-xs text-on-surface-variant">Khung giờ tạm khóa cho tài khoản của bạn trong 10 phút. Nếu bạn thoát ra, bạn có thể quay lại tiếp tục thanh toán bất cứ lúc nào trước khi hết hạn.</p>
                                 </div>
                             </div>
                             <span class="hidden sm:inline-block px-3 py-1 rounded-full bg-primary text-white text-[11px] font-bold whitespace-nowrap">Auto Lock 10p</span>
@@ -370,7 +387,6 @@
         </div>
     </footer>
 
-    <!-- JAVASCRIPT XỬ LÝ MA TRẬN, TẠM KHÓA 10 PHÚT VÀ GHÉP ĐỐI -->
     <script>
         const BOOKED_SLOTS_STORAGE_KEY = 'sb_booked_slots';
         const LOCKED_SLOTS_STORAGE_KEY = 'sb_locked_slots';
@@ -383,13 +399,26 @@
         let activeMatchmakingSlot = null;
         let BASE_COURTS_CONFIG = [];
 
-        // Hàm chuẩn hóa chuỗi để so sánh tên sân an toàn
         function normalizeStr(str) {
             return String(str || '').toLowerCase().trim().replace(/[\s\-_()]/g, '');
         }
 
+        function getLoggedInUser() {
+            try {
+                return JSON.parse(sessionStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('sb_session')) ||
+                       JSON.parse(localStorage.getItem('currentUser')) ||
+                       JSON.parse(localStorage.getItem('current_user')) || null;
+            } catch (e) { return null; }
+        }
+
+        function getCurrentUserId() {
+            const user = getLoggedInUser();
+            return user ? String(user.phone || user.id || user.username || 'user') : 'guest';
+        }
+
         /**
-         * 1. MODULE QUẢN LÝ TẠM KHÓA SLOT TRONG 10 PHÚT (SLOT-LOCKING)
+         * QUẢN LÝ KHÓA GIỮ CHỖ VỚI LOGIC NHẬN DIỆN CHÍNH XÁC CHỦ SỞ HỮU
          */
         const SlotLockManager = {
             getActiveLocks: function() {
@@ -409,6 +438,8 @@
 
             checkLockStatus: function(facilityId, courtName, dateKey, timeSlot) {
                 const locks = this.getActiveLocks();
+                const myUid = getCurrentUserId();
+
                 const matchedLock = locks.find(l => 
                     (String(l.facilityId) === String(facilityId) || !l.facilityId) &&
                     (normalizeStr(l.courtName) === normalizeStr(courtName) || l.courtName === courtName) &&
@@ -419,10 +450,15 @@
                 if (!matchedLock) return { isLocked: false };
 
                 const remainingSeconds = Math.max(0, Math.floor((matchedLock.expiresAt - Date.now()) / 1000));
+                // Phân biệt chính xác: ca này do TÀI KHOẢN NÀY khóa hay NGƯỜI KHÁC khóa
+                const isMyLock = Boolean(myUid !== 'guest' && String(matchedLock.userId) === String(myUid));
+
                 return {
                     isLocked: true,
+                    isMyLock: isMyLock,
                     remainingSeconds: remainingSeconds,
-                    expiresAt: matchedLock.expiresAt
+                    expiresAt: matchedLock.expiresAt,
+                    lockData: matchedLock
                 };
             },
 
@@ -442,10 +478,11 @@
 
                     locks.push({
                         facilityId: String(facilityId),
+                        facilityName: currentFacility ? currentFacility.name : '',
                         courtName: slot.courtName || courtName,
                         date: dateKey,
                         time: slot.time,
-                        userId: userId,
+                        userId: String(userId),
                         lockedAt: now,
                         expiresAt: expiresAt
                     });
@@ -599,15 +636,6 @@
             `;
         }
 
-        function getLoggedInUser() {
-            try {
-                return JSON.parse(sessionStorage.getItem('sb_session')) ||
-                       JSON.parse(localStorage.getItem('sb_session')) ||
-                       JSON.parse(localStorage.getItem('currentUser')) ||
-                       JSON.parse(localStorage.getItem('current_user')) || null;
-            } catch (e) { return null; }
-        }
-
         function pushNotificationToAccount(notif) {
             const user = getLoggedInUser();
             const uid = user ? (user.id || user.phone || 'user') : 'guest';
@@ -746,20 +774,15 @@
         }
 
         /**
-         * LẤY TOÀN BỘ DANH SÁCH CA ĐÃ ĐẶT HOẶC ĐÃ ĐƯỢC XÁC NHẬN TRÊN TOÀN HỆ THỐNG
+         * LẤY TOÀN BỘ DANH SÁCH CA ĐÃ ĐẶT VÀ CA GHÉP THÀNH CÔNG
          */
         function getAllConfirmedBookings() {
             let list = [];
-            // 1. Kho sb_booked_slots chung
             try {
                 const raw = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]');
                 if (Array.isArray(raw)) list = list.concat(raw);
-                else if (raw && typeof raw === 'object') {
-                    Object.keys(raw).forEach(k => list.push({ key: k }));
-                }
             } catch (e) {}
 
-            // 2. Quét qua toàn bộ lịch sử đơn đặt sân của các tài khoản (sb_bookings_user_*)
             try {
                 for (let i = 0; i < localStorage.length; i++) {
                     const storageKey = localStorage.key(i);
@@ -781,7 +804,6 @@
                 }
             } catch (e) {}
 
-            // 3. Đơn hàng cuối vừa đặt thành công (sb_final_order)
             try {
                 const finalOrder = JSON.parse(localStorage.getItem('sb_final_order') || '{}');
                 if (finalOrder && finalOrder.status !== 'cancelled' && finalOrder.time_slot) {
@@ -797,11 +819,7 @@
             return list;
         }
 
-        /**
-         * KIỂM TRA MỘT CA GHÉP ĐỐI ĐÃ CÓ NGƯỜI GHÉP THÀNH CÔNG HAY CHƯA
-         */
         function isMatchAlreadyTaken(courtName, timeSlot, dateKey) {
-            // Kiểm tra trạng thái trận ghép đã hoàn thành từ MatchMaker
             try {
                 const matchStates = JSON.parse(localStorage.getItem('sb_matchmaking_slots') || '{}');
                 const slotKey = `${courtName}_${timeSlot}`;
@@ -810,7 +828,6 @@
                 }
             } catch (e) {}
 
-            // Kiểm tra thông tin người tham gia vừa xin ghép đối (sb_match_joined)
             try {
                 const joinedMatch = JSON.parse(localStorage.getItem('sb_match_joined') || '{}');
                 if (joinedMatch && joinedMatch.time === timeSlot && normalizeStr(joinedMatch.courtName) === normalizeStr(courtName)) {
@@ -819,6 +836,64 @@
             } catch (e) {}
 
             return false;
+        }
+
+        /**
+         * KIỂM TRA XEM CHÍNH USER HIỆN TẠI CÓ CA NÀO ĐANG GIỮ CHỖ CHƯA THANH TOÁN KHÔNG
+         */
+        function checkMyActiveLockBanner() {
+            const myUid = getCurrentUserId();
+            const banner = document.getElementById('activeLockBanner');
+            if (!banner || myUid === 'guest') {
+                if (banner) banner.classList.add('hidden');
+                return;
+            }
+
+            const locks = SlotLockManager.getActiveLocks();
+            const myLock = locks.find(l => String(l.userId) === String(myUid));
+
+            if (myLock) {
+                const remainingSeconds = Math.max(0, Math.floor((myLock.expiresAt - Date.now()) / 1000));
+                const mins = Math.floor(remainingSeconds / 60);
+                const secs = String(remainingSeconds % 60).padStart(2, '0');
+                
+                banner.classList.remove('hidden');
+                document.getElementById('activeLockBannerDetail').innerHTML = `Ca <strong>${myLock.time}</strong> tại <strong>${myLock.courtName}</strong> (${myLock.date})`;
+                document.getElementById('activeLockBannerTime').textContent = `${mins}:${secs}`;
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function resumePendingBooking() {
+            const myUid = getCurrentUserId();
+            const locks = SlotLockManager.getActiveLocks();
+            const myLock = locks.find(l => String(l.userId) === String(myUid));
+
+            if (!myLock) {
+                alert("Ca giữ chỗ đã hết hạn hoặc đã được giải phóng!");
+                checkMyActiveLockBanner();
+                renderMatrix();
+                return;
+            }
+
+            let pending = {};
+            try { pending = JSON.parse(localStorage.getItem('sb_current_booking') || '{}'); } catch(e) {}
+
+            window.location.href = `xac-nhan-dat-san.html?facilityId=${encodeURIComponent(myLock.facilityId || currentFacility.id)}&date=${encodeURIComponent(myLock.date)}&slot=${encodeURIComponent(myLock.time)}&court=${encodeURIComponent(myLock.courtName)}`;
+        }
+
+        function cancelPendingLock() {
+            if (confirm("Bạn có chắc chắn muốn hủy lượt giữ chỗ này? Khung giờ sẽ được mở lại cho người khác.")) {
+                const myUid = getCurrentUserId();
+                let locks = SlotLockManager.getActiveLocks();
+                locks = locks.filter(l => String(l.userId) !== String(myUid));
+                localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(locks));
+                localStorage.removeItem('sb_current_booking');
+                
+                checkMyActiveLockBanner();
+                renderMatrix();
+            }
         }
 
         function initPageData() {
@@ -865,6 +940,7 @@
             renderWeekDaysTrack();
             renderMatrix();
             updateRightPanel();
+            checkMyActiveLockBanner();
         }
 
         function renderWeekDaysTrack() {
@@ -917,10 +993,13 @@
         }
 
         /**
-         * 8. RENDER MA TRẬN KHUNG GIỜ VỚI LOGIC KHÓA ĐA TẦNG:
-         * - Đã qua giờ
-         * - Đã kín (Đặt xong hoặc Ghép đối đã đủ người)
-         * - Đang tạm khóa giữ chỗ 10 phút
+         * RENDER MA TRẬN KHUNG GIỜ VỚI LOGIC PHÂN BIỆT RÕ RÀNG:
+         * 1. Quá giờ -> Xám mờ (Khóa)
+         * 2. Đã đặt chính thức hoặc ghép đủ 4/4 -> Đã kín (Khóa)
+         * 3. Đang giữ chỗ bởi NGƯỜI KHÁC -> Màu cam (Khóa, báo đếm ngược)
+         * 4. Đang giữ chỗ bởi CHÍNH TÀI KHOẢN NÀY -> Màu xanh lá, BẤM ĐƯỢC ĐỂ TIẾP TỤC THANH TOÁN
+         * 5. Ghép đối còn trống -> Xin ghép
+         * 6. Còn trống -> Trắng (Cho phép chọn)
          */
         async function renderMatrix() {
             const container = document.getElementById('matrixCourtsList');
@@ -943,7 +1022,7 @@
 
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
                         ${court.slots.map(slot => {
-                            // 1. Kiểm tra ca đã qua trong ngày hay chưa
+                            // 1. Ca đã qua thời gian thực
                             const isPast = isSlotInPast(selectedDateKey, slot.time);
                             if (isPast) {
                                 return `
@@ -961,7 +1040,7 @@
                                 `;
                             }
 
-                            // 2. KIỂM TRA ĐÃ KÍN SÂN (ĐÃ ĐẶT HOÀN TẤT HOẶC GHÉP ĐỐI ĐÃ ĐỦ NGƯỜI)
+                            // 2. Ca đã được đặt chính thức hoặc ghép đủ người
                             const isMatchFull = slot.defaultMatch && isMatchAlreadyTaken(court.name, slot.time, selectedDateKey);
                             const isActuallyBooked = isMatchFull || confirmedBookings.some(b => {
                                 const courtMatch = normalizeStr(b.courtName) === normalizeStr(court.name) ||
@@ -978,7 +1057,7 @@
 
                             if (isActuallyBooked) {
                                 return `
-                                    <div class="p-2 rounded-xl bg-gray-200/90 text-left opacity-60 cursor-not-allowed select-none flex flex-col justify-between border border-gray-300" title="Ca này đã có người đặt trước hoặc đã ghép đối đủ người">
+                                    <div class="p-2 rounded-xl bg-gray-200/90 text-left opacity-60 cursor-not-allowed select-none flex flex-col justify-between border border-gray-300" title="Ca này đã có người đặt trước">
                                         <div class="flex items-center justify-between">
                                             <span class="text-[11px] text-gray-600 font-medium">${slot.time.split(' - ')[0]}</span>
                                             <span class="material-symbols-outlined text-[12px] text-error">lock</span>
@@ -992,13 +1071,33 @@
                                 `;
                             }
 
-                            // 3. TẠM KHÓA GIỮ CHỖ 10 PHÚT (KHI CÓ NGƯỜI ĐANG ĐIỀN THÔNG TIN HOẶC CHUYỂN SANG BƯỚC THANH TOÁN)
+                            // 3. KIỂM TRA TRẠNG THÁI KHÓA GIỮ CHỖ 10 PHÚT
                             const lockInfo = SlotLockManager.checkLockStatus(facId, court.name, selectedDateKey, slot.time);
-                            if (lockInfo.isLocked) {
+                            
+                            // 3A. NẾU CHÍNH TÀI KHOẢN NÀY ĐANG GIỮ CHỖ: HIỆN NÚT BẤM ĐƯỢC ĐỂ VÀO THANH TOÁN
+                            if (lockInfo.isLocked && lockInfo.isMyLock) {
                                 const mins = Math.floor(lockInfo.remainingSeconds / 60);
                                 const secs = String(lockInfo.remainingSeconds % 60).padStart(2, '0');
                                 return `
-                                    <div class="p-2 rounded-xl bg-amber-50 border border-amber-300 text-left cursor-not-allowed select-none flex flex-col justify-between shadow-2xs" title="Đang có khách giữ chỗ thao tác thanh toán ca này trong 10 phút">
+                                    <button type="button" onclick="resumePendingBooking()" class="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md text-left flex flex-col justify-between ring-2 ring-emerald-400 ring-offset-1 transform scale-[1.02] cursor-pointer" title="Bạn đang giữ chỗ ca này. Bấm vào để thanh toán ngay!">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-[11px] font-extrabold text-white">${slot.time.split(' - ')[0]}</span>
+                                            <span class="material-symbols-outlined text-[15px] text-white animate-spin">sync</span>
+                                        </div>
+                                        <span class="text-[10px] text-emerald-100 font-bold my-0.5">${fmt(slot.price)}</span>
+                                        <span class="text-[9px] bg-white text-emerald-800 px-1 py-0.5 rounded font-extrabold flex items-center justify-center gap-0.5">
+                                            <span>Thanh toán (${mins}:${secs})</span>
+                                        </span>
+                                    </button>
+                                `;
+                            }
+
+                            // 3B. NẾU NGƯỜI KHÁC ĐANG GIỮ CHỖ: HIỆN KHÓA MÀU CAM, VÔ HIỆU HÓA
+                            if (lockInfo.isLocked && !lockInfo.isMyLock) {
+                                const mins = Math.floor(lockInfo.remainingSeconds / 60);
+                                const secs = String(lockInfo.remainingSeconds % 60).padStart(2, '0');
+                                return `
+                                    <div class="p-2 rounded-xl bg-amber-50 border border-amber-300 text-left cursor-not-allowed select-none flex flex-col justify-between shadow-2xs" title="Đang có người dùng khác giữ chỗ ca này trong 10 phút">
                                         <div class="flex items-center justify-between">
                                             <span class="text-[11px] text-amber-900 font-bold">${slot.time.split(' - ')[0]}</span>
                                             <span class="material-symbols-outlined text-[13px] text-amber-600 animate-pulse">lock_clock</span>
@@ -1011,7 +1110,7 @@
                                 `;
                             }
 
-                            // 4. GHÉP ĐỐI (KÈO CÒN MỞ ĐỂ XIN GHÉP)
+                            // 4. Ca Ghép đối
                             if (slot.defaultMatch) {
                                 const isCurrentMatch = isMatchmakingMode && activeMatchmakingSlot && activeMatchmakingSlot.courtName === court.name && activeMatchmakingSlot.time === slot.time;
                                 return `
@@ -1031,7 +1130,7 @@
                                 `;
                             }
 
-                            // 5. CA ĐANG ĐƯỢC CHỌN TRONG PHIÊN NÀY
+                            // 5. Ca đang được chọn trong phiên hiện tại
                             const isSelected = selectedSlotsList.some(s => s.courtName === court.name && s.time === slot.time);
                             if (isSelected) {
                                 return `
@@ -1046,7 +1145,7 @@
                                 `;
                             }
 
-                            // 6. GIỜ VÀNG (17:00 - 21:00)
+                            // 6. Giờ vàng
                             if (slot.isPeak) {
                                 return `
                                     <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, true)" class="p-2 rounded-xl bg-secondary-fixed/50 hover:bg-secondary-fixed text-left transition-all flex flex-col justify-between cursor-pointer border border-orange-200">
@@ -1060,7 +1159,7 @@
                                 `;
                             }
 
-                            // 7. CÒN TRỐNG (CÓ THỂ ĐẶT)
+                            // 7. Ca còn trống
                             return `
                                 <button type="button" onclick="toggleSelectSlot('${court.name}', '${slot.time}', ${slot.price}, false)" class="p-2 rounded-xl bg-white hover:bg-green-100/60 text-left transition-all flex flex-col justify-between cursor-pointer border border-gray-200">
                                     <span class="text-[11px] text-gray-800 font-semibold">${slot.time.split(' - ')[0]}</span>
@@ -1082,9 +1181,15 @@
 
             const facId = currentFacility ? currentFacility.id : 'fac-011';
             const lockInfo = SlotLockManager.checkLockStatus(facId, courtName, selectedDateKey, time);
+            
             if (lockInfo.isLocked) {
-                alert(`Ca này hiện đang được một người dùng khác tạm khóa giữ chỗ trong 10 phút. Vui lòng chọn ca khác hoặc chờ hết hạn!`);
-                return;
+                if (lockInfo.isMyLock) {
+                    resumePendingBooking();
+                    return;
+                } else {
+                    alert(`Ca này hiện đang được một người dùng khác tạm khóa giữ chỗ trong 10 phút. Vui lòng chọn ca khác hoặc chờ hết hạn!`);
+                    return;
+                }
             }
 
             isMatchmakingMode = false;
@@ -1266,10 +1371,19 @@
             updateLiveClock();
             setInterval(updateLiveClock, 30000);
 
-            // Cập nhật lại ma trận sân mỗi giây (cho đồng hồ đếm ngược giữ chỗ 10p và trạng thái mới)
+            // Cập nhật đếm ngược khóa giữ chỗ & kiểm tra banner mỗi giây
             setInterval(() => {
                 renderMatrix();
+                checkMyActiveLockBanner();
             }, 1000);
+
+            // LẮNG NGHE STORAGE: Khi tab khác thay đổi slot, tab hiện tại cập nhật tức thì
+            window.addEventListener('storage', (e) => {
+                if (e.key === LOCKED_SLOTS_STORAGE_KEY || e.key === BOOKED_SLOTS_STORAGE_KEY || e.key === 'sb_match_joined') {
+                    renderMatrix();
+                    checkMyActiveLockBanner();
+                }
+            });
 
             document.getElementById('toggleRentalGear').addEventListener('change', updateRightPanel);
 
@@ -1299,11 +1413,10 @@
             document.getElementById('btnProceedBookingConfirm').addEventListener('click', () => {
                 const currentUser = getLoggedInUser();
                 const userName = currentUser ? (currentUser.fullName || currentUser.full_name || currentUser.name || currentUser.phone) : 'Khách vãng lai';
-                const userId = currentUser ? (currentUser.id || currentUser.phone || 'guest') : 'guest';
+                const userId = getCurrentUserId();
 
                 // A. XÁC NHẬN GHÉP ĐỐI -> KHÓA NGAY CA NÀY
                 if (isMatchmakingMode && activeMatchmakingSlot) {
-                    // Đánh dấu ca ghép đối đã có người ghép thành công
                     const slotKey = `${activeMatchmakingSlot.courtName}_${activeMatchmakingSlot.time}`;
                     let matchStates = {};
                     try { matchStates = JSON.parse(localStorage.getItem('sb_matchmaking_slots') || '{}'); } catch(e) {}
@@ -1315,7 +1428,6 @@
                     };
                     localStorage.setItem('sb_matchmaking_slots', JSON.stringify(matchStates));
 
-                    // Lưu vào danh sách đã đặt chính thức
                     let bookedList = [];
                     try { bookedList = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]'); } catch(e) {}
                     bookedList.push({
@@ -1371,6 +1483,7 @@
                     timeSlot: timeSlotsJoined,
                     slots: selectedSlotsList,
                     bookedBy: userName,
+                    userId: userId,
                     totalPrice: document.getElementById('calcTotalPrice').textContent,
                     lockedUntil: Date.now() + 10 * 60 * 1000
                 };
