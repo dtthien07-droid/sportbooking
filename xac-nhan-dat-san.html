@@ -1064,7 +1064,7 @@
                                             </a>
                                         </div>
                                         <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-900 font-semibold flex items-center gap-1.5">
-                                            <span class="material-symbols-outlined text-[16px] text-primary shrink-0">payments</span>
+                                            <span class="material-symbols-outlined text-primary text-[18px] shrink-0">payments</span>
                                             <span>Đối thủ sẽ gửi <strong>38.000đ</strong> cho bạn khi đến sân thi đấu.</span>
                                         </div>
                                     </div>
@@ -1073,7 +1073,7 @@
                                 <div id="miniCardScanningActions" class="flex flex-col gap-2 pt-2 border-t border-gray-100">
                                     <button id="btnStopMatchmaking" onclick="handleStopMatchmaking()" type="button" class="w-full py-2 px-4 rounded-xl bg-surface-container hover:bg-red-50 hover:text-error text-on-surface-variant text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer">
                                         <span class="material-symbols-outlined text-[16px]">pause_circle</span>
-                                        <span>Dừng t đối</span>
+                                        <span>Dừng tìm đối</span>
                                     </button>
                                 </div>
 
@@ -1183,6 +1183,13 @@
         let bookingData = null;
         let targetFacilityId = "fac-011";
 
+        function parsePrice(val, defaultVal = 0) {
+            if (val === undefined || val === null || val === '') return defaultVal;
+            const str = String(val).replace(/[^\d]/g, '');
+            const num = Number(str);
+            return (!isNaN(num) && num > 0) ? num : defaultVal;
+        }
+
         function getLoggedInUser() {
             try {
                 return JSON.parse(sessionStorage.getItem('sb_session')) ||
@@ -1245,13 +1252,15 @@
             try {
                 if (!bookingData) return;
                 let locks = JSON.parse(localStorage.getItem(LOCKED_SLOTS_STORAGE_KEY) || '[]');
-                locks = locks.filter(l => !(
-                    String(l.facilityId) === String(bookingData.facility_id) &&
-                    l.date === bookingData.raw_date &&
-                    l.courtName === bookingData.court_number &&
-                    l.time === bookingData.time_slot
-                ));
-                localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(locks));
+                if (Array.isArray(locks)) {
+                    locks = locks.filter(l => !(
+                        String(l.facilityId) === String(bookingData.facility_id) &&
+                        l.date === bookingData.raw_date &&
+                        l.courtName === bookingData.court_number &&
+                        l.time === bookingData.time_slot
+                    ));
+                    localStorage.setItem(LOCKED_SLOTS_STORAGE_KEY, JSON.stringify(locks));
+                }
             } catch(e) {}
         }
 
@@ -1262,9 +1271,10 @@
 
             let notifs = [];
             try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
-            if (notifs.length === 0) {
+            if (!Array.isArray(notifs) || notifs.length === 0) {
                 try { notifs = JSON.parse(localStorage.getItem('sb_notifications_list')) || []; } catch(e) {}
             }
+            if (!Array.isArray(notifs)) notifs = [];
 
             const unreadCount = notifs.filter(n => !n.read && n.unread !== false).length;
             const badgeCount = document.getElementById('badgeQuickCount');
@@ -1297,10 +1307,10 @@
                             </div>
                             <div class="flex-1 min-w-0 flex flex-col gap-0.5 text-xs">
                                 <div class="flex items-baseline justify-between">
-                                    <span class="font-bold text-on-surface truncate">${n.title}</span>
+                                    <span class="font-bold text-on-surface truncate">${n.title || ''}</span>
                                     <span class="text-[10px] text-gray-400 shrink-0 ml-1">${n.time || ''}</span>
                                 </div>
-                                <p class="text-gray-600 line-clamp-2 leading-relaxed mt-0.5">${n.desc || n.content}</p>
+                                <p class="text-gray-600 line-clamp-2 leading-relaxed mt-0.5">${n.desc || n.content || ''}</p>
                             </div>
                         </div>
                     `).join('');
@@ -1313,12 +1323,11 @@
                 goToStep(1);
                 return;
             }
-            // Giải phóng khóa slot khi người dùng bấm quay lại chọn lại ca
             releaseCurrentSlotLock();
 
             const params = new URLSearchParams(window.location.search);
-            const facId = bookingData.facility_id || params.get('facilityId') || params.get('id') || 'fac-011';
-            const date = bookingData.raw_date || params.get('date') || '';
+            const facId = (bookingData && bookingData.facility_id) || params.get('facilityId') || params.get('id') || 'fac-011';
+            const date = (bookingData && bookingData.raw_date) || params.get('date') || '';
 
             let targetUrl = `chon-khung-gio.html?facilityId=${encodeURIComponent(facId)}`;
             if (date) targetUrl += `&date=${encodeURIComponent(date)}`;
@@ -1330,8 +1339,10 @@
             const badge = document.getElementById('countdown-badge');
 
             if (lockedUntil) {
-                const diffSec = Math.max(0, Math.floor((lockedUntil - Date.now()) / 1000));
+                const diffSec = Math.max(0, Math.floor((Number(lockedUntil) - Date.now()) / 1000));
                 timeLeft = diffSec > 0 ? diffSec : 599;
+            } else {
+                timeLeft = 599;
             }
 
             function updateTime() {
@@ -1347,11 +1358,10 @@
                     badge.textContent = "00:00";
                     badge.classList.add('bg-error');
 
-                    // Hết 10 phút -> giải phóng slot và thông báo
                     releaseCurrentSlotLock();
                     alert("Đã hết thời gian giữ chỗ tạm thời (10 phút)!\n\nHệ thống sẽ tự động chuyển bạn quay lại trang Chọn khung giờ của sân để chọn lại slot thi đấu.");
-                    const facId = bookingData.facility_id || targetFacilityId || 'fac-011';
-                    const rawDate = bookingData.raw_date || '2026-10-31';
+                    const facId = (bookingData && bookingData.facility_id) || targetFacilityId || 'fac-011';
+                    const rawDate = (bookingData && bookingData.raw_date) || '2026-10-31';
                     window.location.href = `chon-khung-gio.html?facilityId=${encodeURIComponent(facId)}&date=${encodeURIComponent(rawDate)}&timeout=1`;
                 }
             }
@@ -1492,37 +1502,42 @@
         }
 
         function syncStep2Data() {
-            document.getElementById('displaySidebarOrderId').innerText = `#${bookingData.order_id}`;
-            document.getElementById('sidebarVenueImg').src = bookingData.image;
-            document.getElementById('sidebarSportLabel').innerText = bookingData.sport_label;
-            document.getElementById('sidebarCourtName').innerText = bookingData.court_number;
-            document.getElementById('sidebarVenueName').innerText = bookingData.venue_name;
+            const safeSetText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
 
-            document.getElementById('displaySidebarDate').innerText = bookingData.date;
-            document.getElementById('displaySidebarTimeSlot').innerText = bookingData.time_slot;
+            safeSetText('displaySidebarOrderId', `#${bookingData.order_id}`);
+            const vImg = document.getElementById('sidebarVenueImg');
+            if (vImg) vImg.src = bookingData.image;
+
+            safeSetText('sidebarSportLabel', bookingData.sport_label);
+            safeSetText('sidebarCourtName', bookingData.court_number);
+            safeSetText('sidebarVenueName', bookingData.venue_name);
+
+            safeSetText('displaySidebarDate', bookingData.date);
+            safeSetText('displaySidebarTimeSlot', bookingData.time_slot);
 
             const phoneStr = bookingData.user_phone || "0988123456";
             const masked = phoneStr.length >= 7 ? `(${phoneStr.slice(0, 4)}***${phoneStr.slice(-3)})` : `(${phoneStr})`;
-            document.getElementById('displaySidebarUser').innerText = `${bookingData.user_name} ${masked}`;
+            safeSetText('displaySidebarUser', `${bookingData.user_name} ${masked}`);
 
-            document.getElementById('displaySidebarCourtPrice').innerText = `${bookingData.base_price.toLocaleString('vi-VN')} đ`;
-            document.getElementById('displaySidebarRemainingPrice').innerText = `${bookingData.remaining_amount.toLocaleString('vi-VN')} đ`;
-            document.getElementById('displaySidebarDepositPrice').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')} đ`;
-            document.getElementById('qrDepositAmount').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')} đ`;
+            safeSetText('displaySidebarCourtPrice', `${parsePrice(bookingData.base_price).toLocaleString('vi-VN')} đ`);
+            safeSetText('displaySidebarRemainingPrice', `${parsePrice(bookingData.remaining_amount).toLocaleString('vi-VN')} đ`);
+            safeSetText('displaySidebarDepositPrice', `${parsePrice(bookingData.deposit_paid).toLocaleString('vi-VN')} đ`);
+            safeSetText('qrDepositAmount', `${parsePrice(bookingData.deposit_paid).toLocaleString('vi-VN')} đ`);
 
             if (bookingData.is_full_payment) {
-                document.getElementById('sidebarPaymentLabel').innerText = "THANH TOÁN TOÀN BỘ (100%)";
+                safeSetText('sidebarPaymentLabel', "THANH TOÁN TOÀN BỘ (100%)");
             } else {
-                document.getElementById('sidebarPaymentLabel').innerText = "TIỀN CỌC GIỮ SÂN (50%)";
+                safeSetText('sidebarPaymentLabel', "TIỀN CỌC GIỮ SÂN (50%)");
             }
 
-            document.getElementById('displayTransferMemo').innerText = `SB ${bookingData.order_id.replace(/[^0-9]/g, '')} ${phoneStr.replace(/[^0-9]/g, '')}`;
+            safeSetText('displayTransferMemo', `SB ${String(bookingData.order_id).replace(/[^0-9]/g, '')} ${phoneStr.replace(/[^0-9]/g, '')}`);
 
-            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=2|99|098888886886|MB|${bookingData.deposit_paid}|SPORTBOOKING%20${bookingData.order_id}`;
-            document.getElementById('vietqr-image').src = qrApiUrl;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=2|99|098888886886|MB|${parsePrice(bookingData.deposit_paid)}|SPORTBOOKING%20${bookingData.order_id}`;
+            const qrImg = document.getElementById('vietqr-image');
+            if (qrImg) qrImg.src = qrApiUrl;
         }
 
-        // XÁC NHẬN THANH TOÁN: XÓA KHÓA TẠM, LƯU VÀO ĐÚNG TÀI KHOẢN
+        // XÁC NHẬN THANH TOÁN: XÓA KHÓA TẠM, LƯU VÀO ĐÚNG TÀI KHOẢN (ĐÃ ĐƯỢC BỌC AN TOÀN)
         function handleExecutePayment() {
             const payButton = document.getElementById('btn-submit-payment');
             if (payButton) {
@@ -1534,151 +1549,170 @@
             }
 
             setTimeout(() => {
-                const user = getLoggedInUser();
-                const uid = user ? (user.phone || user.id || 'user') : 'guest';
-
-                const finalOrder = {
-                    ...bookingData,
-                    status: 'upcoming',
-                    status_label: 'Đã xác nhận',
-                    created_at: Date.now()
-                };
-                localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
-
-                // 1. Thêm vào lịch sử đặt sân của CHÍNH TÀI KHOẢN ĐANG ĐĂNG NHẬP
-                let history = [];
                 try {
-                    history = JSON.parse(localStorage.getItem(`sb_bookings_user_${uid}`) || '[]');
-                } catch(e) {}
+                    const user = getLoggedInUser() || {};
+                    const uid = user.phone || user.id || 'user';
 
-                history = history.filter(h => h.id !== finalOrder.order_id);
-                history.unshift({
-                    id: finalOrder.order_id,
-                    venue_name: finalOrder.venue_name,
-                    sport: finalOrder.sport,
-                    sport_label: finalOrder.sport_label,
-                    court_number: finalOrder.court_number,
-                    address: finalOrder.address,
-                    time_slot: finalOrder.time_slot,
-                    time_badge: "Sắp tới",
-                    date: finalOrder.date,
-                    raw_date: finalOrder.raw_date,
-                    price: finalOrder.final_total,
-                    total_price: finalOrder.final_total,
-                    deposit_paid: finalOrder.deposit_paid,
-                    status: 'upcoming',
-                    status_label: 'Đã xác nhận',
-                    image: finalOrder.image
-                });
-                localStorage.setItem(`sb_bookings_user_${uid}`, JSON.stringify(history));
+                    const cleanTotal = parsePrice(bookingData.final_total || bookingData.total_price, 104500);
+                    const cleanDeposit = parsePrice(bookingData.deposit_paid, Math.round(cleanTotal / 2));
+                    const cleanRemaining = Math.max(0, cleanTotal - cleanDeposit);
 
-                // 2. Chuyển slot sang trạng thái ĐÃ KÍN CHÍNH THỨC (CONFIRMED)
-                let bookedSlots = [];
-                try {
-                    bookedSlots = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]');
-                } catch(e) {}
-                bookedSlots.push({
-                    courtName: finalOrder.court_number,
-                    time: finalOrder.time_slot,
-                    date: finalOrder.raw_date,
-                    facilityId: finalOrder.facility_id
-                });
-                localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(bookedSlots));
+                    const finalOrder = {
+                        ...bookingData,
+                        id: bookingData.order_id,
+                        final_total: cleanTotal,
+                        total_price: cleanTotal,
+                        price: cleanTotal,
+                        deposit_paid: cleanDeposit,
+                        remaining_amount: cleanRemaining,
+                        status: 'upcoming',
+                        status_label: 'Đã xác nhận',
+                        created_at: Date.now()
+                    };
+                    localStorage.setItem('sb_final_order', JSON.stringify(finalOrder));
 
-                // 3. Xóa slot khỏi danh sách TẠM KHÓA 10 PHÚT
-                releaseCurrentSlotLock();
+                    // 1. Chuyển slot sang trạng thái ĐÃ KÍN CHÍNH THỨC (CONFIRMED)
+                    try {
+                        let bookedSlots = JSON.parse(localStorage.getItem(BOOKED_SLOTS_STORAGE_KEY) || '[]');
+                        if (!Array.isArray(bookedSlots)) bookedSlots = [];
+                        bookedSlots.push({
+                            courtName: finalOrder.court_number,
+                            time: finalOrder.time_slot,
+                            date: finalOrder.raw_date || finalOrder.date,
+                            facilityId: finalOrder.facility_id
+                        });
+                        localStorage.setItem(BOOKED_SLOTS_STORAGE_KEY, JSON.stringify(bookedSlots));
+                    } catch(e) {}
 
-                // 4. Bắn thông báo mới vào đúng tài khoản
-                let notifs = [];
-                try {
-                    notifs = JSON.parse(localStorage.getItem(`sb_notifs_user_${uid}`) || '[]');
-                } catch(e) {}
-                notifs.unshift({
-                    id: 'notif-' + Date.now(),
-                    category: 'booking',
-                    title: 'Đặt sân thành công!',
-                    content: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.order_id}.`,
-                    desc: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.order_id}.`,
-                    time: 'Vừa xong',
-                    timestamp: Date.now(),
-                    unread: true,
-                    link: `chi-tiet-don-dat-san.html?id=${finalOrder.order_id}`,
-                    actionText: 'Xem sân đã đặt',
-                    icon: finalOrder.sport === 'soccer' ? 'sports_soccer' : (finalOrder.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball'),
-                    color: 'text-primary',
-                    bgIcon: 'bg-green-100'
-                });
-                localStorage.setItem(`sb_notifs_user_${uid}`, JSON.stringify(notifs));
+                    // 2. Xóa slot khỏi danh sách TẠM KHÓA 10 PHÚT
+                    releaseCurrentSlotLock();
 
-                if (payButton) {
-                    payButton.disabled = false;
-                    payButton.innerHTML = `
-                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                        <span>XÁC NHẬN THANH TOÁN MÔ PHỎNG</span>
-                    `;
+                    // 3. Thêm vào lịch sử đặt sân của CHÍNH TÀI KHOẢN ĐANG ĐĂNG NHẬP
+                    try {
+                        let history = JSON.parse(localStorage.getItem(`sb_bookings_user_${uid}`) || '[]');
+                        if (!Array.isArray(history)) history = [];
+                        history = history.filter(h => h && h.id !== finalOrder.id);
+                        history.unshift({
+                            id: finalOrder.id,
+                            venue_name: finalOrder.venue_name,
+                            sport: finalOrder.sport,
+                            sport_label: finalOrder.sport_label,
+                            court_number: finalOrder.court_number,
+                            address: finalOrder.address,
+                            time_slot: finalOrder.time_slot,
+                            time_badge: "Sắp tới",
+                            date: finalOrder.date,
+                            raw_date: finalOrder.raw_date || finalOrder.date,
+                            price: finalOrder.final_total,
+                            total_price: finalOrder.final_total,
+                            deposit_paid: finalOrder.deposit_paid,
+                            status: 'upcoming',
+                            status_label: 'Đã xác nhận',
+                            image: finalOrder.image
+                        });
+                        localStorage.setItem(`sb_bookings_user_${uid}`, JSON.stringify(history));
+                    } catch(e) {}
+
+                    // 4. Bắn thông báo mới vào đúng tài khoản
+                    try {
+                        let notifs = JSON.parse(localStorage.getItem(`sb_notifs_user_${uid}`) || '[]');
+                        if (!Array.isArray(notifs)) notifs = [];
+                        notifs.unshift({
+                            id: 'notif-' + Date.now(),
+                            category: 'booking',
+                            title: 'Đặt sân thành công!',
+                            content: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.id}.`,
+                            desc: `Bạn đã giữ chỗ thành công tại ${finalOrder.venue_name} (${finalOrder.date}, ${finalOrder.time_slot}). Mã đơn: #${finalOrder.id}.`,
+                            time: 'Vừa xong',
+                            timestamp: Date.now(),
+                            unread: true,
+                            read: false,
+                            link: `chi-tiet-don-dat-san.html?id=${finalOrder.id}`,
+                            actionText: 'Xem sân đã đặt',
+                            icon: finalOrder.sport === 'soccer' ? 'sports_soccer' : (finalOrder.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball'),
+                            color: 'text-primary',
+                            bgIcon: 'bg-green-100'
+                        });
+                        localStorage.setItem(`sb_notifs_user_${uid}`, JSON.stringify(notifs));
+                    } catch(e) {}
+
+                } catch(err) {
+                    console.error("Lỗi khi xử lý lưu đơn:", err);
+                } finally {
+                    if (payButton) {
+                        payButton.disabled = false;
+                        payButton.innerHTML = `
+                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            <span>XÁC NHẬN THANH TOÁN MÔ PHỎNG</span>
+                        `;
+                    }
+                    goToStep(3);
                 }
-
-                goToStep(3);
             }, 600);
         }
 
         function syncStep3Data() {
-            document.getElementById('step3ConfirmEmail').innerText = bookingData.user_email || 'truclam@gmail.com';
-            document.getElementById('step3BookingIdText').innerText = `#${bookingData.order_id}`;
-            document.getElementById('step3VenueName').innerText = bookingData.venue_name;
-            document.getElementById('step3Address').innerText = bookingData.address;
-            document.getElementById('step3CourtName').innerText = bookingData.court_number;
-            document.getElementById('step3TimeDisplay').innerText = bookingData.time_slot;
-            document.getElementById('step3DateDisplay').innerText = bookingData.date;
-            document.getElementById('step3UserName').innerText = bookingData.user_name;
-            document.getElementById('step3UserPhone').innerText = bookingData.user_phone;
+            try {
+                const safeSetText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
 
-            document.getElementById('step3TotalPriceDisplay').innerText = `${bookingData.final_total.toLocaleString('vi-VN')}đ`;
-            document.getElementById('step3DepositDisplay').innerText = `${bookingData.deposit_paid.toLocaleString('vi-VN')}đ`;
-            document.getElementById('step3RemainingDisplay').innerText = `${bookingData.remaining_amount.toLocaleString('vi-VN')}đ`;
+                safeSetText('step3ConfirmEmail', bookingData.user_email || 'truclam@gmail.com');
+                safeSetText('step3BookingIdText', `#${bookingData.order_id}`);
+                safeSetText('step3VenueName', bookingData.venue_name);
+                safeSetText('step3Address', bookingData.address);
+                safeSetText('step3CourtName', bookingData.court_number);
+                safeSetText('step3TimeDisplay', bookingData.time_slot);
+                safeSetText('step3DateDisplay', bookingData.date);
+                safeSetText('step3UserName', bookingData.user_name);
+                safeSetText('step3UserPhone', bookingData.user_phone);
 
-            document.getElementById('step3QrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(bookingData.order_id)}`;
-            document.getElementById('step3QrCodeText').innerText = `Mã vé: #${bookingData.order_id}`;
-            document.getElementById('step3GoDetailLink').href = `chi-tiet-don-dat-san.html?id=${bookingData.order_id}`;
+                const total = parsePrice(bookingData.final_total || bookingData.total_price);
+                const deposit = parsePrice(bookingData.deposit_paid);
+                const remaining = parsePrice(bookingData.remaining_amount);
 
-            const iconSpan = document.getElementById('step3SportIcon');
-            const sportIconName = bookingData.sport === 'soccer' ? 'sports_soccer' : (bookingData.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball');
-            if (iconSpan) iconSpan.innerText = sportIconName;
+                safeSetText('step3TotalPriceDisplay', `${total.toLocaleString('vi-VN')}đ`);
+                safeSetText('step3DepositDisplay', `${deposit.toLocaleString('vi-VN')}đ`);
+                safeSetText('step3RemainingDisplay', `${remaining.toLocaleString('vi-VN')}đ`);
 
-            const isMatchMaker = !!bookingData.is_matching_enabled;
-            const friendCard = document.getElementById('friendInviteCard');
-            const matchmakerCard = document.getElementById('matchmakerMiniCard');
+                const qrImg = document.getElementById('step3QrImage');
+                if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(bookingData.order_id)}`;
+                safeSetText('step3QrCodeText', `Mã vé: #${bookingData.order_id}`);
 
-            if (isMatchMaker) {
-                if (friendCard) friendCard.classList.add('hidden');
-                if (matchmakerCard) matchmakerCard.classList.remove('hidden');
+                const detailLink = document.getElementById('step3GoDetailLink');
+                if (detailLink) detailLink.href = `chi-tiet-don-dat-san.html?id=${bookingData.order_id}`;
 
-                const criteria = bookingData.matching_criteria || matchingCriteria;
-                const genderMap = { female: 'Nữ', male: 'Nam', any: 'Bất kỳ (Nam/Nữ)' };
-                const levelMap = { beginner: 'Mới chơi', intermediate: 'Trung bình', advanced: 'Khá / Chuyên' };
-                const formatMap = { single: 'Đánh đơn (1vs1)', double: 'Đánh đôi (2vs2)' };
+                const iconSpan = document.getElementById('step3SportIcon');
+                if (iconSpan) {
+                    iconSpan.innerText = bookingData.sport === 'soccer' ? 'sports_soccer' : (bookingData.sport === 'badminton' ? 'sports_tennis' : 'sports_baseball');
+                }
 
-                const genderText = genderMap[criteria.gender] || 'Nữ';
-                const levelText = levelMap[criteria.level] || 'Trung bình';
-                const formatText = formatMap[criteria.format] || 'Đánh đôi';
+                const isMatchMaker = !!bookingData.is_matching_enabled;
+                const friendCard = document.getElementById('friendInviteCard');
+                const matchmakerCard = document.getElementById('matchmakerMiniCard');
 
-                const levelEl = document.getElementById('miniRadarLevel');
-                if (levelEl) levelEl.innerText = levelText;
+                if (isMatchMaker) {
+                    if (friendCard) friendCard.classList.add('hidden');
+                    if (matchmakerCard) matchmakerCard.classList.remove('hidden');
 
-                const genderBadge = document.getElementById('miniBadgeGender');
-                if (genderBadge) genderBadge.innerText = genderText;
+                    const criteria = bookingData.matching_criteria || matchingCriteria;
+                    const genderMap = { female: 'Nữ', male: 'Nam', any: 'Bất kỳ (Nam/Nữ)' };
+                    const levelMap = { beginner: 'Mới chơi', intermediate: 'Trung bình', advanced: 'Khá / Chuyên' };
+                    const formatMap = { single: 'Đánh đơn (1vs1)', double: 'Đánh đôi (2vs2)' };
 
-                const formatBadge = document.getElementById('miniBadgeFormat');
-                if (formatBadge) formatBadge.innerText = formatText;
+                    safeSetText('miniRadarLevel', levelMap[criteria.level] || 'Trung bình');
+                    safeSetText('miniBadgeGender', genderMap[criteria.gender] || 'Nữ');
+                    safeSetText('miniBadgeFormat', formatMap[criteria.format] || 'Đánh đôi');
 
-                const radarIcon = document.getElementById('miniRadarSportIcon');
-                if (radarIcon) radarIcon.innerText = sportIconName;
+                    const radarIcon = document.getElementById('miniRadarSportIcon');
+                    if (radarIcon) radarIcon.innerText = iconSpan ? iconSpan.innerText : 'sports_soccer';
 
-                startMiniRadarCountdown();
-            } else {
-                if (friendCard) friendCard.classList.remove('hidden');
-                if (matchmakerCard) matchmakerCard.classList.add('hidden');
-                if (miniRadarInterval) clearInterval(miniRadarInterval);
+                    startMiniRadarCountdown();
+                } else {
+                    if (friendCard) friendCard.classList.remove('hidden');
+                    if (matchmakerCard) matchmakerCard.classList.add('hidden');
+                    if (miniRadarInterval) clearInterval(miniRadarInterval);
+                }
+            } catch(e) {
+                console.error("Lỗi syncStep3Data:", e);
             }
         }
 
@@ -1920,9 +1954,9 @@
 
             let basePrice = 360000;
             if (currentBooking && currentBooking.totalPrice) {
-                basePrice = Number(String(currentBooking.totalPrice).replace(/[^0-9]/g, '')) || 360000;
+                basePrice = parsePrice(currentBooking.totalPrice, 360000);
             } else if (venueObj && (venueObj.price || venueObj.price_peak)) {
-                basePrice = Number(venueObj.price || venueObj.price_peak);
+                basePrice = parsePrice(venueObj.price || venueObj.price_peak, 360000);
             } else if (sportType === 'badminton') {
                 basePrice = 160000;
             } else if (sportType === 'pickleball') {
@@ -1930,7 +1964,7 @@
             }
 
             const discount = Math.round(basePrice * 0.05);
-            const finalTotal = basePrice - discount;
+            const finalTotal = Math.max(0, basePrice - discount);
             const depositPrice = Math.round(finalTotal / 2);
             const remainingPrice = finalTotal - depositPrice;
 
@@ -1972,7 +2006,10 @@
                 image: (venueObj && venueObj.image) ? venueObj.image : venueImgUrl
             };
 
-            document.getElementById('breadcrumbVenueName').innerText = venueName;
+            const safeSetText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+            const safeSetVal = (id, text) => { const el = document.getElementById(id); if (el) el.value = text; };
+
+            safeSetText('breadcrumbVenueName', venueName);
             const mapQuery = encodeURIComponent(`${bookingData.venue_name} ${bookingData.address}`);
             const accurateMapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
@@ -1982,26 +2019,26 @@
             const sidebarMapBtn = document.getElementById('btnMapSidebar');
             if (sidebarMapBtn) sidebarMapBtn.href = accurateMapUrl;
 
-            document.getElementById('displaySportBadge').innerText = sportText;
-            document.getElementById('displayVenueName').innerText = venueName;
-            document.getElementById('displayVenueAddress').innerText = address;
-            document.getElementById('displayCourtSubName').innerText = courtNumber;
-            document.getElementById('displaySelectedDate').innerText = displayDate;
-            document.getElementById('displaySelectedSlot').innerText = timeSlot;
+            safeSetText('displaySportBadge', sportText);
+            safeSetText('displayVenueName', venueName);
+            safeSetText('displayVenueAddress', address);
+            safeSetText('displayCourtSubName', courtNumber);
+            safeSetText('displaySelectedDate', displayDate);
+            safeSetText('displaySelectedSlot', timeSlot);
 
-            document.getElementById('bookerName').value = defName;
-            document.getElementById('bookerPhone').value = defPhone;
-            document.getElementById('bookerEmail').value = defEmail;
+            safeSetVal('bookerName', defName);
+            safeSetVal('bookerPhone', defPhone);
+            safeSetVal('bookerEmail', defEmail);
 
-            document.getElementById('displayDraftCode').innerText = `Mã: ${orderId}`;
-            document.getElementById('displayBasePriceText').innerText = `${basePrice.toLocaleString('vi-VN')}đ`;
-            document.getElementById('displayDiscountText').innerText = `-${discount.toLocaleString('vi-VN')}đ`;
-            document.getElementById('displayFinalTotal').innerText = `${finalTotal.toLocaleString('vi-VN')}đ`;
-            document.getElementById('fullPriceBadge').innerText = `${finalTotal.toLocaleString('vi-VN')}đ`;
-            document.getElementById('depositPriceOptionBadge').innerText = `${depositPrice.toLocaleString('vi-VN')}đ`;
-            document.getElementById('depositRemainingText').innerText = `Thanh toán nốt ${remainingPrice.toLocaleString('vi-VN')}đ tại quầy`;
-            document.getElementById('amount-payable').innerText = `${depositPrice.toLocaleString('vi-VN')}đ`;
-            document.getElementById('cta-text').innerText = `TIẾP TỤC ĐẾN THANH TOÁN (${depositPrice.toLocaleString('vi-VN')}đ)`;
+            safeSetText('displayDraftCode', `Mã: ${orderId}`);
+            safeSetText('displayBasePriceText', `${basePrice.toLocaleString('vi-VN')}đ`);
+            safeSetText('displayDiscountText', `-${discount.toLocaleString('vi-VN')}đ`);
+            safeSetText('displayFinalTotal', `${finalTotal.toLocaleString('vi-VN')}đ`);
+            safeSetText('fullPriceBadge', `${finalTotal.toLocaleString('vi-VN')}đ`);
+            safeSetText('depositPriceOptionBadge', `${depositPrice.toLocaleString('vi-VN')}đ`);
+            safeSetText('depositRemainingText', `Thanh toán nốt ${remainingPrice.toLocaleString('vi-VN')}đ tại quầy`);
+            safeSetText('amount-payable', `${depositPrice.toLocaleString('vi-VN')}đ`);
+            safeSetText('cta-text', `TIẾP TỤC ĐẾN THANH TOÁN (${depositPrice.toLocaleString('vi-VN')}đ)`);
 
             const spIcon = document.getElementById('step1SportIcon');
             if (spIcon) {
@@ -2081,13 +2118,14 @@
                     const key = `sb_notifs_user_${uid}`;
                     let notifs = [];
                     try { notifs = JSON.parse(localStorage.getItem(key)) || []; } catch(e) {}
-                    notifs.forEach(n => n.read = true);
-                    localStorage.setItem(key, JSON.stringify(notifs));
+                    if (Array.isArray(notifs)) {
+                        notifs.forEach(n => n.read = true);
+                        localStorage.setItem(key, JSON.stringify(notifs));
+                    }
                     loadUserNotifications();
                 };
             }
 
-            // Đồng bộ bộ đếm ngược từ mốc lockedUntil nếu có
             startCountdownTimer(currentBooking ? currentBooking.lockedUntil : null);
 
             const initialStep = parseInt(params.get('step')) || 1;
